@@ -1,0 +1,265 @@
+25/04/2007 V1.0.4
+Core: Fixed parsing of empty channels
+CreateAccount: Added an account creation program
+requestpassword.php: updated to reflect Core database.
+U: Connect4.java: removed printstacktrace.
+Tutor: Load.java: added a FileNotFoundException.
+
+
+08/04/2007 V1.0.4
+V: Created module
+
+26/06/2006 V1.0.3
+Tutor: Created module.
+
+Q: Fixed kick command kicking services.
+
+21/06/2006 V1.0.3
+U: Created module.
+
+20/06/2006 V1.0.3
+Q: Added Sbroadcast command.
+
+19/06/2006 V1.0.3
+Core: Fixed compability problem with startfile.
+
+Q: Added Shade command.
+   Fixed suspend only killing one auth account.
+
+19/02/2006 V1.0.2
+Core: Fixed bug in startfile.
+
+05/02/2006 V1.0.1
+Core: Added changelev command.
+      Picks up AC's by other servers.
+      Fixed bug in detecting mode changes.
+
+Q: Added requestowner command.
+   Added challenge command.
+   Added challengeauth command.
+   Fixed bug in detecting mode changes.
+   
+   
+Pre Core System Q:
+
+22-12-2005 V2.1.6 Holy Day
+* E-mail will require their password.
+
+20-12-2005 V2.1.6
+* Updated N,L-line parsing to the P10 docs.
+* Q now saves fakehosts.
+* Added unbanall command.
+* Added limit forcing.
+* When removing chanflag c,l or k, Q now removes the mode.
+* Modified flag extraction.
+
+19-12-2005 V2.1.6
+* Finally fixed the sync bug.
+
+18-12-2005 V2.1.6
+* Added an extra option to chanlev so nnscript fully works.¨
+* Added chanlev +d (cannot get op).
+
+17-12-2005 V2.1.6
+* Stopped sending glines on the S line.
+* Made a temporary work around to a sync bug.
+
+15-12-2005 V2.1.6
+* Changed the m00se.
+* Added acting.
+
+14-12-2005 V2.1.6
+* Fixed it so Q not only says he won't, but also doesn't give op during a netsplit.
+
+09-12-2005 V2.1.6
+* Fixed typo in the invite error message.
+* Added a check if a user's already on a channel before inviting them.
+* Fixed bug in displaying the network map.
+* Fixed bug in sending Jupe servers at the wrong time at startup causing Q to crash.
+* Fixed bug in resetting channel limits when a chanmode is changed.
+
+05-12-2005 V2.1.6
+* Fixed automatic channel deletion
+
+04-12-2005 V2.1.6
+* Fixed setting topics.
+
+14-11-2005 V2.1.5
+* Fixed requestpassword using the oldest controlcode when user requested 2ce.
+* Fixed ChanFix
+
+09-11-2005 V2.1.5
+* Added userips to userinfo.
+* Trusts now always use ips.
+
+06-11-2005 V2.1.5
+* Fixed Q deleting channels when there where people with access on them.
+
+02-11-2005 V2.1.4
+* Finished Jupe server control.
+
+01-11-2005 V2.1.4
+* Small change to userlevs, 999 is a services Admin and only 1000 are coders.
+
+30-10-2005 V2.1.4
+* Channellimt's are now sent in 3 bursts instead of 1, needs to be spread more though.
+* Added a chanfix like system.
+* Fixed crash when a user joined 0 (parts all channels).
+
+29-10-2005 V2.1.4
+* Fixed floating channellimit offset counting Q twice.
+
+14-10-2005 V2.1.4
+* Fixed not syncing G-Lines on connect.
+* Fixed part of whois display to resemble Quakenet.
+* Added info lines to auths for opers to view some user info.
+* Added a command to block e-mails from being used to register an account.
+* Made Q know about himself.
+
+09-10-2005 V2.1.4
+* Added save command.
+
+08-10-2005 V2.1.4
+* Added cycle channels option.
+* Added reconnect option.
+* Added option to modify trusts.
+* Changed authlev to change defcon from 1000 to 999.
+
+06-10-2005 V2.1.4
+* Added support for channelmode +D.
+
+05-10-2005 V2.1.4
+* Fixed bug in parts using a partmsg not being detected.
+
+01-10-2005 V2.1.3.1
+* Fixed huge bug in changing user rows via numerics.
+
+30-09-2005 V2.1.3
+* Added logoninfo.
+* Made it alot more modular.
+* Wrote the javadocs.
+
+28-09-2005 V2.1.2
+* Fixed delChan not deleting active channel tickets.
+
+27-09-2005 V2.1.1
+* Fixed Q eating 100% cpu.
+
+26-09-2005 V2.1.1
+* Fixed bug in whois displaying multiple auths wrong.
+
+25-09-2005 V2.1
+* Added command so users can move Q from one channel to another.
+
+23-09-2005 V2.1
+* Fixed bug in whois-ing an offline authnick.
+* Welcome & topic lenght limited to 250.
+* Made it so suspended auths/channels don't get cleaned after 40 days.
+* Added channel levels to manage staff channels.
+
+21-09-2005 V2.1
+* Added option to list staff.
+
+18-09-2005 V2.1
+* Fixed bug in enforcing idents on all clients.
+* Added requestop for opless channels.
+
+17-09-2005 V2.1
+* Fixed bug in Q enforcing bitch -v when chanflag +v is set.
+* Enforced the use of unique identds for trusts when an identd is required from that ip.
+* Whois now displays all users auth'd with the same auth.
+* Added a maximum of 10y to trust an ip.
+
+12-09-2005 V2.1
+* Added trust control.
+
+08-09-2005 V2.1
+* Added raw command.
+
+07-09-2005 V2.1
+* Added fake users control system.
+* Added support to force a key on channels.
+* Added ticket system.
+
+06-09-2005 V2.1
+* Added G-line control system.
+* Added clearchan (kick/kill/gline).
+
+05-09-2005 V2.1
+* Added Broadcast function.
+
+04-09-2005 V2.1
+* Added DefCon system.
+* Added channel suspension.
+* Allowed channel modes s and i to be forced.
+* Limited number of people that are allowed to auth to an account to 2.
+
+03-09-2005 V2.0
+* Added detection of kicks.
+* Protect authlev > 1 so they can't be removed with clean_db.
+* Increase time when setting chanlimits to 9 minutes (had to be devidable by 90 seconds).
+* Show a reason when parting a channel.
+* KickBan when chanlev +b.
+
+30-08-2005 V2.0
+* Added request system.
+* Fixed bug in resetting topics.
+* Fixed bug in removechan not detecting the owner properly.
+* Fixed bug in requestpassword not properly checking the users email :s
+* Fixed bug in channel listing where it would display channels of "numericbuddies".
+
+28-08-2005 V2.0
+* Added channellimmit feature.
+* Added listing of a users current channels.
+
+26-08-2005 V2.0 unstable-0.2
+* Fixed huge bug in not using case sensitive searching when looking up numerics.
+* Fixed some bugs in whois.
+* Added chanlev sorting.
+* Changed the output of whois/whoami to resemble Quakenet's Q so you can use nnscripts Q control.
+* Fixed a bug in server removal where the server didn't get removed.
+* Added it so non Oper'd users can now see chanlev's of other users with whom they have common access.
+* Completed the database cleaning function, it will be cleaned and create a backup every 24 hours.
+
+22-08-2005 V2.0 unstable-0.2
+* Implemented bandel.
+* Auto kill nicks with an authlev > 1, when used by a regular user.
+* Auto kill nicks in the form of "[A-Z][^\\w]" and "[^\\w][A-Z]".
+* Made passwords md5 hashed (this will require you to install a
+php page, otherwise users will not be able to reset their passwords).
+* Added command to auth using an md5 hash
+* Made a DB Dump to initialize the BD.
+
+21-08-2005 V2.0 unstable-0.2
+* Made Q put forced modes when chanflag +m is set.
+* banclear now removes bans from the channel (used to just delete
+them from memory).
+* Fixed the status command to actually return sizes instead of 0.
+
+18-08-2005 V2.0 unstable-0.1
+* Fixed bug in whois, displayed user's nick instead of whois'd nick.
+* Started writing proper (version) changes.
+
+17-08-2005 V2.0 unstable
+* Redone, again, finally a little bit more modular.
+* Full mysql implementation!
+
+21-06-2005 V1.0
+* Once again, rewritten from scratch (note to self: READ DOCUMENTATION)
+
+12-05-2005 V0.9
+* Becuase i love Version numbers, and because i took out a rather nasty and
+big bug ;)
+
+23-03-2005 V0.3
+* Started from scratch, hoping to improve performance :p
+
+29-02-2005 V0.2
+* Bugfixes, forgotten stuff, left overs, etc ;)
+* Documented the new functions a bit.
+
+28-02-2005 V0.1.1
+* Public beta.
+
+25-02-2005 V0.1
+* Alpha.

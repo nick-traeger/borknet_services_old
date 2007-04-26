@@ -1,0 +1,4 @@
+echo "Starting services..."
+export CLASSPATH=${PWD%/*}:$CLASSPATH
+nohup java borknet_services.Start -d &
+echo "Done."
