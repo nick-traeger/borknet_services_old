@@ -1,0 +1,40 @@
+# This is an example tutorial file for the BorkNet Tutor bot.
+#
+# Commands look like @command@
+#
+# Available commands are:
+#
+# @title@Your title here.
+# Titles will be used in the topic, and at the start of the tutorial.
+#
+# @header@Your header here.
+# Headers can be used to title paragraphs.
+#
+# @pause@
+# Pauses the tutorial and allows questions to be answerd.
+#
+# @end@
+# Ends the tutorial and allows questions to be answerd.
+#
+# %channel% will represent the channel the tutorial is being played on.
+#
+# Comments are lines that begin with # - and are ignored
+#
+@title@This is an example tutorial.
+---
+@header@This tutorial will explain the %channel% system.
+Tutorials are held on %channel%, they will detail certain aspects of the network, and will allow users to ask questions to the staff.
+Tutorials will be held every sunday at 20:00 CET (19:00 GMT).
+@pause@
+@header@More information:
+You've just seen how the question system works, tutorials will have regular question breaks, and at the end of every tutorial, there will be a last question round.
+Planned tutorials are:
+Introduction
+The Q Bot (will later be extended to: Services)
+Security
+@pause@
+@header@Even more information:
+We might also translate some of these tutorials to other languages, depending on our userbase.
+Every once and a while we'll also hold special tutorials or dev-chats.
+That's it for tonight.
+@end@

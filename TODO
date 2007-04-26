@@ -1,0 +1,12 @@
+Urgent:
+Fix/Find/Confirm bug in N not deleting a channel that got closed on net resync?
+
+Upgrades:
+Use hashmaps to store module commands instead of arraylists.
+Cleanup mysql queries & indexes to imporve speed (maybe even use a partial memory system?).
+Refactor...lots.
+Update the core system and all modules, so that all traffic passes the core, and can be picked up by othermodules!
+
+
+MemoServ(M)
+HelpServ(G->F and H or just G?)?

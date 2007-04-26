@@ -1,0 +1,81 @@
+/**
+#
+# BorkNet Services Core
+#
+
+#
+# Copyright (C) 2004 Ozafy - ozafy@borknet.org - http://www.borknet.org
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+
+#
+# Thx to:
+# Oberjaeger, as allways :)
+#
+
+*/
+
+
+/*
+
+A very basic command, replies to /msg moo with /notice Moo!
+
+*/
+
+
+import java.io.*;
+import java.util.*;
+import borknet_services.core.*;
+
+/**
+ * Class to load configuration files.
+ * @author Ozafy - ozafy@borknet.org - http://www.borknet.org
+ */
+public class Roulette implements Command
+{
+    /**
+     * Constructs a Loader
+     * @param debug		If we're running in debug.
+     */
+	public Roulette()
+	{
+	}
+
+	public void parse_command(Core C, U Bot, String numeric, String botnum, String username, String params)
+	{
+		Random r = new Random();
+		int i = r.nextInt(6);
+		if(i==5)
+		{
+			C.cmd_dis(numeric, botnum,username, "*BANG*");
+		}
+		else
+		{
+			C.cmd_notice(numeric, botnum, username, "You live!");
+		}
+	}
+
+	public void parse_help(Core C, U Bot, String numeric, String botnum, String username, int lev)
+	{
+		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" Roulette");
+		C.cmd_notice(numeric, botnum, username, "WARNING:");
+		C.cmd_notice(numeric, botnum, username, "This game has a 1/6 chance to disconnect you from the network!");
+	}
+	public void showcommand(Core C, U Bot, String numeric, String botnum, String username, int lev)
+	{
+		C.cmd_notice(numeric, botnum, username, "Roulette - Play a game of Russian roulette.");
+	}
+}

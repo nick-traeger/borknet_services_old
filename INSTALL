@@ -1,0 +1,78 @@
+Installation of the Q bot.
+##########################
+
+Copyright (C) 2004 Ozafy - ozafy@borknet.org - http://www.borknet.org
+---------------------------------------------------------------------
+
+Table Of Contents:
+------------------
+1. Requirements
+2. Preparations
+ 2.1 MySQL
+ 2.2 PHP
+3. Configuration
+4. Running
+5. Closing stuff
+
+
+
+1. Requirements
+===============
+
+Make sure you have installed the JDK 1.5 or higher.
+http://java.sun.com/j2se/1.5.0/download.jsp
+Make sure you have installed MySQL 4.0 or higher.
+http://dev.mysql.com/downloads/
+Make sure you have installed the Java MySQL connector 3.0 or higher.
+(As of writing V3.1 is bugged and will cause an excess memory use,
+and V3.2 was alpha, so we suggest to use 3.0)
+http://dev.mysql.com/downloads/connector/j/3.0.html
+
+
+
+2. Preparations
+===============
+
+ 2.1 MySQL
+ =========
+ create the correct database/user and import the borknet.sql file.
+ after this, run the CreateAccount program, which will create the
+ Services Admin account.
+
+ 2.2 PHP
+ =======
+ since N uses md5 hashes of passwords in it's db, it is not possible to
+ retrieve user passwords. Because of this, we have created a possibility to
+ reset user passwords. When a user issues the requestpassword command, a
+ mail gets sent to the e-mail belonging to that auth account. In this e-mail
+ is a link, which, when clicked, will reset the user's password.
+ for this to work, you'll need to put up the requestpassword.php and
+ /incs/bork_connect.php files on your networks site, and add your networks
+ main address to the config. The links will then look something like
+ http://www.yournet.org/requestpassword.php?user=Username&code=dVrt6g .
+
+
+
+3. Configuration
+================
+
+edit bot.conf.
+
+edit /core/modules/botname/botname.conf for each of the modules.
+
+
+
+4. Running
+==========
+
+./services
+(To turn off debugging/logging remove the flag from the startupline)
+
+
+
+5. Closing stuff
+================
+
+Thank you for downloading this release!
+Please report all bugs to ozafy@borknet.org or irc.borknet.org/BorkNet
+Also feel free to just drop by and comment on the bot :)
