@@ -68,6 +68,9 @@ edit /core/modules/botname/botname.conf for each of the modules.
 ./services
 (To turn off debugging/logging remove the flag from the startupline)
 
+Makes sure you obey the directory structure, that means the Start.class file
+should be in a directory called borknet_services, with all other dirs below.
+
 
 
 5. Closing stuff
