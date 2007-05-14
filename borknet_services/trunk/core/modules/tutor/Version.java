@@ -55,7 +55,7 @@ public class Version implements Command
 	public void parse_command(Core C, Tutor Bot, String numeric, String botnum, String username, String params)
 	{
 		String version1 = C.get_version();
-		String version2 = "Tutor V1.0 (C) 2006 Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
+		String version2 = "Tutor (C) 2006 Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
 		if(params.startsWith("\1"))
 		{
 			version1 = "\1VERSION " + version1 + "\1";

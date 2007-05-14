@@ -53,12 +53,11 @@ public class Whois implements Command
 		try
 		{
 			String nick = result[1];
-			if(nick.equalsIgnoreCase("Q") || nick.equalsIgnoreCase("#Q"))
+			if(nick.equalsIgnoreCase(Bot.get_nick()) || nick.equalsIgnoreCase("#"+Bot.get_nick()))
 			{
-				nick = Bot.get_nick();
-				C.cmd_notice(numeric, botnum, username, nick+" is online right now.");
-				C.cmd_notice(numeric, botnum, username, nick+" is authed as "+nick+".");
-				C.cmd_notice(numeric, botnum, username, nick+" is God.");
+				C.cmd_notice(numeric, botnum, username, Bot.get_nick()+" is online right now.");
+				C.cmd_notice(numeric, botnum, username, Bot.get_nick()+" is authed as "+Bot.get_nick()+".");
+				C.cmd_notice(numeric, botnum, username, Bot.get_nick()+" is God.");
 				return;
 			}
 			//get the user
