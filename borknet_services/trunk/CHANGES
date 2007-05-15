@@ -1,9 +1,13 @@
-15/05/2007
+15/05/2007 REV18
+Tutor: added invite to loading/ending tutorials
+Update version files
+
+15/05/2007 REV17
 Cancelled snircd support for now.
 G: Queue system picks up users already in the channel (including voiced users)
 Q: fixed bug in not picking up a Clearmode
 
-14/05/2007
+14/05/2007 REV16
 Updated Version files to reflect revision system.
 Q: Fixed bug in whois.
 U: Created One Armed Bandit

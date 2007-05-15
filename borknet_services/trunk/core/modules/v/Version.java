@@ -55,7 +55,7 @@ public class Version implements Command
 	public void parse_command(Core C, V Bot, String numeric, String botnum, String username, String params)
 	{
 		String version1 = C.get_version();
-		String version2 = "vHost Module (C) 2005-2007 Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
+		String version2 = "vHost Module (C) Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
 		if(params.startsWith("\1"))
 		{
 			version1 = "\1VERSION " + version1 + "\1";
