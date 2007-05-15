@@ -171,6 +171,15 @@ public class G implements Modules
 			if(channels[n].equals(c.toLowerCase()))
 			{
 				queon[n] = true;
+				//get a list of users currently on the channel
+				String[] users = dbc.getChannelUsers(c);
+				if(!users[0].equals("0"))
+				{
+					for(String u : users)
+					{
+						addUser(u, c);
+					}
+				}
 				return;
 			}
 		}

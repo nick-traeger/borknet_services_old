@@ -163,39 +163,56 @@ public class Server
 	 * @param chan		channel that get's cleared
 	 * @param modes		modes that get cleared
 	 */
-	public void cmode(String chan, String modes)
+	public void cmode(String opernume, String params)
 	{
 		//if another bot then me clears a channel i need to enforce myself, since i'm the big pooba
-		if(dbc.chanExists(chan))
+		String result[] = params.split("\\s");
+		try
 		{
-			String channel[] = dbc.getChanRow(chan);
-			String bans[] = dbc.getBanList(chan);
-			String flags = channel[1];
-			C.cmd_mode(numeric,num, chan , "+o");
-			//did i used to enforce modes? if so, put them back.
-			if(flags.contains("m"))
+			if(result[1].startsWith("#"))
 			{
-				C.cmd_mode_me(numeric,num,"",chan,channel[2]);
-			}
-			if(flags.contains("l"))
-			{
-				C.cmd_limit(numeric,num,chan, Integer.parseInt(channel[6]));
-			}
-			if(flags.contains("k"))
-			{
-				if(!channel[8].equals("0"))
+				String chan = result[1];
+				if(dbc.chanExists(chan))
 				{
-					C.cmd_key(numeric,num,chan, channel[8]);
+					String channel[] = dbc.getChanRow(chan);
+					String bans[] = dbc.getBanList(chan);
+					String flags = channel[1];
+					C.cmd_mode(numeric,numeric+num, chan , "+o");
+					//did i used to enforce modes? if so, put them back.
+					if(flags.contains("m"))
+					{
+						C.cmd_mode_me(numeric,num,"",chan,channel[2]);
+					}
+					if(flags.contains("l"))
+					{
+						C.cmd_limit(numeric,num,chan, Integer.parseInt(channel[6]));
+					}
+					if(flags.contains("k"))
+					{
+						if(!channel[8].equals("0"))
+						{
+							C.cmd_key(numeric,num,chan, channel[8]);
+						}
+					}
+					if(!bans[0].equals("0"))
+					{
+						for(int i=0; i<bans.length; i++)
+						{
+							C.cmd_mode_me(numeric,num,bans[i], chan , "+b");
+						}
+					}
+					return;
 				}
 			}
-			if(!bans[0].equals("0"))
+			else
 			{
-				for(int i=0; i<bans.length; i++)
-				{
-					C.cmd_mode_me(numeric,num,bans[i], chan , "+b");
-				}
+				throw new Exception();
 			}
-			return;
+		}
+		catch(Exception e)
+		{
+			C.printDebug("Exception in Q's cmode!\n");
+			C.debug(e);
 		}
 	}
 
