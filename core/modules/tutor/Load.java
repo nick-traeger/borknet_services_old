@@ -88,6 +88,7 @@ public class Load implements Command
 			String tutorchan = Bot.getTutorChan();
 			String tutorstaff = Bot.getTutorStaffChan();
 			C.cmd_topic(numeric, botnum, tutorchan, "Tonight's tutorial: \""+title+"\" will start at "+Bot.getTime()+".");
+			C.cmd_mode_me(numeric, botnum,"",tutorchan,"-i");
 			C.cmd_privmsg(numeric, botnum, tutorstaff , "Done.");
 		}
 		catch(ArrayIndexOutOfBoundsException a)

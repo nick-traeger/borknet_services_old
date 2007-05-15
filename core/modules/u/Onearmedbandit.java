@@ -28,9 +28,11 @@
 
 */
 
+
 /*
-Version reply, replies with both the Core version and Module version,
-and to both ctcp's and pm's.
+
+A very basic command, replies to /msg moo with /notice Moo!
+
 */
 
 
@@ -42,35 +44,43 @@ import borknet_services.core.*;
  * Class to load configuration files.
  * @author Ozafy - ozafy@borknet.org - http://www.borknet.org
  */
-public class Version implements Command
+public class Onearmedbandit implements Command
 {
     /**
      * Constructs a Loader
      * @param debug		If we're running in debug.
      */
-	public Version()
+	public Onearmedbandit()
 	{
 	}
 
-	public void parse_command(Core C, Tutor Bot, String numeric, String botnum, String username, String params)
+	public void parse_command(Core C, U Bot, String numeric, String botnum, String username, String params)
 	{
-		String version1 = C.get_version();
-		String version2 = "Tutor (C) Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
-		if(params.startsWith("\1"))
+		String[] symbols = {"noodles","mooses","cows","bob","banana","cats"};
+		Random r = new Random();
+		Random s = new Random();
+		Random t = new Random();
+		int i = r.nextInt(6);
+		int j = s.nextInt(6);
+		int k = t.nextInt(6);
+		C.cmd_notice(numeric, botnum, username, "You played: " + symbols[i] + " " + symbols[j] + " "  + symbols[k]);
+		if((i == j) && (j == k))
 		{
-			version1 = "\1VERSION " + version1 + "\1";
-			version2 = "\1VERSION " + version2 + "\1";
+			C.cmd_notice(numeric, botnum, username, "You won!");
 		}
-		C.cmd_notice(numeric, botnum,username,version1);
-		C.cmd_notice(numeric, botnum,username,version2);
+		else
+		{
+			C.cmd_notice(numeric, botnum, username, "You lost!");
+		}
 	}
 
-	public void parse_help(Core C, Tutor Bot, String numeric, String botnum, String username, int lev)
+	public void parse_help(Core C, U Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" version");
+		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" Onearmedbandit");
+		C.cmd_notice(numeric, botnum, username, "Play a game of One Armed Bandit.");
 	}
-	public void showcommand(Core C, Tutor Bot, String numeric, String botnum, String username, int lev)
+	public void showcommand(Core C, U Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "version - Shows the version. - level 2.");
+		C.cmd_notice(numeric, botnum, username, "Onearmedbandit - Play a game of One Armed Bandit.");
 	}
 }

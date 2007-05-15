@@ -64,6 +64,7 @@ public class End implements Command
 		C.cmd_privmsg(numeric, botnum, tutorchan , "Good night, and thanks for attending.");
 		C.cmd_privmsg(numeric, botnum, tutorchan, "---");
 		C.cmd_topic(numeric, botnum, tutorchan, "Tutorials run every sunday at "+Bot.getTime()+".");
+		C.cmd_mode_me(numeric, botnum,"",tutorchan,"+i");
 		Bot.clearQuestions();
 		Bot.stopTutorial();
 		C.cmd_notice(numeric, botnum, username, "Done.");

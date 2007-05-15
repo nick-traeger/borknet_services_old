@@ -44,7 +44,7 @@ import java.sql.*;
 public class Core
 {
 	/** Version reply sent to users */
-	private String version = "The BorkNet Services Core (C) 2005-2006 Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
+	private String version = "The BorkNet Services Core (C) Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
 
 	/** Reads the IRC Server */
 	private BufferedReader IRCir;
