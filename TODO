@@ -5,18 +5,19 @@ Upgrades:
 Use hashmaps to store module commands instead of arraylists.
 Cleanup mysql queries & indexes to imporve speed (maybe even use a partial memory system?).
 Refactor...lots.
-Update the core system and all modules, so that all traffic passes the core, and can be picked up by othermodules!
 
+(C) Userchans should hold voice and op status, not just op.
 (R) Transfer chanlev from L to Q
-(V) Custom vHosts for users linked to Q accounts
+(V) Custom vHosts for users linked to Q accounts -> REQUIRES DB UPDATE
+(Q) Improve limit function -> REQUIRES DB UPDATE
 
-Trojanscan (T)
+Trojanscan (T) -> REQUIRES DB UPDATE
 Custom reg-exes
 Fakeclients to check for onjoin/part messages (silent kill or report)
 
-MemoServ(M)
+MemoServ(M) -> REQUIRES DB UPDATE
 User Memos
 Channel Memos
 
-HelpServ(G->F and H or just G?)?
+HelpServ(G->F and H or just G?)? -> REQUIRES DB UPDATE
 FAQ System
