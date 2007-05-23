@@ -91,11 +91,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_channels WHERE name = ?");
+			pstmt = con.prepareStatement("SELECT name FROM q_channels WHERE name = ?");
 			pstmt.setString(1,chan);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String channel = rs.getString(2);
+			String channel = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -115,11 +115,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
+			pstmt = con.prepareStatement("SELECT authnick FROM auths WHERE authnick = ?");
 			pstmt.setString(1,auth);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String authnick = rs.getString(2);
+			String authnick = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -139,11 +139,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE authnick = ?");
+			pstmt = con.prepareStatement("SELECT nick FROM users WHERE authnick = ?");
 			pstmt.setString(1,auth);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String authnick = rs.getString(2);
+			String authnick = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -163,11 +163,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
+			pstmt = con.prepareStatement("SELECT level FROM auths WHERE authnick = ?");
 			pstmt.setString(1,auth);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			Integer lev = Integer.parseInt(rs.getString(5));
+			Integer lev = Integer.parseInt(rs.getString(1));
 			if(lev>1)
 			{
 				return true;
@@ -194,11 +194,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM servers WHERE numer = ?");
+			pstmt = con.prepareStatement("SELECT service FROM servers WHERE numer = ?");
 			pstmt.setString(1,numeric.substring(0,2));
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			boolean service = Boolean.parseBoolean(rs.getString(5));
+			boolean service = Boolean.parseBoolean(rs.getString(1));
 			if(service)
 			{
 				return true;
@@ -225,11 +225,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_mails");
+			pstmt = con.prepareStatement("SELECT mail FROM q_mails");
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				String bad = rs.getString(2);
+				String bad = rs.getString(1);
 				if(mail.contains(bad))
 				{
 					return true;
@@ -254,11 +254,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_fakeusers WHERE BINARY numer = ?");
+			pstmt = con.prepareStatement("SELECT numer FROM q_fakeusers WHERE BINARY numer = ?");
 			pstmt.setString(1,numer);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String lev = rs.getString(2);
+			String lev = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -278,11 +278,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE nick = ?");
+			pstmt = con.prepareStatement("SELECT nick FROM users WHERE nick = ?");
 			pstmt.setString(1,nick);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String lev = rs.getString(2);
+			String lev = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -302,11 +302,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM servers WHERE BINARY numer = ?");
+			pstmt = con.prepareStatement("SELECT numer FROM servers WHERE BINARY numer = ?");
 			pstmt.setString(1,numer);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String lev = rs.getString(2);
+			String lev = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -326,11 +326,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_jupes WHERE BINARY numer = ?");
+			pstmt = con.prepareStatement("SELECT numer FROM q_jupes WHERE BINARY numer = ?");
 			pstmt.setString(1,numer);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String lev = rs.getString(2);
+			String lev = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -351,12 +351,12 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE BINARY user = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT modes FROM userchans WHERE BINARY user = ? AND channel = ?");
 			pstmt.setString(1,user);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String mode = rs.getString(4);
+			String mode = rs.getString(1);
 			if(mode.equals("o"))
 			{
 				return true;
@@ -384,12 +384,12 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE BINARY user = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT user FROM userchans WHERE BINARY user = ? AND channel = ?");
 			pstmt.setString(1,user);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String mode = rs.getString(4);
+			String mode = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -410,12 +410,12 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM chanfix WHERE host = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT points FROM chanfix WHERE host = ? AND channel = ?");
 			pstmt.setString(1,host);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			int points = Integer.parseInt(rs.getString(4));
+			int points = Integer.parseInt(rs.getString(1));
 			if(points > 25)
 			{
 				return true;
@@ -440,12 +440,12 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM chanfix WHERE host = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT host FROM chanfix WHERE host = ? AND channel = ?");
 			pstmt.setString(1,user);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String chan = rs.getString(2);
+			String chan = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -465,12 +465,12 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE channel = ?");
+			pstmt = con.prepareStatement("SELECT modes FROM userchans WHERE channel = ?");
 			pstmt.setString(1,channel);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				String mode = rs.getString(4);
+				String mode = rs.getString(1);
 				if(mode.equals("o"))
 				{
 					return true;
@@ -495,12 +495,12 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM chanfix WHERE channel = ?");
+			pstmt = con.prepareStatement("SELECT points FROM chanfix WHERE channel = ?");
 			pstmt.setString(1,channel);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				int points = Integer.parseInt(rs.getString(4));
+				int points = Integer.parseInt(rs.getString(1));
 				if(points > 25)
 				{
 					return true;
@@ -525,11 +525,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_trusts WHERE host = ?");
+			pstmt = con.prepareStatement("SELECT host FROM q_trusts WHERE host = ?");
 			pstmt.setString(1,host);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String trusthost = rs.getString(2);
+			String trusthost = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -549,11 +549,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_trusts WHERE auth = ?");
+			pstmt = con.prepareStatement("SELECT auth FROM q_trusts WHERE auth = ?");
 			pstmt.setString(1,auth);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String trustauth = rs.getString(4);
+			String trustauth = rs.getString(1);
 			return true;
 		}
 		catch(Exception e)
@@ -573,11 +573,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_trusts WHERE host = ?");
+			pstmt = con.prepareStatement("SELECT need-ident FROM q_trusts WHERE host = ?");
 			pstmt.setString(1,ip);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			boolean b = Boolean.parseBoolean(rs.getString(6));
+			boolean b = Boolean.parseBoolean(rs.getString(1));
 			return b;
 		}
 		catch(Exception e)
@@ -748,11 +748,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_trusts WHERE host = ?");
+			pstmt = con.prepareStatement("SELECT users FROM q_trusts WHERE host = ?");
 			pstmt.setString(1,host);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			int users = Integer.parseInt(rs.getString(3));
+			int users = Integer.parseInt(rs.getString(1));
 			rs.close();
 			return users;
 		}
@@ -773,15 +773,15 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_challenge WHERE user = ?");
+			pstmt = con.prepareStatement("SELECT challenge,time FROM q_challenge WHERE user = ?");
 			pstmt.setString(1,user);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String chall = rs.getString(3);
+			String chall = rs.getString(1);
 			long btime = System.nanoTime();
 			String time2 = "" + btime;
 			String t = time2.substring(0,10);
-			if(Long.parseLong(rs.getString(4))>=Long.parseLong(t)-60)
+			if(Long.parseLong(rs.getString(2))>=Long.parseLong(t)-60)
 			{
 				rs.close();
 				return chall;
@@ -1437,13 +1437,13 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths");
+			pstmt = con.prepareStatement("SELECT authnick,level FROM auths ORDER BY level DESC");
 			ResultSet rs = pstmt.executeQuery();
 			ArrayList<String> staff = new ArrayList<String>();
 			while(rs.next())
 			{
-				int lev = Integer.parseInt(rs.getString(5));
-				String a = rs.getString(2) + " (";
+				int lev = Integer.parseInt(rs.getString(2));
+				String a = rs.getString(1) + " (";
 				String x = "";
 				if(lev>1)
 				{
