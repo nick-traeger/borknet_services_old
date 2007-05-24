@@ -11,7 +11,10 @@ Refactor... lots
 (R) Transfer chanlev from L to Q
 (V) Custom vHosts for users linked to Q accounts -> REQUIRES DB UPDATE
 (Q) Improve limit function -> REQUIRES DB UPDATE
-(Q) SMTP user/pass
+(Q) Add a rehashable customizable motd file.
+
+LogServ/StatServ (LogServ) -> REQUIRES DB UPDATE
+Keep several stats
 
 Trojanscan (T) -> REQUIRES DB UPDATE
 Custom reg-exes
