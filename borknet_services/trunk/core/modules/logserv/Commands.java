@@ -30,6 +30,7 @@
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import java.text.*;
 import borknet_services.core.*;
 
 
@@ -47,6 +48,8 @@ public class Commands
 	private String numeric = "";
 	private String botnum = "";
 	private String network = "";
+	Format date = new SimpleDateFormat("yyyy-MM-dd");
+	Format time = new SimpleDateFormat("HH:mm:ss");
     public Commands(Core C, Logserv Bot)
 	{
 		this.C = C;
@@ -156,10 +159,11 @@ public class Commands
 	{
         try
         {
+			Date now = new Date();
 			String nick = dbc.getUserNick(user);
-            File logFile = new File(Bot.getLogdir()+channel+".log");
+            File logFile = new File(Bot.getLogdir()+"/"+channel+"."+date.format(now)+".log");
             BufferedWriter bw = new BufferedWriter(new FileWriter(logFile,true));
-            bw.append(nick + " P " + channel + " :"+msg);
+            bw.append("["+time.format(now)+"] " + nick + ": "+msg);
             bw.append("\n");
             bw.flush();
         }
