@@ -1,3 +1,6 @@
+18/10/2007 REV24
+T: Fixed gline issue.
+
 18/10/2007 REV23
 Q: Added the compiled class... *sigh*
 T: Created a rough version of T with a very simple botnet detection.
