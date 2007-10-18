@@ -2737,7 +2737,7 @@ public class DBControl
 				if(Integer.parseInt(rs.getString(4)) + Integer.parseInt(rs.getString(5)) - Integer.parseInt(C.get_time()) < 0)
 				{
 					C.report("Deleting Jupe: '" + rs.getString(2) + "'");
-					delJupe(Bot.get_num(),rs.getString(2));
+					delJupe(rs.getString(2),Bot.get_num());
 				}
 			}
 			pstmt = con.prepareStatement("SELECT * FROM q_challenge");
