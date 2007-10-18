@@ -1,5 +1,10 @@
+18/10/2007 REV23
+Q: Added the compiled class... *sigh*
+T: Created a rough version of T with a very simple botnet detection.
+
 18/10/2007 REV22
 Q: Fixed bug in not properly deleting jupes after they expired.
+
 25/05/2007 REV21
 LogServ: changed file layout and added dates to filenames.
 

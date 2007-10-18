@@ -10,10 +10,11 @@ rem javac core/commands/*.java
 rem javac core/modules/basic/*.java
 rem javac core/modules/bob/*.java
 rem javac core/modules/g/*.java
-javac core/modules/logserv/*.java
-rem javac core/modules/q/*.java
+rem javac core/modules/logserv/*.java
+javac core/modules/q/*.java
 rem javac core/modules/r/*.java
 rem javac core/modules/s/*.java
+javac core/modules/t/*.java
 rem javac core/modules/tutor/*.java
 rem javac core/modules/u/*.java
 rem javac core/modules/v/*.java

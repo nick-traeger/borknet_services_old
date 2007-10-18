@@ -12,13 +12,10 @@ Refactor... lots
 (V) Custom vHosts for users linked to Q accounts -> REQUIRES DB UPDATE
 (Q) Improve limit function -> REQUIRES DB UPDATE
 (Q) Add a rehashable customizable motd file.
+(T) Add Fakeclients to check for onjoin/part messages (silent kill or report)
 
 LogServ/StatServ (LogServ) -> REQUIRES DB UPDATE
 Keep several stats
-
-Trojanscan (T) -> REQUIRES DB UPDATE
-Custom reg-exes
-Fakeclients to check for onjoin/part messages (silent kill or report)
 
 MemoServ(M) -> REQUIRES DB UPDATE
 User Memos
