@@ -88,25 +88,28 @@ public class Q implements Modules
 		//join my channels and set my modes
 		for(int n=0;n<channels.length;n++)
 		{
-			C.cmd_join(numeric, num,channels[n]);
 			String channel[] = dbc.getChanRow(channels[n]);
-			String bans[] = dbc.getBanList(channels[n]);
-			String flags = channel[1];
-			if(flags.contains("m"))
+			if(channel[7].equals("false"))
 			{
-				String modes = channel[2];
-				C.cmd_mode_me(numeric, num,"",channels[n],modes);
-			}
-			if(flags.contains("f"))
-			{
-				String topic = channel[4];
-				C.cmd_topic(numeric, num,channels[n], topic);
-			}
-			if(!bans[0].equals("0"))
-			{
-				for(int i=0; i<bans.length; i++)
+				C.cmd_join(numeric, num,channels[n]);
+				String bans[] = dbc.getBanList(channels[n]);
+				String flags = channel[1];
+				if(flags.contains("m"))
 				{
-					C.cmd_mode_me(numeric, num,bans[i], channels[n] , "+b");
+					String modes = channel[2];
+					C.cmd_mode_me(numeric, num,"",channels[n],modes);
+				}
+				if(flags.contains("f"))
+				{
+					String topic = channel[4];
+					C.cmd_topic(numeric, num,channels[n], topic);
+				}
+				if(!bans[0].equals("0"))
+				{
+					for(int i=0; i<bans.length; i++)
+					{
+						C.cmd_mode_me(numeric, num,bans[i], channels[n] , "+b");
+					}
 				}
 			}
 		}
