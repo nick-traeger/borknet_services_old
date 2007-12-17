@@ -59,7 +59,8 @@ public class CoreModControl
 				{
 					// Convert the file object to a URL
 					File dir = new File(System.getProperty("user.dir")+File.separator+"core"+File.separator+"modules"+File.separator+modulelist.get(n).toLowerCase()+File.separator);
-					URL url = dir.toURL();
+					URI uri = dir.toURI();
+					URL url = uri.toURL();
 					urls = new URL[]{url};
 				}
 				catch (Exception e)
@@ -116,7 +117,8 @@ public class CoreModControl
 				URL[] urls = null;
 				// Convert the file object to a URL
 				File dir = new File(System.getProperty("user.dir")+File.separator+"core"+File.separator+"modules"+File.separator+module.toLowerCase()+File.separator);
-				URL url = dir.toURL();
+				URI uri = dir.toURI();
+				URL url = uri.toURL();
 				urls = new URL[]{url};
 				// Create a new class loader with the directory
 				ClassLoader clsl = new URLClassLoader(urls);
@@ -162,7 +164,8 @@ public class CoreModControl
 				URL[] urls = null;
 				// Convert the file object to a URL
 				File dir = new File(System.getProperty("user.dir")+File.separator+"core"+File.separator+"modules"+File.separator+module.toLowerCase()+File.separator);
-				URL url = dir.toURL();
+				URI uri = dir.toURI();
+				URL url = uri.toURL();
 				urls = new URL[]{url};
 				// Create a new class loader with the directory
 				ClassLoader clsl = new URLClassLoader(urls);

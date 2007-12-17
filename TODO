@@ -1,5 +1,6 @@
 Urgent:
 Fix/Find/Confirm bug in N not deleting a channel that got closed on net resync?
+check compatibility with higher mysql connector
 
 Upgrades:
 Use hashmaps to store module commands instead of arraylists.

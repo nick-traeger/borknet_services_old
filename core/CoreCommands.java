@@ -54,7 +54,8 @@ public class CoreCommands
 		{
 			// Convert the file object to a URL
 			File dir = new File(System.getProperty("user.dir")+File.separator+"core"+File.separator+"commands"+File.separator);
-			URL url = dir.toURL();
+			URI uri = dir.toURI();
+			URL url = uri.toURL();
 			urls = new URL[]{url};
 			CmdLoader cl = new CmdLoader("core/cmds");
 			String[] commandlist = cl.getVars();
