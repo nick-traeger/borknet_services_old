@@ -1,6 +1,8 @@
 Urgent:
 Fix/Find/Confirm bug in N not deleting a channel that got closed on net resync?
 check compatibility with higher mysql connector
+check db cleanup error
+add automated message to Q informing users when an admin uses changepass
 
 Upgrades:
 Use hashmaps to store module commands instead of arraylists.
