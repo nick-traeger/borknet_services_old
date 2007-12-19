@@ -1,3 +1,6 @@
+19/12/2007 REV27
+Q: No longer deletes anything that expires (including glines and trusts) untill I can pinpoint the error.
+
 17/12/2007 REV26
 Updated entire package to Java 1.6
 REV25 Will NOT work

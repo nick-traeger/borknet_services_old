@@ -2679,6 +2679,8 @@ public class DBControl
 
 	public void clean()
 	{
+		//disabled untill i can pinpoint the error
+		/*
 		long btime = System.nanoTime();
 		String time2 = "" + btime;
 		String t = time2.substring(0,10);
@@ -2750,6 +2752,7 @@ public class DBControl
 				}
 			}
 			C.report("Cleanup complete!");
+
 		}
 		catch(Exception e)
 		{
@@ -2757,6 +2760,7 @@ public class DBControl
 			e.printStackTrace();
 			System.exit(0);
 		}
+		*/
 	}
 
 	public String encrypt(String plaintext)
