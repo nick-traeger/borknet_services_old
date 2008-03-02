@@ -75,7 +75,6 @@ public class T implements Modules
 		C.cmd_create_service(numeric, num, nick, ident, host, "+oXwkgdr",description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
-		C.cmd_privmsg(numeric, num, reportchan, "Size matters not. Look at me. Judge me by my size, do you? Hmm? Hmm. And well you should not. For my ally is the Force, and a powerful ally it is.");
 		C.ircsend(numeric + " EA");
 	}
 

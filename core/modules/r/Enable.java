@@ -95,7 +95,7 @@ public class Enable implements Command
 	{
 		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "enable <0|1> - Enable the request system.");
+			C.cmd_notice(numeric, botnum, username, "enable <0|1> - Enable the request system. - level 100");
 		}
 	}
 }

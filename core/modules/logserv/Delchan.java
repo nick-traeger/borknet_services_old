@@ -118,7 +118,7 @@ public class Delchan implements Command
 	{
 		if(lev>99)
 		{
-			C.cmd_notice(numeric, botnum, username, "delchan #channel - Makes the bot part #channel.");
+			C.cmd_notice(numeric, botnum, username, "delchan #channel - Makes the bot part #channel. - level 100");
 		}
 	}
 }

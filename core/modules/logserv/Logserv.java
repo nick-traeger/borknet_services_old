@@ -92,12 +92,12 @@ public class Logserv implements Modules
 
 	public void stop()
 	{
-		C.cmd_kill_service(numeric+num, "Quit: Soon will I rest, yes, forever sleep. Earned it I have. Twilight is upon me, soon night must fall.");
+		C.cmd_kill_service(numeric+num, "Quit: Look! Over there! You're rights are being violated even more! *poof*");
 	}
 
 	public void hstop()
 	{
-		C.cmd_kill_service(numeric+num, "Quit: Happens to every guy sometimes this does.");
+		C.cmd_kill_service(numeric+num, "Quit: Look! Over there! You're rights are being violated even more! *poof*");
 	}
 
 	private void load_conf()

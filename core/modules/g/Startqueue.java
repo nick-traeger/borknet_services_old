@@ -99,7 +99,7 @@ public class Startqueue implements Command
 	{
 		if(lev > 1)
 		{
-			C.cmd_notice(numeric, botnum, username, "startqueue <#channel> - Enable the queue.");
+			C.cmd_notice(numeric, botnum, username, "startqueue <#channel> - Enable the queue. - level 2");
 		}
 	}
 }

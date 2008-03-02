@@ -98,7 +98,7 @@ public class Stopqueue implements Command
 	{
 		if(lev > 1)
 		{
-			C.cmd_notice(numeric, botnum, username, "stopqueue <#channel> - Stops the queue.");
+			C.cmd_notice(numeric, botnum, username, "stopqueue <#channel> - Stops the queue. - level 2");
 		}
 	}
 }

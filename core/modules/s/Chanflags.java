@@ -159,7 +159,7 @@ public class Chanflags implements Command
 	{
 		if(lev>99)
 		{
-			C.cmd_notice(numeric, botnum, username, "chanflags <#channel> [flag] - Will change/display #channel's flags.");
+			C.cmd_notice(numeric, botnum, username, "chanflags <#channel> [flag] - Will change/display #channel's flags. - level 100");
 		}
 	}
 }

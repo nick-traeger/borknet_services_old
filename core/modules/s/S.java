@@ -97,12 +97,12 @@ public class S implements Modules
 
 	public void stop()
 	{
-		C.cmd_kill_service(numeric+num, "Quit: Soon will I rest, yes, forever sleep. Earned it I have. Twilight is upon me, soon night must fall.");
+		C.cmd_kill_service(numeric+num, "Quit: Spam away you trolls.");
 	}
 
 	public void hstop()
 	{
-		C.cmd_kill_service(numeric+num, "Quit: Happens to every guy sometimes this does.");
+		C.cmd_kill_service(numeric+num, "Quit: My bananas noes!");
 	}
 
 	private void load_conf()

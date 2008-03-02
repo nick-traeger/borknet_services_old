@@ -118,7 +118,7 @@ public class Next implements Command
 	{
 		if(lev > 1)
 		{
-			C.cmd_notice(numeric, botnum, username, "next <#channel> - Gets the next user from the queue.");
+			C.cmd_notice(numeric, botnum, username, "next <#channel> - Gets the next user from the queue. - level 2");
 		}
 	}
 }
