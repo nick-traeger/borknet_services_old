@@ -175,30 +175,19 @@ public class Server
 		C.ircsend(Bot.get_num() + " SH " + numeric + " " + ident + " " + vhost);
 	}
 
-	public String encrypt(String plaintext)
+	public String encrypt(String str)
 	{
-		byte[] defaultBytes = plaintext.getBytes();
-		try
+		long hash = 0;
+		long x    = 0;
+		for(int i = 0; i < str.length(); i++)
 		{
-			MessageDigest algorithm = MessageDigest.getInstance("MD5");
-			algorithm.reset();
-			algorithm.update(defaultBytes);
-			byte messageDigest[] = algorithm.digest();
-			StringBuffer hexString = new StringBuffer();
-			for (int i=0;i<messageDigest.length;i++)
+			hash = (hash << 4) + str.charAt(i);
+			if((x = hash & 0xF0000000L) != 0)
 			{
-				String hex = Integer.toHexString(0xFF & messageDigest[i]);
-				if(hex.length()==1) hexString.append('0');
-				hexString.append(hex);
+				hash ^= (x >> 24);
 			}
-			return hexString.toString();
+			hash &= ~x;
 		}
-		catch(NoSuchAlgorithmException e)
-		{
-			System.out.println ( "Error encrypting password." );
-			e.printStackTrace();
-			System.exit(0);
-			return "0";
-		}
+		return hash+"";
 	}
 }

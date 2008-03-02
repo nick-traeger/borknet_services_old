@@ -97,7 +97,7 @@ public class Forcehost implements Command
 			//he didn't, Yoda time!
 			catch(Exception e)
 			{
-				C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" sethost <ident> <host>");
+				C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" forcehost <nickname> <ident> <host>");
 				return;
 			}
 		}
@@ -113,7 +113,7 @@ public class Forcehost implements Command
 	{
 		if(lev>949)
 		{
-			C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" forcehost <nick> <ident> <host>");
+			C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" forcehost <nickname> <ident> <host>");
 		}
 		else
 		{

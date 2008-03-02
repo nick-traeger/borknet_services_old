@@ -101,7 +101,7 @@ public class Remove implements Command
 	{
 		if(lev > 1)
 		{
-			C.cmd_notice(numeric, botnum, username, "remove <nick> <#channel> - Removes a ticket from a user.");
+			C.cmd_notice(numeric, botnum, username, "remove <nick> <#channel> - Removes a ticket from a user. - level 2");
 		}
 	}
 }

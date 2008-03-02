@@ -81,7 +81,7 @@ public class Chanmodes implements Command
 				else
 				{
 					//clean nasty flags
-					Pattern pat = Pattern.compile("[^cimnrstuCDN+-]");
+					Pattern pat = Pattern.compile("[^cimnrstuCDNMT+-]");
 					Matcher m = pat.matcher(flags);
 					StringBuffer sb = new StringBuffer();
 					boolean nok = m.find();

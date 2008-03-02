@@ -1,3 +1,13 @@
+02/03/2008 REV28
+Q: Now accepts snircd channel modes.
+Global: added userlevel display to all showcommands.
+V: Changed hashing method.
+T: Removed join message.
+S: Changed Quit Message.
+LogServ: Changed Quit Message.
+Asuka support dropped.
+Snircd now officially supported.
+
 19/12/2007 REV27
 Q: No longer deletes anything that expires (including glines and trusts) untill I can pinpoint the error.
 

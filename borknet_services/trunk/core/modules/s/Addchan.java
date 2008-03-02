@@ -99,7 +99,7 @@ public class Addchan implements Command
 	{
 		if(lev>99)
 		{
-			C.cmd_notice(numeric, botnum, username, "addchan #channel - Makes the bot join #channel.");
+			C.cmd_notice(numeric, botnum, username, "addchan #channel - Makes the bot join #channel. - level 100");
 		}
 	}
 }

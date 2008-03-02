@@ -107,7 +107,7 @@ public class Ticket implements Command
 	{
 		if(lev > 1)
 		{
-			C.cmd_notice(numeric, botnum, username, "ticket <nick> <#channel> - Issue a ticket to a user.");
+			C.cmd_notice(numeric, botnum, username, "ticket <nick> <#channel> - Issue a ticket to a user. - level 2");
 		}
 	}
 }

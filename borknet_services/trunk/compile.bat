@@ -3,7 +3,7 @@ rem
 rem Used for compiling on windows.
 rem 
 
-set CLASSPATH=J:\borknet
+set CLASSPATH=D:\borknet
 
 javac *.java
 javac core/*.java
