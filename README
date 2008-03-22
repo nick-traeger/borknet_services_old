@@ -27,8 +27,7 @@ Table Of Contents:
 1. About
 ========
 
-This is a complete set of modulair services for ircu u2.10.11.07+asuka(1.2.1)
-and u2.10.12.10+snircd(1.3.0).
+This is a complete set of modulair services for ircu u2.10.12.10+snircd(1.3.4)
 So far it includes:
 N: Services Core: it can load/unload and rehash the modules.
 
@@ -40,14 +39,13 @@ N: Services Core: it can load/unload and rehash the modules.
          set of oper commands.
       S: Spamscan: It will scan channels for spam & advertising and will take 
          appropriate action against malicious persons.
-      R: Request Service: It can be used to request L (QuakeNet Dev-Com
-         https://svn.quakenet.org/svn/quakenet/lightweight/ ),
-         Q and S.
+      R: Request Service: It can be used to request Q and S.
       G: Help Service: It can issue tickets for help channels, and has a queue
          system.
       U: Game Service: It has a few games built in and can be easely expanded.
   Tutor: Tutorial Service: can give automated tutorials to a channel.
-      V: vHost service (only compatible with snircd, DISABLE on asuka).
+      T: Trojanscan Module: It scans users against bot patterns.
+      V: vHost service.
 
 2. Installation
 ===============
@@ -57,11 +55,7 @@ Please read the included INSTALL file.
 3. Thanks
 =========
 
-Alex <Oberjaeger> Kenny.
-Not only does he sponsor me with the hardware needed for this project,
-he's also been good moral support and a great friend.
-
-The rest of the BorkNet goons.
+The BorkNet goons.
 If it wasn't for them to release my misplaced kills and G-lines, I 
 would have given up on this project long ago.
 
