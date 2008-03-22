@@ -99,13 +99,6 @@ public class Server
 			String me = params.substring(2, params.indexOf(":")-1);
 			privmsg(me, command, message);
 		}
-		if(params.startsWith("O "))
-		{
-			//AWAAA P #feds :bla
-			String message = params.substring(params.indexOf(":") +1);
-			String me = params.substring(2, params.indexOf(":")-1);
-			notice(me, command, message);
-		}
 	}
 
 	/**
@@ -117,15 +110,5 @@ public class Server
 	public void privmsg(String me, String username, String message)
 	{
 		CC.privmsg(me, username, message);
-	}
-	public void notice(String me, String username, String message)
-	{
-		if(username.equals(Bot.getLnum()))
-		{
-			if(message.matches("[\\w]+[\\s]+[agmnov]+"))
-			{
-				Bot.lAccess(message);
-			}
-		}
 	}
 }

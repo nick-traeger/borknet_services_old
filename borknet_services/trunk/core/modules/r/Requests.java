@@ -78,20 +78,12 @@ public class Requests implements Command
 				C.cmd_notice(numeric, botnum, username, "You do not meet the requirements for S, please try again later.");
 				return;
 			}
-			boolean l = dbc.isOnChan(Bot.getLnum(),chan);
-			boolean q = dbc.isOnChan(Bot.getQnum(),chan);
-			if(!l && !q)
+			if(!dbc.isOnChan(Bot.getQnum(),chan))
 			{
-				C.cmd_notice(numeric, botnum, username, "You need L or Q in order to be able to request S.");
+				C.cmd_notice(numeric, botnum, username, "You need Q in order to be able to request S.");
 				return;
 			}
-			else if(l)
-			{
-				C.cmd_notice(numeric, botnum, username, "Checking your L access. This may take a while, please be patient...");
-				Bot.addLCheckForS(username,user[4],chan);
-				return;
-			}
-			else if(q)
+			else
 			{
 				C.cmd_notice(numeric, botnum, username, "Checking your Q access. This may take a while, please be patient...");
 				String acc[] = dbc.getAccRow(user[4], chan);

@@ -78,18 +78,9 @@ public class Requestq implements Command
 				C.cmd_notice(numeric, botnum, username, "You do not meet the requirements for Q, please try again later.");
 				return;
 			}
-			if(dbc.isOnChan(Bot.getLnum(),chan))
-			{
-				C.cmd_notice(numeric, botnum, username, "Checking your L access. This may take a while, please be patient...");
-				Bot.addLCheckForQ(username,user[4],chan);
-				return;
-			}
-			else
-			{
-				C.cmd_notice(numeric, botnum, username, "Requirements met, Q should be added. Contact #help should further assistance be required.");
-				CoreModControl mod = C.get_modCore();
-				mod.parse(numeric+botnum+" P "+Bot.getQnum()+" :addchan "+chan+" #"+user[4]);
-			}
+			C.cmd_notice(numeric, botnum, username, "Requirements met, Q should be added. Contact #help should further assistance be required.");
+			CoreModControl mod = C.get_modCore();
+			mod.parse(numeric+botnum+" P "+Bot.getQnum()+" :addchan "+chan+" #"+user[4]);
 		}
 		catch(ArrayIndexOutOfBoundsException e)
 		{

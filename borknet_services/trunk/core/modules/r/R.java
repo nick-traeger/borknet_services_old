@@ -48,19 +48,10 @@ public class R implements Modules
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
 
-	private String lnum = "0";
-	private int lusers = 0;
 	private String qnum = "0";
 	private int qusers = 0;
 	private String snum = "0";
 	private int susers = 0;
-
-	private ArrayList<String> qcheck = new ArrayList<String>();
-	private ArrayList<String> qchans = new ArrayList<String>();
-	private ArrayList<String> qrusrs = new ArrayList<String>();
-	private ArrayList<String> scheck = new ArrayList<String>();
-	private ArrayList<String> schans = new ArrayList<String>();
-	private ArrayList<String> srusrs = new ArrayList<String>();
 
 	private boolean enable = true;
 
@@ -120,8 +111,6 @@ public class R implements Modules
 			host = dataSrc.getProperty("host");
 			pass = dataSrc.getProperty("pass");
 			num = dataSrc.getProperty("numeric");
-			lnum = dataSrc.getProperty("lnum");
-			lusers = Integer.parseInt(dataSrc.getProperty("lusers"));
 			qnum = dataSrc.getProperty("qnum");
 			qusers = Integer.parseInt(dataSrc.getProperty("qusers"));
 			snum = dataSrc.getProperty("snum");
@@ -171,10 +160,6 @@ public class R implements Modules
 	{
 		//gets issued every 24 hours, can be used to cleanup the db, or other stuff
 	}
-	public int getLusers()
-	{
-		return lusers;
-	}
 	public int getQusers()
 	{
 		return qusers;
@@ -182,10 +167,6 @@ public class R implements Modules
 	public int getSusers()
 	{
 		return susers;
-	}
-	public String getLnum()
-	{
-		return lnum;
 	}
 	public String getQnum()
 	{
@@ -195,63 +176,6 @@ public class R implements Modules
 	{
 		return snum;
 	}
-	public void addLCheckForS(String username, String auth, String chan)
-	{
-		scheck.add(auth.toLowerCase());
-		schans.add(chan);
-		srusrs.add(username);
-		C.cmd_privmsg(numeric, num, lnum, "chanlev "+chan+" #"+auth);
-	}
-	public void addLCheckForQ(String username, String auth, String chan)
-	{
-		qcheck.add(auth.toLowerCase());
-		qchans.add(chan);
-		qrusrs.add(username);
-		C.cmd_privmsg(numeric, num, lnum, "chanlev "+chan+" #"+auth);
-	}
-	public void lAccess(String access)
-	{
-		String acc[] = access.replaceAll("\\W+",",").split(",");
-		int i = qcheck.indexOf(acc[0].toLowerCase());
-		if(i != -1)
-		{
-			if(acc[1].contains("n"))
-			{
-				C.cmd_notice(numeric, num, qrusrs.get(i), "Requirements met, Q should be added. Contact #help should further assistance be required.");
-				CoreModControl mod = C.get_modCore();
-				mod.parse(numeric+num+" P "+qnum+" :addchan "+qchans.get(i)+" #"+qcheck.get(i));
-				C.cmd_notice(numeric, num, qrusrs.get(i), "Request completed. Q added and L deleted.");
-				C.cmd_privmsg(numeric, num, lnum, "delchan "+qchans.get(i));
-			}
-			else
-			{
-				C.cmd_notice(numeric, num, qrusrs.get(i), "You don't hold the +n (owner) flag on that channel.");
-			}
-			qcheck.remove(i);
-			qchans.remove(i);
-			qrusrs.remove(i);
-			return;
-		}
-		i = scheck.indexOf(acc[0].toLowerCase());
-		if(i != -1)
-		{
-			if(acc[1].contains("n"))
-			{
-				C.cmd_notice(numeric, num, srusrs.get(i), "Requirements met, S should be added. Contact #help should further assistance be required.");
-				CoreModControl mod = C.get_modCore();
-				mod.parse(numeric+num+" P "+snum+" :addchan "+schans.get(i));
-			}
-			else
-			{
-				C.cmd_notice(numeric, num, srusrs.get(i), "You don't hold the +n (owner) flag on that channel.");
-			}
-			scheck.remove(i);
-			schans.remove(i);
-			srusrs.remove(i);
-			return;
-		}
-	}
-
 	public void enable(boolean state)
 	{
 		enable = state;

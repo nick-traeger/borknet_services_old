@@ -1,3 +1,6 @@
+22/03/2008 REV29
+R: Removed support for L & Logserv.
+
 02/03/2008 REV28
 Q: Now accepts snircd channel modes.
 Global: added userlevel display to all showcommands.
