@@ -573,22 +573,25 @@ public class Core
 
 						String chan = params.substring(params.indexOf("#"),params.indexOf(" ",params.indexOf("#")));
 						String users = "";
-						//no bans
-						if(params.indexOf(" :") == -1)
-						{
-							users = params.substring(params.lastIndexOf(" ")+1);
-						}
-						//bans
-						else
-						{
-							users = params.substring(params.substring(0,params.indexOf(" :")).lastIndexOf(" ")+1,params.indexOf(" :"));
-						}
 						String result[] = params.split("\\s");
-						if(result.length>3 && result[3].startsWith("+") && EA)
+						if(result.length > 3)
 						{
-							reop(chan);
+							//no bans
+							if(params.indexOf(" :") == -1)
+							{
+								users = params.substring(params.lastIndexOf(" ")+1);
+							}
+							//bans
+							else
+							{
+								users = params.substring(params.substring(0,params.indexOf(" :")).lastIndexOf(" ")+1,params.indexOf(" :"));
+							}
+							if(result[3].startsWith("+") && EA)
+							{
+								reop(chan);
+							}
+							ser.bline(chan, users);
 						}
-						ser.bline(chan, users);
 					}
 					//a mode change
 					if(params.startsWith("M "))
