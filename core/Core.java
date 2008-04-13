@@ -735,34 +735,7 @@ public class Core
 		//AB G !1123885135.436177 releases.borknet.org 1123885135.436177
 		if(msg.startsWith("G !"))
 		{
-			//strip the msg from extras
-			String pingmsg = msg.substring(3);
-			//split the time the server sent into 2 parts
-			String time1a = pingmsg.substring(0,pingmsg.indexOf('.'));
-			String time1b = pingmsg.substring(pingmsg.indexOf('.')+1,pingmsg.indexOf(' '));
-			//local system time
-			long time = System.nanoTime();
-			String time2 = "" + time;
-			//split the local time
-			String time2a = time2.substring(0,10);
-			String time2b = time2.substring(10,16);
-			String diff = "0.";
-			//calc the diff
-			long dif = Long.parseLong(time2a)-Long.parseLong(time1a);
-			diff = dif + ".";
-			long dif2 = Long.parseLong(time2b)-Long.parseLong(time1b);
-			String temp = "" + dif2;
-			int difleng = 6 - temp.length();
-			for(int n = 0; n<difleng; n++)
-			{
-				diff += "0";
-			}
-			diff += dif2;
-			//old reply left in because um, i dno
-			//also noticed it had a HUGE error, but hey, it worked :p
-			//String pongmsg = botNumeric + " Z " + botNumeric + " AB " + msg.substring(3) + " 0 " + msg.substring(3);
-			String pongmsg = numeric + " Z " + numeric + " AB " + time1a+"."+time1b + " " + diff + " " + time2a+"."+time2b;
-			//I hate ping reply's O_<
+			String pongmsg = numeric + " Z :" + host;
 			IRCor.write(pongmsg);
 			IRCor.newLine();
 			IRCor.flush();
