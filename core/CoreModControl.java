@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 package borknet_services.core;
 import java.util.*;
@@ -92,7 +86,6 @@ public class CoreModControl
 					catch (Exception e)
 					{
 						C.debug(e);
-						System.exit(1);
 					}
 				}
 				m.setCmnds(modcmds,modcmdn);
@@ -101,7 +94,6 @@ public class CoreModControl
 			catch (Exception e)
 			{
 				C.debug(e);
-				System.exit(1);
 			}
 		}
 	}
@@ -224,7 +216,7 @@ public class CoreModControl
 			modules.get(key).stop();
 		}
 		modules.clear();
-		C.report("Modules stoped.");
+		C.report("Modules stopped.");
 	}
 
 	private String initialUpper(String s)

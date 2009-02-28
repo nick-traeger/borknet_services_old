@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -49,11 +43,11 @@ public class Stafflist implements Command
 
 	public void parse_command(Core C, Q Bot, DBControl dbc, String numeric, String botnum, String target, String username, String params)
 	{
-		String staff[] = dbc.getStaffList();
+		ArrayList<String> staff = dbc.getStaffList();
 		C.cmd_notice(numeric, botnum, username, "Staff list:");
-		for(int n=0; n<staff.length; n++)
+		for(String s : staff)
 		{
-			C.cmd_notice(numeric, botnum, username, staff[n]);
+			C.cmd_notice(numeric, botnum, username, s);
 		}
 		C.cmd_notice(numeric, botnum, username, "End of list.");
 		return;
@@ -66,6 +60,6 @@ public class Stafflist implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "stafflist - List all staff members.");
+		C.cmd_notice(numeric, botnum, username, "STAFFLIST           List all staff members.");
 	}
 }

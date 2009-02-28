@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.sql.*;
 import java.util.*;
@@ -39,20 +33,19 @@ import borknet_services.core.*;
  */
 public class DBControl
 {
-	/** Database server */
-	private String server;
-	/** Database user */
-	private String user;
-	/** Database password */
-	private String password;
-	/** Database */
-	private String db;
 	/** Database connection */
 	private Connection con;
 	/** Main bot */
 	private Core C;
 
+	private CoreDBControl dbc;
+
 	private S Bot;
+
+	private HashMap<String,String> channels = new HashMap<String,String>();
+	private HashMap<String,String> userMsg = new HashMap<String,String>();
+	private HashMap<String,Integer> userPoints = new HashMap<String,Integer>();
+	private int kills = 1;
 
 	/**
 	 * Constructs a Database connection.
@@ -63,15 +56,15 @@ public class DBControl
 	 * @param debug			Are we debugging?
 	 * @param B				Main bot
 	 */
-	public DBControl(Core C, S Bot, Connection con)
+	public DBControl(Core C, S Bot)
 	{
 		try
 		{
 			this.C = C;
 			this.Bot = Bot;
-			this.con = con;
-			PreparedStatement pstmt = con.prepareStatement("TRUNCATE TABLE `s_users`");
-			pstmt.execute();
+			this.dbc = C.get_dbc();
+			this.con = dbc.getCon();
+			load();
 		}
 		catch(Exception e)
 		{
@@ -88,20 +81,7 @@ public class DBControl
 	 */
 	public boolean chanExists(String chan)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE channel = ?");
-			pstmt.setString(1,chan);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String channel = rs.getString(2);
-			return true;
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
+		return dbc.chanExists(chan);
 	}
 
 	/**
@@ -112,20 +92,7 @@ public class DBControl
 	 */
 	public boolean SchanExists(String chan)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_channels WHERE name = ?");
-			pstmt.setString(1,chan);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String channel = rs.getString(2);
-			return true;
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
+		return channels.containsKey(chan.toLowerCase());
 	}
 
 	/**
@@ -136,30 +103,20 @@ public class DBControl
 	 */
 	public int getAuthLev(String numer)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE BINARY numer = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
-			pstmt.setString(1,rs.getString(6));
-			rs = pstmt.executeQuery();
-			rs.first();
-			return Integer.parseInt(rs.getString(5));
-		}
-		catch(Exception e)
-		{
-			return 0;
-		}
+		return dbc.getAuthLev(numer);
 	}
 
 	/**
 	 * Get all registerd channels
 	 * @return			an array of all registerd channels
 	 */
-	public String[] getChanTable()
+	public List<String> getChanTable()
+	{
+		List<String> keys = new ArrayList<String>(channels.keySet());
+		return keys;
+	}
+
+	public void load()
 	{
 		try
 		{
@@ -169,99 +126,44 @@ public class DBControl
 			ArrayList<String> a = new ArrayList<String>();
 			while(rs.next())
 			{
-				a.add(rs.getString(2));
+				channels.put(rs.getString("name").toLowerCase(),rs.getString("flags"));
 			}
-			if(a.size()>0)
-			{
-				String[] r = (String[]) a.toArray(new String[ a.size() ]);
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-			}
+
 		}
 		catch(Exception e)
 		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+			System.out.println ( "Error executing sql statement" );
+			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 
 	public String getChanFlags(String channel)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_channels WHERE name = ?");
-			pstmt.setString(1,channel);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String flags = rs.getString(3);
-			return flags;
-		}
-		catch(Exception e)
-		{
-			return "0";
-		}
+		return channels.get(channel.toLowerCase());
 	}
 
 	public int getPoints(String user)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_users WHERE BINARY username = ?");
-			pstmt.setString(1,user);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int p = Integer.parseInt(rs.getString(3));
-			return p;
-		}
-		catch(Exception e)
-		{
-			return 0;
-		}
+		return userPoints.get(user);
 	}
 
-	public String getID()
+	public int getID()
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_kills");
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int p = Integer.parseInt(rs.getString(2));
-			pstmt = con.prepareStatement("UPDATE s_kills SET kills = ? WHERE kills = ?");
-			pstmt.setString(1,(p+1)+"");
-			pstmt.setString(2,p+"");
-			pstmt.executeUpdate();
-			return p+"";
-		}
-		catch(Exception e)
-		{
-			return "0";
-		}
+		return kills++;
+	}
+
+	public boolean isService(String numeric)
+	{
+		return dbc.isService(numeric);
 	}
 
 	public boolean repeat(String user, String msg)
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_users WHERE BINARY username = ?");
-			pstmt.setString(1,user);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String m = rs.getString(4);
-			if(m.equals(msg))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			String m = userMsg.get(user);
+			return m.equals(msg);
 		}
 		catch(Exception e)
 		{
@@ -277,6 +179,7 @@ public class DBControl
 			pstmt = con.prepareStatement("DELETE FROM s_channels WHERE name = ? LIMIT 1");
 			pstmt.setString(1,chan);
 			pstmt.executeUpdate();
+			channels.remove(chan.toLowerCase());
 		}
 		catch ( SQLException e )
 		{
@@ -288,72 +191,33 @@ public class DBControl
 
 	public void delPoints(int points)
 	{
-		try
+		List<String> users = new ArrayList<String>(userPoints.keySet());
+		for(String user : users)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_users");
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next())
+			int p = userPoints.get(user);
+			p -= points;
+			if(p<0)
 			{
-				String user = rs.getString(2);
-				int p = Integer.parseInt(rs.getString(3));
-				p -= points;
-				if(p<0)
-				{
-					pstmt = con.prepareStatement("DELETE FROM s_users WHERE BINARY username = ?");
-					pstmt.setString(1,user);
-					pstmt.executeUpdate();
-				}
-				else
-				{
-					pstmt = con.prepareStatement("UPDATE s_users SET points = ? WHERE BINARY username = ?");
-					pstmt.setString(1,p+"");
-					pstmt.setString(2,user);
-					pstmt.executeUpdate();
-				}
+				userPoints.remove(user);
+				userMsg.remove(user);
 			}
-		}
-		catch(Exception e)
-		{
-			System.out.println ( "Error executing sql statement" );
-			e.printStackTrace();
-			System.exit(0);
+			else
+			{
+				userPoints.put(user,p);
+			}
 		}
 	}
 
 	public void addPoints(String user, int points)
 	{
-		try
+		Integer p = userPoints.get(user);
+		if(p instanceof Integer)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_users WHERE BINARY username = ?");
-			pstmt.setString(1,user);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int p = Integer.parseInt(rs.getString(3));
-			p += points;
-			pstmt = con.prepareStatement("UPDATE s_users SET points = ? WHERE BINARY username = ?");
-			pstmt.setString(1,p+"");
-			pstmt.setString(2,user);
-			pstmt.executeUpdate();
+			userPoints.put(user,(points+p));
 		}
-		catch(Exception e)
+		else
 		{
-			try
-			{
-				PreparedStatement pstmt;
-				pstmt = con.prepareStatement("INSERT INTO s_users VALUES ('',?,?,?)");
-				pstmt.setString(1,user);
-				pstmt.setString(2,points+"");
-				pstmt.setString(3,"");
-				pstmt.executeUpdate();
-			}
-			catch ( SQLException sqle )
-			{
-				System.out.println ( "Error executing sql statement" );
-				sqle.printStackTrace();
-				System.exit(0);
-			}
+			userPoints.put(user,points);
 		}
 	}
 
@@ -362,10 +226,11 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO s_channels VALUES ('',?,?)");
+			pstmt = con.prepareStatement("INSERT INTO s_channels VALUES (?,?)");
 			pstmt.setString(1,chan);
 			pstmt.setString(2,flags);
 			pstmt.executeUpdate();
+			channels.put(chan.toLowerCase(),flags);
 		}
 		catch ( SQLException e )
 		{
@@ -384,6 +249,7 @@ public class DBControl
 			pstmt.setString(1,flags);
 			pstmt.setString(2,chan);
 			pstmt.executeUpdate();
+			channels.put(chan.toLowerCase(),flags);
 			return true;
 		}
 		catch ( SQLException e )
@@ -392,21 +258,9 @@ public class DBControl
 		}
 	}
 
-	public boolean setMsg(String user, String msg)
+	public void setMsg(String user, String msg)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("UPDATE s_users SET message = ? WHERE BINARY username = ?");
-			pstmt.setString(1,msg);
-			pstmt.setString(2,user);
-			pstmt.executeUpdate();
-			return true;
-		}
-		catch ( SQLException e )
-		{
-			return false;
-		}
+		userMsg.put(user,msg);
 	}
 
 	/**
@@ -417,43 +271,18 @@ public class DBControl
 	 */
 	public int getChanUsers(String channel)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM userchans WHERE channel = ?");
-			pstmt.setString(1,channel);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return users;
-		}
-		catch(Exception e)
-		{
-			return 0;
-		}
+		return dbc.getChanUsers(channel);
 	}
 
 	public void clean()
 	{
-		try
+		List<String> channelkeys = new ArrayList<String>(channels.keySet());
+		for(String channel : channelkeys)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM s_channels");
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next())
+			if(getChanUsers(channel) < 1)
 			{
-				if(getChanUsers(rs.getString(2)) < 1)
-				{
-					delChan(rs.getString(2));
-				}
+				delChan(channel);
 			}
-		}
-		catch(Exception e)
-		{
-			System.out.println ( "Error executing sql statement" );
-			e.printStackTrace();
-			System.exit(0);
 		}
 	}
 	/**
@@ -464,18 +293,6 @@ public class DBControl
 	 */
 	public String[] getUserRow(String numer)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE BINARY numer = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
+		return dbc.getUserRow(numer);
 	}
 }

@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -59,7 +53,7 @@ public class Delchan implements Command
 				//bad, bad coding
 				if(!channel.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
 				String flags = dbc.getChanFlags(channel);
-				if(!flags.equals("0"))
+				if(flags instanceof String)
 				{
 					dbc.delChan(channel);
 					String part = "";
@@ -118,7 +112,7 @@ public class Delchan implements Command
 	{
 		if(lev>99)
 		{
-			C.cmd_notice(numeric, botnum, username, "delchan #channel - Makes the bot part #channel. - level 100");
+			C.cmd_notice(numeric, botnum, username, "DELCHAN             Makes the bot part a channel. - level 100");
 		}
 	}
 }

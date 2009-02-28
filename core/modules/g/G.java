@@ -20,13 +20,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
+
+/*
+The actual module core.
+It loads the config.
+Creates all needed classes.
+
+It can be used to create both servers & clients.
+*/
+
 import java.io.*;
 import java.util.*;
 import java.sql.*;
@@ -45,13 +48,8 @@ public class G implements Modules
 	private String numeric = "";
 	private String num = "AAA";
 	private String reportchan = "";
-	private String channels[] = {"0","0"};
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
-
-	private boolean[] queon = { false,false };
-	private String[] quelast = { "0","0" };
-	private ArrayList<LinkedList<String>> queues = new ArrayList<LinkedList<String>>();
 
 	public G()
 	{
@@ -62,20 +60,11 @@ public class G implements Modules
 		this.C = C;
 		load_conf();
 		numeric = C.get_numeric();
-		dbc = new DBControl(C,this,C.getDBCon());
+		dbc = new DBControl(C,this);
 		ser = new Server(C,dbc,this);
 		C.cmd_create_service(num, nick, ident, host, "+oXwkgsr", description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
-		queon = new boolean[channels.length];
-		quelast = new String[channels.length];
-		for(int n=0; n<channels.length; n++)
-		{
-			C.cmd_join(numeric, num, channels[n]);
-			queon[n] = false;
-			quelast[n] = "0";
-			queues.add(new LinkedList<String>());
-		}
 	}
 
 	public void setCmnds(ArrayList<Object> cmds,ArrayList<String> cmdn)
@@ -118,7 +107,6 @@ public class G implements Modules
 			host = dataSrc.getProperty("host");
 			pass = dataSrc.getProperty("pass");
 			num = dataSrc.getProperty("numeric");
-			channels = dataSrc.getProperty("channels").toLowerCase().split(",");
 		}
 		catch(Exception e)
 		{
@@ -156,107 +144,16 @@ public class G implements Modules
 	{
 		return host;
 	}
-	public void clean()
-	{
-		//gets issued every 24 hours, can be used to cleanup the db, or other stuff
-	}
-	public DBControl getDBC()
+	public DBControl get_dbc()
 	{
 		return dbc;
 	}
-	public void addQueue(String c)
+	public void clean()
 	{
-		for(int n=0; n<channels.length; n++)
-		{
-			if(channels[n].equals(c.toLowerCase()))
-			{
-				queon[n] = true;
-				//get a list of users currently on the channel
-				String[] users = dbc.getChannelUsers(c);
-				if(!users[0].equals("0"))
-				{
-					for(String u : users)
-					{
-						addUser(u, c);
-					}
-				}
-				return;
-			}
-		}
-	}
-	public void delQueue(String c)
-	{
-		for(int n=0; n<channels.length; n++)
-		{
-			if(channels[n].equals(c.toLowerCase()))
-			{
-				queon[n] = false;
-				return;
-			}
-		}
-	}
-	public void addUser(String u, String c)
-	{
-		for(int n=0; n<channels.length; n++)
-		{
-			if(channels[n].equals(c.toLowerCase()))
-			{
-				queues.get(n).offer(u);
-				return;
-			}
-		}
-	}
-	public String getUser(String c)
-	{
-		for(int n=0; n<channels.length; n++)
-		{
-			if(channels[n].equals(c.toLowerCase()))
-			{
-				quelast[n] = queues.get(n).poll();
-				return quelast[n];
-			}
-		}
-		return "0";
-	}
-	public String getPrevUser(String c)
-	{
-		for(int n=0; n<channels.length; n++)
-		{
-			if(channels[n].equals(c.toLowerCase()))
-			{
-				return quelast[n];
-			}
-		}
-		return "0";
-	}
-	public boolean onChan(String c)
-	{
-		for(int n=0; n<channels.length; n++)
-		{
-			if(channels[n].equals(c.toLowerCase()))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	public boolean hasQueue(String c)
-	{
-		for(int n=0; n<channels.length; n++)
-		{
-			if(channels[n].equals(c.toLowerCase()))
-			{
-				return queon[n];
-			}
-		}
-		return false;
 	}
 
 	public void reop(String chan)
 	{
-		if(onChan(chan))
-		{
-			C.cmd_mode(numeric, numeric+num , chan , "+o");
-		}
+		//gets issued if services got restarted during a split for resync reasons.
 	}
 }

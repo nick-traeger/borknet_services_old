@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 /*
@@ -76,23 +70,8 @@ public class Commands
 		String tutorchan = Bot.getTutorChan();
 		String tutorstaff = Bot.getTutorStaffChan();
 		ArrayList<String> questions = Bot.getQuestions();
-		if(user[4].equals("0"))
-		{
-			if(Bot.getTutorial())
-			{
-				C.cmd_privmsg(numeric, botnum,tutorstaff,"Question #"+questions.size()+": " +user[1]+" asked: "+message);
-				Bot.addQuestion(user[1]+" asked: "+message);
-				C.cmd_notice(numeric, botnum,username,"Your question has been relayed to the "+tutorchan+" staff.");
-				return;
-			}
-			else
-			{
-				C.cmd_notice(numeric, botnum,username,"There is currently no tutorial running.");
-				return;
-			}
-		}
-		String auth[] = dbc.getAuthRow(user[4]);
-		if(Integer.parseInt(auth[3]) < 2)
+		int lev = dbc.getAuthLev(username);
+		if(lev < 2)
 		{
 			if(Bot.getTutorial())
 			{
@@ -134,11 +113,6 @@ public class Commands
 			if(compo > -1)
 			{
 				Command ccommand = (Command) cmds.get(compo);
-				int lev = 0;
-				if(!user[4].equals("0"))
-				{
-					lev = Integer.parseInt(auth[3]);
-				}
 				ccommand.parse_help(C,Bot,numeric,botnum,username,lev);
 			}
 			else
@@ -150,11 +124,7 @@ public class Commands
 		if(command.equals("showcommands"))
 		{
 			C.cmd_notice(numeric, botnum,username,"The following commands are available to you:");
-			int lev = 0;
-			if(!user[4].equals("0"))
-			{
-				lev = Integer.parseInt(auth[3]);
-			}
+			C.cmd_notice(numeric, botnum,username,"For more information on a specific command, type HELP <command>:");
 			for(int n=0; n<cmds.size(); n++)
 			{
 				Command ccommand = (Command) cmds.get(n);

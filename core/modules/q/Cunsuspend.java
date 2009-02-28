@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Cunsuspend implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >899)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >899)
 		{
 			try
 			{
@@ -64,7 +58,8 @@ public class Cunsuspend implements Command
 				String channel = result[1];
 				//fucking shity coding this next line :D
 				if(!channel.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
-				if(dbc.chanExists(channel))
+				String[] chanrow = dbc.getChanRow(channel);
+				if(!chanrow[0].equals("0") && chanrow[7].equals("1"))
 				{
 					dbc.delChan(channel);
 					C.cmd_notice(numeric, botnum,username, "Done.");
@@ -106,7 +101,7 @@ public class Cunsuspend implements Command
 	{
 		if(lev > 899)
 		{
-			C.cmd_notice(numeric, botnum, username, "cunsuspend <#channel> - Unsuspend a channel. - level 900.");
+			C.cmd_notice(numeric, botnum, username, "CUNSUSPEND          Unsuspend a channel. - level 900.");
 		}
 	}
 }

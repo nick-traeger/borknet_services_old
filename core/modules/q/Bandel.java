@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -112,7 +106,7 @@ public class Bandel implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "bandel <#channel> <#number> - Deletes ban #number from the banlist.");
+			C.cmd_notice(numeric, botnum, username, "BANDEL              Deletes a ban from the banlist.");
 		}
 	}
 

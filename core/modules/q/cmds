@@ -1,6 +1,6 @@
 Hello
 Requestpassword
-Shade
+Resetpassword
 Auth
 Challenge
 Challengeauth
@@ -33,16 +33,18 @@ Move
 Recover
 Requestowner
 Moo
+Userflags
 Chaninfo
 Addchan
 Delchan
+Cyclechannels
 Say
 Act
 Gline
 Glist
 Ungline
 Authinfo
-Stats
+Serverlist
 Splitlist
 Splitdel
 Chanfix

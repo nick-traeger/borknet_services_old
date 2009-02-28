@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -68,7 +62,7 @@ public class Defcon implements Command
 				return;
 			}
 			String auth[] = dbc.getAuthRow(user[4]);
-			if(Integer.parseInt(auth[3]) > 998 && Boolean.parseBoolean(user[5]))
+			if(Integer.parseInt(auth[3]) > 998 && user[5].equals("1"))
 			{
 				if(lev>0 && lev < 6)
 				{
@@ -151,7 +145,7 @@ public class Defcon implements Command
 				return;
 			}
 			String auth[] = dbc.getAuthRow(user[4]);
-			if(Integer.parseInt(auth[3]) > 949 && Boolean.parseBoolean(user[5]))
+			if(Integer.parseInt(auth[3]) > 949 && user[5].equals("1"))
 			{
 				int lev = Bot.getDefCon();
 				C.cmd_notice(numeric, botnum,username, "The current defcon level is:");
@@ -203,7 +197,7 @@ public class Defcon implements Command
 	{
 		if(lev > 998)
 		{
-			C.cmd_notice(numeric, botnum, username, "defcon <#level> - Secure the network. - level 999.");
+			C.cmd_notice(numeric, botnum, username, "DEFCON              Secure the network. - level 999.");
 		}
 	}
 }

@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -59,7 +53,7 @@ public class Op implements Command
 			String user[] = dbc.getUserRow(username);
 			//users access
 			String acc = get_access(user[4], channel, dbc);
-			if(acc.contains("o") || acc.contains("a") || acc.contains("n") || acc.contains("m") || Boolean.parseBoolean(user[5]))
+			if(acc.contains("o") || acc.contains("a") || acc.contains("n") || acc.contains("m") || user[5].equals("1"))
 			{
 				C.cmd_mode_me(numeric, botnum, username, channel , "+o");
 				C.cmd_notice(numeric, botnum, username, "Done.");
@@ -91,11 +85,7 @@ public class Op implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "op <#channel> - Gives you +o (op) on a channel.");
-		}
-		else
-		{
-			C.cmd_notice(numeric, botnum, username, "This command is either unknown, or you need to be opered up to use it.");
+			C.cmd_notice(numeric, botnum, username, "OP                  Gives you +o (op) on a channel.");
 		}
 	}
 

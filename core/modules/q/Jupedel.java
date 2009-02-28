@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Jupedel implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >949)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >949)
 		{
 			String[] result = params.split("\\s");
 			try
@@ -70,7 +64,7 @@ public class Jupedel implements Command
 			//he didn't, Yoda time!
 			catch(ArrayIndexOutOfBoundsException e)
 			{
-				C.cmd_notice(numeric, botnum,username, "/msg " + Bot.get_nick() + " unjupe <pattern>");
+				C.cmd_notice(numeric, botnum,username, "/msg " + Bot.get_nick() + " jupedel <pattern>");
 				return;
 			}
 		}
@@ -86,7 +80,7 @@ public class Jupedel implements Command
 	{
 		if(lev > 949)
 		{
-			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " unjupe <pattern>");
+			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " jupedel <pattern>");
 		}
 		else
 		{
@@ -97,7 +91,7 @@ public class Jupedel implements Command
 	{
 		if(lev > 949)
 		{
-			C.cmd_notice(numeric, botnum, username, "unjupe <pattern> - Removes all jupes matching a given pattern. - level 950.");
+			C.cmd_notice(numeric, botnum, username, "JUPEDEL             Removes all jupes matching a given pattern. - level 950.");
 		}
 	}
 }

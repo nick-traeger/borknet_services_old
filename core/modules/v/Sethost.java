@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 
@@ -73,13 +67,7 @@ public class Sethost implements Command
 				String host = result[2];
 				if(ident.matches("[\\w]*") && host.matches("[\\w.]*"))
 				{
-					//C.set_host(numeric ,username ,ident ,vhost);
-					C.ircsend(Bot.get_num() + " SH " + username + " " + ident + " " + host);
-					if(!user[3].contains("h"))
-					{
-						C.get_dbc().setUserField(username, 3, user[3]+"h");
-					}
-					C.get_dbc().setUserField(username, 8, ident+"@"+host);
+					C.cmd_sethost(username, ident, host, user[3]);
 					C.cmd_notice(numeric, botnum, username, "Done.");
 				}
 				else
@@ -90,15 +78,22 @@ public class Sethost implements Command
 			//he didn't, Yoda time!
 			catch(Exception e)
 			{
-				C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" sethost <ident> <host>");
-				return;
+				C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " sethost <ident> <host>");
 			}
 		}
 		//user doesn't have access, that bastard!
 		else
 		{
-			C.cmd_notice(numeric, botnum, username, "This command is either unknown, or you need to be opered up to use it.");
-			return;
+			if (!auth[8].equals("0"))
+			{
+				String host[] = auth[8].split("@");
+				C.cmd_sethost(username, host[0], host[1], user[3]);
+				C.cmd_notice(numeric, botnum, username, "Done.");
+			}
+			else
+			{
+				C.cmd_notice(numeric, botnum, username, "Your account does not have a custom vHost.");
+			}
 		}
 	}
 
@@ -110,14 +105,19 @@ public class Sethost implements Command
 		}
 		else
 		{
-			C.cmd_notice(numeric, botnum, username, "This command is either unknown, or you need to be opered up to use it.");
+			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " sethost");
+			C.cmd_notice(numeric, botnum, username, "Applies the custom vhost linked to your account.");
 		}
 	}
 	public void showcommand(Core C, V Bot, String numeric, String botnum, String username, int lev)
 	{
-		if(lev>1)
+		if (lev > 1)
 		{
-			C.cmd_notice(numeric, botnum, username, "sethost <ident> <host> - makes the bot set your ident and host - level 2.");
+			C.cmd_notice(numeric, botnum, username, "SETHOST             Makes the bot set your ident and host - level 2.");
+		}
+		else if (lev > 0)
+		{
+			C.cmd_notice(numeric, botnum, username, "SETHOST             Applies the custom vhost linked to your account.");
 		}
 	}
 }

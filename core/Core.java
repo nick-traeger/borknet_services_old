@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 package borknet_services.core;
 import java.io.*;
@@ -61,7 +55,11 @@ public class Core
 	/** Seperate deamon to send mails */
 	private CoreMail mail;
 	/** Create mail daemon */
-	private Thread th1;
+	private Thread mailThread;
+	/** Internal Timer */
+	private CoreTimer timer;
+	/** Create mail daemon */
+	private Thread timerThread;
 
 	/** Bot Description */
 	private String description = "";
@@ -87,8 +85,6 @@ public class Core
 	private String mailport = "";
 	/** Name of the network the bot is connecting to */
 	private String network = "";
-	/** Main website of the network we're connecting to */
-	private String website = "";
 	/** Users needed to request Q */
 	private int rusers = 5;
 	/** Database server */
@@ -126,6 +122,8 @@ public class Core
 	/** logging stuff */
     private Logger logger = Logger.getLogger("");
     private FileHandler fh;
+    private SimpleDateFormat format = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
+    private SimpleDateFormat sqlformat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     /**
      * Constructs an IRCClient.
      * @param dataSrc	Holds all the configuration file settings.
@@ -179,7 +177,8 @@ public class Core
 	{
 		if(debug)
 		{
-			logger.info(s);
+			java.util.Date now = new java.util.Date();
+			logger.info("["+format.format(now)+"]"+s);
 		}
 	}
 
@@ -227,7 +226,6 @@ public class Core
 			mailserver = dataSrc.getProperty("mailserver");
 			mailport = dataSrc.getProperty("mailport");
 			network = dataSrc.getProperty("network");
-			website = dataSrc.getProperty("website");
 			dbserv = dataSrc.getProperty("dbserv");
 			dbuser = dataSrc.getProperty("dbuser");
 			dbpass = dataSrc.getProperty("dbpass");
@@ -257,10 +255,14 @@ public class Core
 		ser = new CoreServer(this, dbc);
 		//create the mail sending class and deamon it.
 		mail = new CoreMail();
-		th1 = new Thread(mail);
-		th1.setDaemon(true);
-		th1.start();
+		mailThread = new Thread(mail);
+		mailThread.setDaemon(true);
+		mailThread.start();
 		mail.setCore(this);
+		timer = new CoreTimer(this);
+		Thread timerThread = new Thread(timer);
+		timerThread.setDaemon(true);
+		timerThread.start();
 	}
 
     /**
@@ -270,24 +272,17 @@ public class Core
      */
 	private void connect(String serverHostname, int serverPort)
 	{
-		//open socket
-		try
-		{
-			IRCServerS = new Socket(serverHostname, serverPort);
-		}
-		catch(Exception e)
-		{
-			printDebug("error connecting to IRC server");
-			debug(e);
-			System.exit(0);
-		}
 		InputStream IRCis = null;
 		OutputStream IRCos = null;
 		//check for input output streams
 		try
 		{
+			IRCServerS = new Socket(serverHostname, serverPort);
 			IRCis = IRCServerS.getInputStream();
 			IRCos = IRCServerS.getOutputStream();
+			//make the buffers
+			IRCir = new BufferedReader(new InputStreamReader(IRCis,"ISO-8859-1"));
+			IRCor = new BufferedWriter(new OutputStreamWriter(IRCos,"ISO-8859-1"));
 		}
 		catch(Exception e)
 		{
@@ -295,9 +290,6 @@ public class Core
 			debug(e);
 			System.exit(0);
 		}
-		//make the buffers
-		IRCir = new BufferedReader(new InputStreamReader(IRCis));
-		IRCor = new BufferedWriter(new OutputStreamWriter(IRCos));
 		return;
 	}
 
@@ -354,7 +346,7 @@ public class Core
 			printDebug("[>out<] >> PASS " + pass);
 			bw.write("PASS " + pass);
 			bw.newLine();
-			printDebug("[>---<] >> *** Identificate the Service...");
+			printDebug("[>---<] >> *** Identify the Service...");
 			//get system time and split it
 			long time = System.nanoTime();
 			String time2 = "" + time;
@@ -363,7 +355,7 @@ public class Core
 			printDebug("[>out<] >> SERVER " + host + " 1 " + time2a + " " + time2a + " J10 " + numeric + "]]] +s :" + description);
 			bw.write("SERVER " + host + " 1 " + time2a + " " + time2a + " J10 " + numeric + "]]] +s :" + description);
 			bw.newLine();
-			dbc.addServer(numeric,host,"0","true");
+			dbc.addServer(numeric,host,"0",true);
 			printDebug("[>---<] >> *** Sending EB");
 			printDebug("[>out<] >> " + numeric + " EB");
 			bw.write(numeric + " EB");
@@ -554,8 +546,12 @@ public class Core
 					{
 						//[>in <] >> AB B #BorkNet 949217470 +tncCNu ABBh8,ABBhz,ABBhn:v,ACAAT:o,ACAAV,ABAXs :%InsanitySane!*@sexplay.dk *!juliusjule@sexplay.dk naimex!*@sexplay.dk
 						//[>in <] >> AB B #BorkNet 949217470 ABBh8,ABBhz,ABBhn:v,ACAAT:o,ACAAV,ABAXs :%InsanitySane!*@sexplay.dk *!juliusjule@sexplay.dk naimex!*@sexplay.dk
+						//wtf at these:
+						//[>in <] >> AD B #Tutorial 0 +mtinDCN ADAAA
+						//[>in <] >> AD B #avpoe 0 ADATI
+						//[>in <] >> AD B #help 1 ADAAA:o
 						/* a problem arises if a server splits, services (Q) get restarted during the split,
-						   and they join a (now) empty channel (because of the split). the TS on our uplink will be
+						   and they join a (now) empty channel (because of the split). the TS on our link will be
 						   younger then the ts on the rejoining server, so we lose our modes.
 						   Possible solutions:
 						   a) if this happens, the B line will have a mode string, so we can find the channels that way,
@@ -569,8 +565,10 @@ public class Core
 
 
 						   We're going for a.
-						*/
 
+						   another problem surfaced where the timestamp being burst was a 0 or a 1. I have no idea why, however
+						   this causes deops aswell. another fix was put inplace.
+						*/
 						String chan = params.substring(params.indexOf("#"),params.indexOf(" ",params.indexOf("#")));
 						String users = "";
 						String result[] = params.split("\\s");
@@ -586,7 +584,7 @@ public class Core
 							{
 								users = params.substring(params.substring(0,params.indexOf(" :")).lastIndexOf(" ")+1,params.indexOf(" :"));
 							}
-							if(result[3].startsWith("+") && EA)
+							if(EA && (result[3].startsWith("+") || result[2].length() < 2))
 							{
 								reop(chan);
 							}
@@ -743,9 +741,6 @@ public class Core
 			IRCor.newLine();
 			IRCor.flush();
 			printDebug("[>out<] >> " + pongmsg);
-			//teehee
-			printDebug("[>---<] >> Ping Pong");
-			gotPing();
 			return true;
 		}
 		return false;
@@ -757,6 +752,7 @@ public class Core
 	public void rehash()
 	{
 		mod.stop();
+		timer.stop();
 		logoff();
 		disconnect();
 		EA = false;
@@ -843,15 +839,6 @@ public class Core
 	public String get_net()
 	{
 		return network;
-	}
-
-    /**
-     * Get the network website
-     * @return network website
-     */
-	public String get_web()
-	{
-		return website;
 	}
 
     /**
@@ -1021,6 +1008,24 @@ public class Core
 	public void set_info(String info)
 	{
 		this.info = info;
+	}
+
+    /**
+     * Get the EA
+     * @return the current logon info line
+     */
+	public boolean get_EA()
+	{
+		return EA;
+	}
+
+    /**
+     * Get the EA
+     * @return the current logon info line
+     */
+	public boolean get_debug()
+	{
+		return debug;
 	}
 
     /**
@@ -1276,7 +1281,7 @@ public class Core
 	{
 		//AB S lightweight.borknet.org 2 0 1123847781 P10 [lAAD +s :The lean, mean opping machine.
 		ircsend(numeric + " S " + host + " 2 0 " + get_time() + " P10 "+numer+"AAD +s :Juped.");
-		dbc.addServer(numer,host,numeric,"true");
+		dbc.addServer(numer,host,numeric,true);
 	}
 
     /**
@@ -1289,7 +1294,7 @@ public class Core
 	{
 		//AB S lightweight.borknet.org 2 0 1123847781 P10 [lAAD +s :The lean, mean opping machine.
 		ircsend(numeric + " S " + host + " 3 0 " + get_time() + " P10 "+numer+"AAD +s :Juped.");
-		dbc.addServer(numer,host,numeric,"true");
+		dbc.addServer(numer,host,numeric,true);
 	}
 
     /**
@@ -1319,9 +1324,9 @@ public class Core
      * @param user			user's numeric
      * @param why		reason why we're killing him/her/it
      */
-     public void cmd_dis(String num, String user, String why)
+     public void cmd_dis(String user, String why)
 	{
-		ircsend(numeric + num + " D " + user + " : ("  + why + ")");
+		ircsend(numeric + " D " + user + " : ("  + why + ")");
 		dbc.delUser(user);
 	}
 
@@ -1330,9 +1335,9 @@ public class Core
      * @param user			user's numeric
      * @param why		reason why we're killing him/her/it
      */
-     public void cmd_dis(String numeric, String num, String user, String why)
+     public void cmd_dis(String numeric, String user, String why)
 	{
-		ircsend(numeric + num + " D " + user + " : ("  + why + ")");
+		ircsend(numeric + " D " + user + " : ("  + why + ")");
 		dbc.delUser(user);
 	}
 
@@ -1477,7 +1482,7 @@ public class Core
 	{
 		String time = get_time();
 		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + nick + " B]AAAB " + numeric+num+" :" + desc);
-		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,"true",numeric,"0.0.0.0","0");
+		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,true,numeric,"0.0.0.0","0");
 	}
 
     /**
@@ -1491,7 +1496,21 @@ public class Core
 	{
 		String time = get_time();
 		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + nick + " B]AAAB " + numeric+num+" :" + desc);
-		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,"true",numeric,"0.0.0.0","0");
+		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,true,numeric,"0.0.0.0","0");
+	}
+
+    /**
+     * create a fake user
+     * @param nick		fake nickname
+     * @param ident		fake ident
+     * @param host		fake host
+     * @param desc		fake description
+     */
+	public void cmd_create_service(String numeric, String num, String nick, String ident, String host, String ip, String modes, String desc)
+	{
+		String time = get_time();
+		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + nick + " "+base64Encode(ipToInt(ip))+" " + numeric+num+" :" + desc);
+		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,true,numeric,"0.0.0.0","0");
 	}
 
     /**
@@ -1519,7 +1538,7 @@ public class Core
 	{
 		String time = get_time();
 		ircsend(numeric + " S " + host + " 2 0 " + time + " J10 " + num + "]]] +s :"+desc);
-		dbc.addServer(num,host,numeric,"true");
+		dbc.addServer(num,host,numeric,true);
 	}
 
     /**
@@ -1533,6 +1552,16 @@ public class Core
 		dbc.delServer(host);
 	}
 
+	public void cmd_sethost(String num, String ident, String host, String modes)
+	{
+		ircsend(numeric + " SH " + num + " " + ident + " " + host);
+		if (!modes.contains("h"))
+		{
+			dbc.setUserField(num, 3, modes + "h");
+		}
+		dbc.setUserField(num, 8, ident + "@" + host);
+	}
+
     /**
      * get the system time
      *
@@ -1540,31 +1569,33 @@ public class Core
      */
 	public String get_time()
 	{
-		long time = System.nanoTime();
-		String time2 = "" + time;
-		return time2.substring(0,10);
+		Calendar cal = Calendar.getInstance();
+		long l = (cal.getTimeInMillis() / 1000);
+		return l+"";
 	}
 
     /**
      * gets executed every ping (90 seconds)
      */
-	private void gotPing()
+	public void timerTick()
 	{
-		if(cleaner == 1000)
+		if(cleaner == 960)
 		{
-			dbc.save("24h-backup");
+			java.util.Date now = new java.util.Date();
+			dbc.save(sqlformat.format(now));
 			mod.clean();
 			cleaner = 0;
+			System.gc();
 			return;
 		}
-		ser.gotPing();
+		ser.timerTick();
 		cleaner++;
 	}
 
 	/**
 	 * Base64 decoding
 	 */
-	public String base64_decode(String numer)
+	public String base64Decode(String numer)
 	{
 		char num[] = numer.toCharArray();
 		int base64n = 0;
@@ -1620,6 +1651,38 @@ public class Core
 		return base64n+"";
 	}
 
+	public String base64Encode(Integer numer)
+	{
+		String base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]";
+		char base[] = base64.toCharArray();
+		String encoded = "";
+		while(numer>0)
+		{
+			int index = numer%64;
+			encoded = base[index] + encoded;
+			numer = (int) Math.ceil(numer/64);
+		}
+		return encoded;
+
+	}
+
+	public Integer ipToInt(String addr)
+	{
+		String[] addrArray = addr.split("\\.");
+		int num = 0;
+		for (int i=0;i<addrArray.length;i++)
+		{
+			int power = 3-i;
+			num += ((Integer.parseInt(addrArray[i])%256 * Math.pow(256,power)));
+		}
+		return num;
+	}
+
+	public String intToIp(int i)
+	{
+		return ((i >> 24 ) & 0xFF) + "." + ((i >> 16 ) & 0xFF) + "." + ((i >> 8 ) & 0xFF) + "." + (i & 0xFF);
+	}
+
     /**
      * process the End of Burst
      */
@@ -1629,7 +1692,7 @@ public class Core
 		String time = get_time();
 		//create myself
 		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " +oXwkgdr " + nick + " B]AAAB " + numeric+corenum+" :" + description);
-		dbc.addUser(numeric+corenum, nick,ident+"@"+host,"+oXwkgdr",nick,"true",numeric,"127.0.0.1","0");
+		dbc.addUser(numeric+corenum, nick,ident+"@"+host,"+oXwkgdr",nick,true,numeric,"127.0.0.1","0");
 		dbc.setAuthField(nick,5, get_time());
 		//join my debugchannel
 		cmd_join(corenum,reportchan);

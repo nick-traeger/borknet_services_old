@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -113,6 +107,7 @@ public class Authinfo implements Command
 		if(lev > 99)
 		{
 			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " authinfo <#username> [new info]");
+			C.cmd_notice(numeric, botnum,username, "To clear the current infoline set it to 0");
 		}
 		else
 		{
@@ -123,7 +118,7 @@ public class Authinfo implements Command
 	{
 		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "authinfo <#username> [new info] - Changes the user's info. - level 100.");
+			C.cmd_notice(numeric, botnum, username, "AUTHINFO            Changes the user's info. - level 100.");
 		}
 	}
 }

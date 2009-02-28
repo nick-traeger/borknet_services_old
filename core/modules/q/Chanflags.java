@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -58,7 +52,11 @@ public class Chanflags implements Command
 			return;
 		}
 		//is he oper?
-		boolean isop = Boolean.parseBoolean(userinfo[5]);
+		boolean isop = false;
+		if(userinfo[5].equals("1"))
+		{
+			isop = true;
+		}
 		try
 		{
 			//get some info from what the user asks
@@ -240,7 +238,7 @@ public class Chanflags implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "chanflags <#channel> [+/-flags] - Shows or changes a channel's flags.");
+			C.cmd_notice(numeric, botnum, username, "CHANFLAGS           Shows or changes a channel's flags.");
 		}
 	}
 

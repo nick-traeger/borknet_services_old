@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -63,7 +57,7 @@ public class Whois implements Command
 			//get the user
 			String user[] = dbc.getUserRow(username);
 			//is he op?
-			boolean isop = Boolean.parseBoolean(user[5]);
+			boolean isop = user[5].equals("1");
 			//what's his authlev?
 			int lev = 0;
 			if(!user[4].equals("0"))
@@ -84,7 +78,7 @@ public class Whois implements Command
 				//he exists!
 				else
 				{
-					String userinfo[][] = dbc.getUserRowsViaAuth(auth[0]);
+					ArrayList<String[]> userinfo = dbc.getUserRowsViaAuth(auth[0]);
 					if(Integer.parseInt(auth[3])>1)
 					{
 						C.cmd_notice(numeric, botnum, username, auth[0] + " is " + C.get_net() + " Staff.");
@@ -102,7 +96,7 @@ public class Whois implements Command
 					//he's a boss
 					if(Integer.parseInt(auth[3])>998)
 					{
-						C.cmd_notice(numeric, botnum, username, auth[0] + " is a Services Admin.");
+						C.cmd_notice(numeric, botnum, username, auth[0] + " is a Services Administrator.");
 					}
 					//he's my daddy <3
 					if(Integer.parseInt(auth[3])>999)
@@ -110,12 +104,12 @@ public class Whois implements Command
 						C.cmd_notice(numeric, botnum, username, auth[0] + " is a Services Developer.");
 					}
 					//and he's online!
-					if(!userinfo[0][0].equals("0"))
+					if(userinfo.size()>0)
 					{
 						C.cmd_notice(numeric, botnum, username, "There are users authed with that id.");
-						for(int n=0; n<userinfo.length; n++)
+						for(String[] userinfoline : userinfo)
 						{
-							C.cmd_notice(numeric, botnum, username, userinfo[n][1] + " is authed as " + auth[0]);
+							C.cmd_notice(numeric, botnum, username, userinfoline[1] + " is authed as " + auth[0]);
 						}
 					}
 					//he's a helper or above
@@ -134,40 +128,48 @@ public class Whois implements Command
 						//give more crap
 						C.cmd_notice(numeric, botnum, username, "Authlevel: " + Integer.parseInt(auth[3]));
 						C.cmd_notice(numeric, botnum, username, "Authmail: " + auth[2]);
-						C.cmd_notice(numeric, botnum, username, "Suspended: " + auth[4]);
+						C.cmd_notice(numeric, botnum, username, "Suspended: " + (auth[4].equals("1") ? "True" : "False"));
 						if(!auth[6].equals("0"))
 						{
 							C.cmd_notice(numeric, botnum, username, "Extra Info: " + auth[6]);
+						}
+						if(!auth[7].equals("0"))
+						{
+							C.cmd_notice(numeric, botnum, username, "Userflags: +" + auth[7]);
 						}
 						if(dbc.authHasTrust(auth[0]))
 						{
 							C.cmd_notice(numeric, botnum, username, auth[0] + " is trusted.");
 						}
-						if(!userinfo[0][0].equals("0"))
+						if(userinfo.size()>0)
 						{
-							for(int n=0; n<userinfo.length; n++)
+							for(String userinfoline[] : userinfo)
 							{
-								if(userinfo.length>1)
+								if(userinfo.size()>1)
 								{
-									C.cmd_notice(numeric, botnum, username, "----- "+userinfo[n][1]+" -----");
+									C.cmd_notice(numeric, botnum, username, "----- "+userinfoline[1]+" -----");
 								}
-								C.cmd_notice(numeric, botnum, username, "Host: " + userinfo[n][2]);
-								if(!userinfo[n][8].equals("0"))
+								C.cmd_notice(numeric, botnum, username, "Host: " + userinfoline[2]);
+								if(!userinfoline[8].equals("0"))
 								{
-									C.cmd_notice(numeric, botnum, username, "Fakehost: " + userinfo[n][8]);
+									C.cmd_notice(numeric, botnum, username, "Fakehost: " + userinfoline[8]);
 								}
-								C.cmd_notice(numeric, botnum, username, "IP: " + userinfo[n][7]);
-								C.cmd_notice(numeric, botnum, username, "Numeric: " + userinfo[n][0]);
-								String chans[] = dbc.getUserChans(userinfo[n][0]);
+								if(!auth[8].equals("0"))
+								{
+									C.cmd_notice(numeric, botnum, username, "Vhost: " + auth[8]);
+								}
+								C.cmd_notice(numeric, botnum, username, "IP: " + userinfoline[7]);
+								C.cmd_notice(numeric, botnum, username, "Numeric: " + userinfoline[0]);
+								String chans[] = dbc.getUserChans(userinfoline[0]);
 								if(!chans[0].equals("0"))
 								{
 									for(int c=0; c<chans.length; c++)
 									{
-										C.cmd_notice(numeric, botnum, username, userinfo[n][1] + " is on " + chans[c] + ".");
+										C.cmd_notice(numeric, botnum, username, userinfoline[1] + " is on " + chans[c] + ".");
 									}
 								}
 							}
-							if(userinfo.length>1)
+							if(userinfo.size()>1)
 							{
 								C.cmd_notice(numeric, botnum, username, "----- End of users -----");
 							}
@@ -220,15 +222,15 @@ public class Whois implements Command
 						authinfo = dbc.getAuthRow(userinfo[4]);
 						levl = Integer.parseInt(authinfo[3]);
 						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is authed as " + authinfo[0] + ".");
-						String userinfos[][] = dbc.getUserRowsViaAuth(authinfo[0]);
-						if(userinfos.length > 1)
+						ArrayList<String[]> userinfos = dbc.getUserRowsViaAuth(authinfo[0]);
+						if(userinfos.size() > 1)
 						{
 							C.cmd_notice(numeric, botnum, username, "There are more users authed with that id.");
-							for(int n=0; n<userinfos.length; n++)
+							for(String[] userinfoline : userinfos)
 							{
-								if(!userinfos[n][1].equalsIgnoreCase(nick))
+								if(!userinfoline[1].equalsIgnoreCase(nick))
 								{
-									C.cmd_notice(numeric, botnum, username, userinfos[n][1] + " is also authed as " + authinfo[0]);
+									C.cmd_notice(numeric, botnum, username, userinfoline[1] + " is also authed as " + authinfo[0]);
 								}
 							}
 						}
@@ -239,14 +241,14 @@ public class Whois implements Command
 						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is NOT authed");
 						authinfo = new String[]{ "one", "two", "three"};
 					}
-					boolean userop = Boolean.parseBoolean(userinfo[5]);
+					boolean userop = userinfo[5].equals("1");
 					//he's a helper!
 					if(levl>1)
 					{
 						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is " + C.get_net() + " Staff.");
 					}
 					//he's an ircop!
-					if(levl>99)
+					if(levl>99 && userop)
 					{
 						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is an IRC Operator.");
 					}
@@ -258,7 +260,7 @@ public class Whois implements Command
 					//he's a boss
 					if(levl>998)
 					{
-						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is a Services Admin.");
+						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is a Services Administrator.");
 					}
 					//he's my daddy <3
 					if(levl>999)
@@ -294,10 +296,18 @@ public class Whois implements Command
 							//more crap
 							C.cmd_notice(numeric, botnum, username, "Authlevel: " + authinfo[3]);
 							C.cmd_notice(numeric, botnum, username, "Authmail: " + authinfo[2]);
-							C.cmd_notice(numeric, botnum, username, "Suspended: " + authinfo[4]);
+							C.cmd_notice(numeric, botnum, username, "Suspended: " + (authinfo[4].equals("1") ? "True" : "False"));
 							if(!authinfo[6].equals("0"))
 							{
 								C.cmd_notice(numeric, botnum, username, "Extra Info: " + authinfo[6]);
+							}
+							if(!authinfo[7].equals("0"))
+							{
+								C.cmd_notice(numeric, botnum, username, "Userflags: +" + authinfo[7]);
+							}
+							if(!authinfo[8].equals("0"))
+							{
+								C.cmd_notice(numeric, botnum, username, "Vhost: " + authinfo[8]);
 							}
 							if(dbc.authHasTrust(userinfo[4]))
 							{
@@ -354,6 +364,6 @@ public class Whois implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "whois <#username|nick> - Shows information about that auth account or nick.");
+		C.cmd_notice(numeric, botnum, username, "WHOIS               Shows information about that auth account or nick.");
 	}
 }

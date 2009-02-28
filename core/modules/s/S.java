@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -59,7 +53,7 @@ public class S implements Modules
 		this.C = C;
 		load_conf();
 		numeric = C.get_numeric();
-		dbc = new DBControl(C,this,C.getDBCon());
+		dbc = new DBControl(C,this);
 		ser = new Server(C,dbc,this);
 		DP = new DelPoints(dbc);
 		Thread th1 = new Thread(DP);
@@ -68,14 +62,11 @@ public class S implements Modules
 		C.cmd_create_service(num, nick, ident, host, "+oXwkgr", description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
-		String channels[] = dbc.getChanTable();
+		List<String> channels = dbc.getChanTable();
 		//join my channels and set my modes
-		for(int n=0;n<channels.length;n++)
+		for(String channel : channels)
 		{
-			if(!channels[0].equals("0"))
-			{
-				C.cmd_join(numeric,num,channels[n]);
-			}
+			C.cmd_join(numeric,num,channel);
 		}
 	}
 
@@ -97,12 +88,14 @@ public class S implements Modules
 
 	public void stop()
 	{
+		DP.stop();
 		C.cmd_kill_service(numeric+num, "Quit: Spam away you trolls.");
 	}
 
 	public void hstop()
 	{
-		C.cmd_kill_service(numeric+num, "Quit: My bananas noes!");
+		DP.stop();
+		C.cmd_kill_service(numeric+num, "Quit: My bananas! Noes!");
 	}
 
 	private void load_conf()

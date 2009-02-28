@@ -20,13 +20,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
+
+/*
+Handles all raw data.
+
+This one only parses private messages and relays them to commands.
+
+However, it can parse any message on the network, and could infact
+be adjusted to support diffrent protocols (in theory ;)
+*/
+
 import java.util.*;
 import java.net.*;
 import borknet_services.core.*;
@@ -99,16 +103,6 @@ public class Server
 			String me = params.substring(2, params.indexOf(":")-1);
 			privmsg(me, command, message);
 		}
-		if(params.startsWith("J "))
-		{
-			//[>in <] >> ABAXs J #BorkNet 949217470
-			//[>in <] >> ABARL J 0
-			if(!params.equals("J 0"))
-			{
-				String chan = params.substring(params.indexOf("#"),params.indexOf(" ",params.indexOf("#")));
-				join(command, chan);
-			}
-		}
 	}
 
 	/**
@@ -120,13 +114,5 @@ public class Server
 	public void privmsg(String me, String username, String message)
 	{
 		CC.privmsg(me, username, message);
-	}
-
-	public void join(String user, String chan)
-	{
-		if(Bot.hasQueue(chan))
-		{
-			Bot.addUser(user,chan);
-		}
 	}
 }

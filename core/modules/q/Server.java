@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.util.*;
 import java.net.*;
@@ -525,23 +519,23 @@ public class Server
 					int lev = Integer.parseInt(auth[3]);
 					if(chanlev > 99 && lev < 2)
 					{
-						C.cmd_dis(numeric,num,username, "Protected channel.");
+						C.cmd_dis(numeric,username, "Protected channel.");
 						return;
 					}
 					if(chanlev > 949 && lev < 100)
 					{
-						C.cmd_dis(numeric,num,username, "Protected channel.");
+						C.cmd_dis(numeric,username, "Protected channel.");
 						return;
 					}
 					if(chanlev > 998 && lev < 998)
 					{
-						C.cmd_dis(numeric,num,username, "Protected channel.");
+						C.cmd_dis(numeric,username, "Protected channel.");
 						return;
 					}
 				}
 				else
 				{
-					C.cmd_dis(numeric,num,username, "Protected channel.");
+					C.cmd_dis(numeric,username, "Protected channel.");
 					return;
 				}
 			}
@@ -659,7 +653,14 @@ public class Server
 			for(int a=0;a<gl.length;a++)
 			{
 				//[>in <] >> A] GL AQ +#icededicated* 302474378 :Networ
-				C.ircsend(numeric + " GL " + serv + " " + gl[a][0] + " " + gl[a][1] + " :" + gl[a][3]);
+				if(Integer.parseInt(gl[a][1]) > 0)
+				{
+					C.ircsend(numeric + " GL " + serv + " " + gl[a][0] + " " + gl[a][1] + " :" + gl[a][3]);
+				}
+				else
+				{
+					dbc.delGline(gl[a][0]);
+				}
 			}
 		}
 	}
@@ -713,20 +714,20 @@ public class Server
 				{
 					if(operhst.startsWith("~"))
 					{
-						C.cmd_dis(numeric,num,opernume, "IDENTD required from your host.");
+						C.cmd_dis(numeric,opernume, "IDENTD required from your host.");
 						return;
 					}
 					int x = dbc.getHostCount(operhst);
 					if(x>0)
 					{
-						C.cmd_dis(numeric,num,opernume, "Unique IDENTD required from your host.");
+						C.cmd_dis(numeric,opernume, "Unique IDENTD required from your host.");
 						return;
 					}
 				}
 				if(Bot.getDefCon() < 4)
 				{
 					C.cmd_notice(numeric,num,opernume, "Defcon "+Bot.getDefCon()+" enabled: This network is currently not accepting any new connections, please try again later.");
-					C.cmd_dis(numeric,num,opernume, "Defcon "+Bot.getDefCon()+" enabled: This network is currently not accepting any new connections, please try again later.");
+					C.cmd_dis(numeric,opernume, "Defcon "+Bot.getDefCon()+" enabled: This network is currently not accepting any new connections, please try again later.");
 					return;
 				}
 				if((opernck.matches("[^\\w]*[A-Z][^\\w]*") || dbc.isReservedNick(opernck)) && !dbc.isService(opernume))
@@ -766,12 +767,12 @@ public class Server
 							String auth[] = dbc.getAuthRow(user[4]);
 							if(Integer.parseInt(auth[3])<2)
 							{
-								C.cmd_dis(numeric,num,usernumeric,"Protected nick.");
+								C.cmd_dis(numeric,usernumeric,"Protected nick.");
 							}
 						}
 						else
 						{
-							C.cmd_dis(numeric,num,usernumeric,"Protected nick.");
+							C.cmd_dis(numeric,usernumeric,"Protected nick.");
 						}
 					}
 				}
@@ -803,12 +804,12 @@ public class Server
 						String auth[] = dbc.getAuthRow(user[4]);
 						if(Integer.parseInt(auth[3])<2)
 						{
-							C.cmd_dis(numeric,num,badnicks.get(n),"Protected nick.");
+							C.cmd_dis(numeric,badnicks.get(n),"Protected nick.");
 						}
 					}
 					else
 					{
-						C.cmd_dis(numeric,num,badnicks.get(n),"Protected nick.");
+						C.cmd_dis(numeric,badnicks.get(n),"Protected nick.");
 					}
 				}
 			}

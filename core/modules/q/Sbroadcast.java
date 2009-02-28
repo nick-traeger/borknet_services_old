@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,18 +50,23 @@ public class Sbroadcast implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >949)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >949)
 		{
 			//did he give me a neat msg to die with?
 			String[] result = params.split("\\s");
-			String server = result[1];
+			String server = "";
 			String br = "";
 			try
 			{
+				server = result[1];
 				br = result[2];
 				for(int m=3; m<result.length; m++)
 				{
 					br += " " + result[m];
+				}
+				if(br.trim().length()<1 || server.trim().length()<4)
+				{
+					throw new ArrayIndexOutOfBoundsException();
 				}
 			}
 			//he didn't, Yoda time!
@@ -109,7 +108,7 @@ public class Sbroadcast implements Command
 	{
 		if(lev > 949)
 		{
-			C.cmd_notice(numeric, botnum, username, "sbroadcast <server> <message> - Broadcast a message to all users on <server>. - level 950.");
+			C.cmd_notice(numeric, botnum, username, "SBROADCAST          Broadcast a message to all users on a server. - level 950.");
 		}
 	}
 }

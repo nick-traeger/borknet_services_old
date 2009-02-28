@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -111,28 +105,35 @@ public class Hello implements Command
 				String pass = dbc.encrypt(userpass);
 				//the actual message, you can easely add/change it
 				//use the %nbsp tag to indicate a space, %newline for a newline
-				String subj = "Your " + nick + " account!";
-				String mesg = "Your login/password is:%newline";
-				mesg += "Login: " + userinfo[1] + "%newline";
-				mesg += "Password: " + userpass + "%newline";
-				mesg += "%nbsp%newline";
-				mesg += "To AUTH yourself type the following command:%newline";
-				mesg += "/msg " + nick + "@" + host + " AUTH " + userinfo[1] + " " + userpass + "%newline";
-				mesg += "or you can use the challenge-repsonse method explained in the faq on "+C.get_web()+"%newline";
-				mesg += "%nbsp%newline";
-				mesg += "You can use the newpass command to change your password:%newline";
-				mesg += "/msg " + nick + " newpass " + userpass + " newpassword newpassword%newline";
-				mesg += "would change your password in newpassword.%newline";
-				mesg += "%nbsp%newline";
-				mesg += "NB: Save this email for future reference.%newline";
-				mesg += "%nbsp%newline";
-				mesg += "%nbsp%newline";
-				//call the external thread to send the mail, and not hog recources
-				C.send_mail(subj, mail1, mesg,nick,host);
-				//well, we hope it's sent
-				C.cmd_notice(numeric, botnum, username, "Mail Sent to " + mail1 + "!");
+				if(Bot.getSendmail())
+				{
+					String subj = "Your " + nick + " account!";
+					String mesg = "Your login/password is:%newline";
+					mesg += "Login: " + userinfo[1] + "%newline";
+					mesg += "Password: " + userpass + "%newline";
+					mesg += "%nbsp%newline";
+					mesg += "To AUTH yourself type the following command:%newline";
+					mesg += "/msg " + nick + "@" + host + " AUTH " + userinfo[1] + " " + userpass + "%newline";
+					mesg += "or you can use the challenge-repsonse method%newline";
+					mesg += "%nbsp%newline";
+					mesg += "You can use the newpass command to change your password:%newline";
+					mesg += "/msg " + nick + " newpass " + userpass + " newpassword newpassword%newline";
+					mesg += "would change your password in newpassword.%newline";
+					mesg += "%nbsp%newline";
+					mesg += "NB: Save this email for future reference.%newline";
+					mesg += "%nbsp%newline";
+					mesg += "%nbsp%newline";
+					//call the external thread to send the mail, and not hog recources
+					C.send_mail(subj, mail1, mesg,nick,host);
+					//well, we hope it's sent
+					C.cmd_notice(numeric, botnum, username, "Mail Sent to " + mail1 + "!");
+				}
+				else
+				{
+					C.cmd_notice(numeric, botnum, username, "Account created successfully, your new password is: " + userpass + "!");
+				}
 				//we add his info to the active authed array
-				dbc.addAuth(userinfo[1],pass,mail1,"1","false",C.get_time(),"0");
+				dbc.addAuth(userinfo[1],pass,mail1,1,false,Long.parseLong(C.get_time()),"0","0","0");
 				return;
 			}
 			//he made a typo in an address, or is retarded
@@ -157,6 +158,6 @@ public class Hello implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "hello <your@mail.here> <your@mail.here> - Creates an account with the bot.");
+		C.cmd_notice(numeric, botnum, username, "HELLO               Creates an account with the bot.");
 	}
 }

@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -59,7 +53,7 @@ public class Addchan implements Command
 				//bad, bad coding
 				if(!channel.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
 				String flags = dbc.getChanFlags(channel);
-				if(!flags.equals("0"))
+				if(flags instanceof String)
 				{
 					C.cmd_notice(numeric,botnum,username, "Channel is already registered.");
 					return;
@@ -99,7 +93,7 @@ public class Addchan implements Command
 	{
 		if(lev>99)
 		{
-			C.cmd_notice(numeric, botnum, username, "addchan #channel - Makes the bot join #channel. - level 100");
+			C.cmd_notice(numeric, botnum, username, "ADDCHAN             Makes the bot join a channel. - level 100");
 		}
 	}
 }

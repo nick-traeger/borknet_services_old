@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Trustadd implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >899)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >899)
 		{
 			String[] result = params.split("\\s");
 			try
@@ -74,7 +68,7 @@ public class Trustadd implements Command
 					C.cmd_notice(numeric, botnum,username, "Please use an ip, not a host.");
 					return;
 				}
-				long connections = Long.parseLong(result[2]);
+				int connections = Integer.parseInt(result[2]);
 				if( connections < 6)
 				{
 					connections = 6;
@@ -94,7 +88,7 @@ public class Trustadd implements Command
 				}
 				time += Long.parseLong(C.get_time());
 				boolean ident = Boolean.parseBoolean(result[5]);
-				dbc.addTrust(host,connections+"",tauth,time+"",ident+"");
+				dbc.addTrust(host,connections,tauth,time,ident);
 				C.cmd_notice(numeric, botnum,username, "Added Trust "+host+", for "+connections+" connections to "+tauth+" untill "+ time +" (require ident:"+ ident +").");
 				C.report(auth[0] + " Added Trust "+host+", for "+connections+" connections to "+tauth+" untill "+ time +" (require ident:"+ ident +").");
 				return;
@@ -131,7 +125,7 @@ public class Trustadd implements Command
 	{
 		if(lev > 899)
 		{
-			C.cmd_notice(numeric, botnum, username, "trustadd <ip> <connections> <auth> <duration> <require ident> - Add a trust. - level 900.");
+			C.cmd_notice(numeric, botnum, username, "TRUSTADD            Add a trust. - level 900.");
 		}
 	}
 }

@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 /*
@@ -45,7 +39,6 @@ public class V implements Modules
 {
 	private Core C;
 	private Server ser;
-	private DBControl dbc;
 	private String description = "";
 	private String nick = "";
 	private String ident = "";
@@ -68,14 +61,12 @@ public class V implements Modules
 		/* Creates a server */
 		this.C = C;
 		load_conf();
-		dbc = new DBControl(C,this,C.getDBCon());
-		ser = new Server(C,dbc,this);
+		ser = new Server(C,this);
 		C.cmd_create_serer(host, numeric, description);
 		C.ircsend(numeric + " EB");
 		C.cmd_create_service(numeric, num, nick, ident, host, "+oXwkgdr",description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
-		C.cmd_privmsg(numeric, num, reportchan, "Size matters not. Look at me. Judge me by my size, do you? Hmm? Hmm. And well you should not. For my ally is the Force, and a powerful ally it is.");
 		C.ircsend(numeric + " EA");
 	}
 

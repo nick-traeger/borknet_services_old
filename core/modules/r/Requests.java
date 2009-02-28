@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -51,7 +45,7 @@ public class Requests implements Command
 		{
 			String result[] = params.split("\\s");
 			String chan = result[1];
-			DBControl dbc = Bot.getDBC();
+			CoreDBControl dbc = Bot.getDBC();
 			String user[] = dbc.getUserRow(username);
 			if(dbc.isOnChan(Bot.getSnum(),chan))
 			{
@@ -86,8 +80,7 @@ public class Requests implements Command
 			else
 			{
 				C.cmd_notice(numeric, botnum, username, "Checking your Q access. This may take a while, please be patient...");
-				String acc[] = dbc.getAccRow(user[4], chan);
-				if(acc[2].contains("n"))
+				if(Bot.getAccRow(user[4], chan))
 				{
 					C.cmd_notice(numeric, botnum, username, "Requirements met, S should be added. Contact #help should further assistance be required.");
 					CoreModControl mod = C.get_modCore();
@@ -113,6 +106,6 @@ public class Requests implements Command
 	}
 	public void showcommand(Core C, R Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "requests <#channel> - Requests S for your channel.");
+		C.cmd_notice(numeric, botnum, username, "REQUESTS            Requests S for your channel.");
 	}
 }

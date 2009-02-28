@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -65,7 +59,7 @@ public class Challenge implements Command
 			userpass += chars.substring(g,g+1);
 		}
 		String challenge = dbc.encrypt(userpass);
-		dbc.addChallenge(username,challenge,C.get_time());
+		dbc.addChallenge(username,challenge,Long.parseLong(C.get_time()));
 		C.cmd_notice(numeric, botnum, username, "CHALLENGE md5 "+challenge);
 	}
 
@@ -83,6 +77,6 @@ public class Challenge implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "challenge - Requests a challenge for use in challenge-response identification.");
+		C.cmd_notice(numeric, botnum, username, "CHALLENGE           Requests a challenge for use in challenge-response identification.");
 	}
 }

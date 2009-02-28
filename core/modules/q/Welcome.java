@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -70,7 +64,7 @@ public class Welcome implements Command
 				String user[] = dbc.getUserRow(username);
 				//get access string
 				String acc = get_access(user[4], channel,dbc);
-				if(acc.contains("n") || acc.contains("m") || Boolean.parseBoolean(user[5]))
+				if(acc.contains("n") || acc.contains("m") || user[5].equals("1"))
 				{
 					//we have to set a new topic
 					if(result.length>2)
@@ -133,7 +127,7 @@ public class Welcome implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "welcome <#channel> [message] - Sets the welcome message on a channel.");
+			C.cmd_notice(numeric, botnum, username, "WELCOME             Sets the welcome message on a channel.");
 		}
 	}
 

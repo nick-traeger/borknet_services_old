@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -59,7 +53,7 @@ public class Whoami implements Command
 		//authed
 		else
 		{
-			String auth[] = dbc.getAuthRowWithIndex(user[4]);
+			String auth[] = dbc.getAuthRow(user[4]);
 			String access[][] = dbc.getAccessTable(user[4]);
 			if(!access[0][0].equals("0"))
 			{
@@ -70,17 +64,21 @@ public class Whoami implements Command
 			}
 			//give some info
 			//it's an oper!
-			if(Boolean.parseBoolean(user[5]))
+			if(user[5].equals("1"))
 			{
-				C.cmd_notice(numeric, botnum, username, "You are a known oper.");
+				C.cmd_notice(numeric, botnum, username, "You are a known Operator.");
 			}
 			if(dbc.authHasTrust(user[4]))
 			{
 				C.cmd_notice(numeric, botnum, username, "You have a trust.");
 			}
 			C.cmd_notice(numeric, botnum, username, "Current modes: " + user[3]);
-			C.cmd_notice(numeric, botnum, username, "You have authed as userid: " + auth[0] + " nick: " + auth[1]);
-			C.cmd_notice(numeric, botnum, username, "E-mail: " + auth[3]);
+			C.cmd_notice(numeric, botnum, username, "You have authed as " + auth[0]);
+			C.cmd_notice(numeric, botnum, username, "E-mail: " + auth[2]);
+			if(!auth[7].equals("0"))
+			{
+				C.cmd_notice(numeric, botnum, username, "Userflags: +" + auth[7]);
+			}
 			String chans[] = dbc.getUserChans(username);
 			if(!chans[0].equals("0"))
 			{
@@ -100,6 +98,6 @@ public class Whoami implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "whoami - The bot should tell you your current global auth level and may give other info too.");
+		C.cmd_notice(numeric, botnum, username, "WHOAMI              The bot should tell you your current global auth level and may give other info too.");
 	}
 }

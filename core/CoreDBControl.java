@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 package borknet_services.core;
 import java.sql.*;
@@ -53,6 +47,18 @@ public class CoreDBControl
 	/** Main bot */
 	private Core C;
 
+	private HashMap<String,User> usersByNumeric = new HashMap<String,User>();
+	private HashMap<String,User> usersByNick = new HashMap<String,User>();
+	private HashMap<String,ArrayList<User>> usersByAuth = new HashMap<String,ArrayList<User>>();
+	private HashMap<String,ArrayList<User>> usersByHost = new HashMap<String,ArrayList<User>>();
+	private HashMap<String,ArrayList<User>> usersByIP = new HashMap<String,ArrayList<User>>();
+
+	private HashMap<String,Auth> auths = new HashMap<String,Auth>();
+
+	private HashMap<String,Server> serversByNumeric = new HashMap<String,Server>();
+	private HashMap<String,ArrayList<Server>> serversByHub = new HashMap<String,ArrayList<Server>>();
+	private HashMap<String,Server> serversByHost = new HashMap<String,Server>();
+
 	/**
 	 * Constructs a Database connection.
 	 * @param server		Database server
@@ -73,14 +79,13 @@ public class CoreDBControl
 			this.C = C;
 			testDriver();
 			con = getConnection ( server, user, password, db);
-			C.printDebug( "[>---<] >> *** Truncating users, userchans, servers and glines..." );
+			C.printDebug( "[>---<] >> *** Truncating userchans..." );
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("TRUNCATE TABLE `servers`");
-			pstmt.execute();
-			pstmt = con.prepareStatement("TRUNCATE TABLE `users`");
-			pstmt.execute();
 			pstmt = con.prepareStatement("TRUNCATE TABLE `userchans`");
 			pstmt.execute();
+			C.printDebug( "[>---<] >> *** Done." );
+			C.printDebug( "[>---<] >> *** Loading Auth data..." );
+			loadAuths();
 			C.printDebug( "[>---<] >> *** Done." );
 		}
 		catch(Exception e)
@@ -165,16 +170,73 @@ public class CoreDBControl
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement("TRUNCATE TABLE `servers`");
 			pstmt.execute();
-			pstmt = con.prepareStatement("TRUNCATE TABLE `users`");
-			pstmt.execute();
 			pstmt = con.prepareStatement("TRUNCATE TABLE `userchans`");
 			pstmt.execute();
+			usersByNumeric = new HashMap<String,User>();
+			usersByNick = new HashMap<String,User>();
+			usersByAuth = new HashMap<String,ArrayList<User>>();
+			usersByHost = new HashMap<String,ArrayList<User>>();
+			usersByIP = new HashMap<String,ArrayList<User>>();
 		}
 		catch(Exception e)
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
 			System.exit(0);
+		}
+	}
+
+	public void loadAuths()
+	{
+		try
+		{
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement("SELECT * FROM auths");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				String authnick = rs.getString("authnick");
+				Auth a = new Auth(authnick);
+				a.setPassword(rs.getString("pass"));
+				a.setMail(rs.getString("mail"));
+				a.setLevel(rs.getInt("level"));
+				a.setSuspended((rs.getBoolean("suspended") ? 1 : 0));
+				a.setLast(rs.getLong("last"));
+				a.setInfo(rs.getString("info"));
+				a.setUserflags(rs.getString("userflags"));
+				a.setVHost(rs.getString("vhost"));
+				auths.put(authnick.toLowerCase(),a);
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println ( "Error executing sql statement" );
+			C.debug(e);
+			System.exit(0);
+		}
+	}
+
+	/**
+	 * Check if a channel exists.
+	 * @param chan		channel to check
+	 *
+	 * @return			true or false
+	 */
+	public boolean chanExists(String chan)
+	{
+		try
+		{
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement("SELECT channel FROM userchans WHERE channel = ?");
+			pstmt.setString(1,chan);
+			ResultSet rs = pstmt.executeQuery();
+			rs.first();
+			String channel = rs.getString("channel");
+			return true;
+		}
+		catch(Exception e)
+		{
+			return false;
 		}
 	}
 
@@ -186,20 +248,7 @@ public class CoreDBControl
 	 */
 	public boolean authExists(String auth)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
-			pstmt.setString(1,auth);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String authnick = rs.getString(2);
-			return true;
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
+		return auths.containsKey(auth.toLowerCase());
 	}
 
 	/**
@@ -210,19 +259,38 @@ public class CoreDBControl
 	 */
 	public boolean authOnline(String auth)
 	{
-		try
+		return usersByAuth.containsKey(auth.toLowerCase());
+	}
+
+	public String getNumViaAuth(String auth)
+	{
+		User u = usersByAuth.get(auth.toLowerCase()).get(0);
+		if(u instanceof User)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE authnick = ?");
-			pstmt.setString(1,auth);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String authnick = rs.getString(2);
-			return true;
+			return u.getNumeric();
 		}
-		catch(Exception e)
+		else
 		{
-			return false;
+			return "0";
+		}
+	}
+
+	/**
+	 * Get a numeric's user row
+	 * @param numer		numeric of the user to fetch
+	 *
+	 * @return			an array of all fields
+	 */
+	public int getAuthLev(String numer)
+	{
+		Auth a = auths.get(usersByNumeric.get(numer).getAuth().toLowerCase());
+		if(a instanceof Auth)
+		{
+			return a.getLevel();
+		}
+		else
+		{
+			return 0;
 		}
 	}
 
@@ -234,24 +302,27 @@ public class CoreDBControl
 	 */
 	public boolean isReservedNick(String auth)
 	{
-		try
+		Auth a = auths.get(auth.toLowerCase());
+		if(a instanceof Auth)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
-			pstmt.setString(1,auth);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			Integer lev = Integer.parseInt(rs.getString(5));
+			Integer lev = a.getLevel();
 			if(lev>1)
 			{
-				return true;
+				if(a.getUserflags().contains("k"))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			else
 			{
 				return false;
 			}
 		}
-		catch(Exception e)
+		else
 		{
 			return false;
 		}
@@ -265,27 +336,39 @@ public class CoreDBControl
 	 */
 	public boolean isService(String numeric)
 	{
-		try
+		Server s = serversByNumeric.get(numeric.substring(0,2));
+		if(s instanceof Server)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM servers WHERE numer = ?");
-			pstmt.setString(1,numeric.substring(0,2));
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			boolean service = Boolean.parseBoolean(rs.getString(5));
-			if(service)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return s.getService();
 		}
-		catch(Exception e)
+		else
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Check if a nick is reserved.
+	 * @param auth		nick to check
+	 *
+	 * @return			true or false
+	 */
+	public String getServer(String numeric)
+	{
+		Server s = serversByNumeric.get(numeric.substring(0,2));
+		if(s instanceof Server)
+		{
+			return s.getHost();
+		}
+		else
+		{
+			return "unknown";
+		}
+	}
+
+	public int getServerCount()
+	{
+		return serversByNumeric.size();
 	}
 
 	/**
@@ -296,17 +379,12 @@ public class CoreDBControl
 	 */
 	public boolean isServerNumeric(String numer)
 	{
-		try
+		Server s = serversByNumeric.get(numer);
+		if(s instanceof Server)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM servers WHERE BINARY numer = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String lev = rs.getString(2);
 			return true;
 		}
-		catch(Exception e)
+		else
 		{
 			return false;
 		}
@@ -324,12 +402,12 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE BINARY user = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT modes FROM userchans WHERE BINARY user = ? AND channel = ?");
 			pstmt.setString(1,user);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String mode = rs.getString(4);
+			String mode = rs.getString("modes");
 			if(mode.equals("o"))
 			{
 				return true;
@@ -346,6 +424,17 @@ public class CoreDBControl
 	}
 
 	/**
+	 * Check if a numeric exists.
+	 * @param numer		numeric to check
+	 *
+	 * @return			true or false
+	 */
+	public boolean isNickUsed(String nick)
+	{
+		return usersByNick.containsKey(nick.toLowerCase());
+	}
+
+	/**
 	 * Check if a numeric is on a channel
 	 * @param user		numeric to check
 	 * @param channel	channel to check
@@ -357,12 +446,12 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE BINARY user = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT user FROM userchans WHERE BINARY user = ? AND channel = ?");
 			pstmt.setString(1,user);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String mode = rs.getString(4);
+			String mode = rs.getString("user");
 			return true;
 		}
 		catch(Exception e)
@@ -383,12 +472,12 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM chanfix WHERE host = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT points FROM chanfix WHERE host = ? AND channel = ?");
 			pstmt.setString(1,host);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			int points = Integer.parseInt(rs.getString(4));
+			int points = rs.getInt("points");
 			if(points > 25)
 			{
 				return true;
@@ -413,12 +502,12 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM chanfix WHERE host = ? AND channel = ?");
+			pstmt = con.prepareStatement("SELECT channel FROM chanfix WHERE host = ? AND channel = ?");
 			pstmt.setString(1,user);
 			pstmt.setString(2,channel);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			String chan = rs.getString(2);
+			String chan = rs.getString("channel");
 			return true;
 		}
 		catch(Exception e)
@@ -438,12 +527,12 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE channel = ?");
+			pstmt = con.prepareStatement("SELECT modes FROM userchans WHERE channel = ?");
 			pstmt.setString(1,channel);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				String mode = rs.getString(4);
+				String mode = rs.getString("modes");
 				if(mode.equals("o"))
 				{
 					return true;
@@ -468,12 +557,12 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM chanfix WHERE channel = ?");
+			pstmt = con.prepareStatement("SELECT points FROM chanfix WHERE channel = ?");
 			pstmt.setString(1,channel);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				int points = Integer.parseInt(rs.getString(4));
+				int points = rs.getInt("points");
 				if(points > 25)
 				{
 					return true;
@@ -498,11 +587,13 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM userchans WHERE channel = ?");
+			pstmt = con.prepareStatement("SELECT SQL_CALC_FOUND_ROWS * FROM userchans WHERE channel = ?");
 			pstmt.setString(1,channel);
 			ResultSet rs = pstmt.executeQuery();
+			pstmt = con.prepareStatement("SELECT FOUND_ROWS();");
+			rs = pstmt.executeQuery();
 			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
+			int users = rs.getInt(1);
 			rs.close();
 			return users;
 		}
@@ -522,64 +613,7 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM users WHERE authnick = ?");
-			pstmt.setString(1,auth);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return users;
-		}
-		catch(Exception e)
-		{
-			return 0;
-		}
-	}
-
-	/**
-	 * Get the number of affected hosts
-	 * @param host		host to check
-	 *
-	 * @return			the number of affected hosts
-	 */
-	public int getAffectedH(String host)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM users WHERE host like ?");
-			pstmt.setString(1,host);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return users;
-		}
-		catch(Exception e)
-		{
-			return 0;
-		}
-	}
-
-	/**
-	 * Get the number of affected channels
-	 * @param chan		chan to check
-	 *
-	 * @return			the number of affected channels
-	 */
-	public int getAffectedC(String chan)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM userchans WHERE channel like ?");
-			pstmt.setString(1,chan);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return users;
+			return usersByAuth.get(auth.toLowerCase()).size();
 		}
 		catch(Exception e)
 		{
@@ -597,14 +631,7 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM users WHERE host like ?");
-			pstmt.setString(1,host);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return users;
+			return usersByHost.get(host.toLowerCase()).size();
 		}
 		catch(Exception e)
 		{
@@ -622,19 +649,17 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM users WHERE ip = ?");
-			pstmt.setString(1,ip);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return users;
+			return usersByIP.get(ip).size();
 		}
 		catch(Exception e)
 		{
 			return 0;
 		}
+	}
+
+	public HashMap<String,User> getUsers()
+	{
+		return usersByNumeric;
 	}
 
 	/**
@@ -647,12 +672,8 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE BINARY numer = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
+			User u = usersByNumeric.get(numer);
+			return new String[]{ u.getNumeric(), u.getNick(), u.getIdent()+"@"+u.getHost(), u.getModes(), u.getAuth(), u.getOperator()+"", u.getServer(), u.getIp(), u.getFakehost()};
 		}
 		catch(Exception e)
 		{
@@ -670,12 +691,9 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE authnick = ?");
-			pstmt.setString(1,auth);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
+			User u = usersByAuth.get(auth.toLowerCase()).get(0);
+			return new String[]{ u.getNumeric(), u.getNick(), u.getIdent()+"@"+u.getHost(), u.getModes(), u.getAuth(), u.getOperator()+"", u.getServer(), u.getIp(), u.getFakehost()};
+
 		}
 		catch(Exception e)
 		{
@@ -693,12 +711,9 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE host = ?");
-			pstmt.setString(1,host);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
+			User u = usersByHost.get(host.toLowerCase()).get(0);
+			return new String[]{ u.getNumeric(), u.getNick(), u.getIdent()+"@"+u.getHost(), u.getModes(), u.getAuth(), u.getOperator()+"", u.getServer(), u.getIp(), u.getFakehost()};
+
 		}
 		catch(Exception e)
 		{
@@ -716,12 +731,9 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE nick = ?");
-			pstmt.setString(1,nick);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
+			User u = usersByNick.get(nick.toLowerCase());
+			return new String[]{ u.getNumeric(), u.getNick(), u.getIdent()+"@"+u.getHost(), u.getModes(), u.getAuth(), u.getOperator()+"", u.getServer(), u.getIp(), u.getFakehost()};
+
 		}
 		catch(Exception e)
 		{
@@ -739,35 +751,9 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
-			pstmt.setString(1,nick);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)};
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
-	}
+			Auth a = auths.get(nick.toLowerCase());
+			return new String[]{a.getAuthnick(),a.getPassword(),a.getMail(),a.getLevel()+"",a.getSuspended()+"",a.getLast()+"",a.getInfo(),a.getUserflags(),a.getVHost()};
 
-	/**
-	 * Get an auth's row WITH it's index
-	 * @param nick		auth to fetch
-	 *
-	 * @return			an array of all fields, including the index!
-	 */
-	public String[] getAuthRowWithIndex(String nick)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
-			pstmt.setString(1,nick);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)};
 		}
 		catch(Exception e)
 		{
@@ -792,7 +778,7 @@ public class CoreDBControl
 			ArrayList<String> a = new ArrayList<String>();
 			while(rs.next())
 			{
-				a.add(rs.getString(2));
+				a.add(rs.getString("channel"));
 			}
 			if(a.size()>0)
 			{
@@ -827,7 +813,7 @@ public class CoreDBControl
 			ArrayList<String> a = new ArrayList<String>();
 			while(rs.next())
 			{
-				a.add(rs.getString(3));
+				a.add(rs.getString("user"));
 			}
 			if(a.size()>0)
 			{
@@ -842,85 +828,6 @@ public class CoreDBControl
 		catch(Exception e)
 		{
 			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
-	}
-
-	/**
-	 * Get the sizes of some tables
-	 * @return			an array of all info
-	 */
-	public int[] getSizes()
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM users");
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM auths");
-			rs = pstmt.executeQuery();
-			rs.first();
-			int auths = Integer.parseInt(rs.getString(1));
-			rs.close();
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM servers");
-			rs = pstmt.executeQuery();
-			rs.first();
-			int servers = Integer.parseInt(rs.getString(1));
-			rs.close();
-			pstmt = con.prepareStatement("SELECT COUNT(DISTINCT channel) FROM userchans");
-			rs = pstmt.executeQuery();
-			rs.first();
-			int chans = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return new int[]{users,auths,servers,chans};
-		}
-		catch(Exception e)
-		{
-			return new int[]{0,0,0,0,0,0,0,0,0,0};
-		}
-	}
-
-	/**
-	 * Get the sizes of some server specific tables
-	 * @param			Server to get info of
-	 *
-	 * @return			an array of all info
-	 */
-	public int[] getSizes(String host)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM servers WHERE host = ?");
-			pstmt.setString(1,host);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String server = rs.getString(2);
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM users WHERE numer like ?");
-			pstmt.setString(1,server+"%");
-			rs = pstmt.executeQuery();
-			rs.first();
-			int users = Integer.parseInt(rs.getString(1));
-			rs.close();
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM users WHERE numer like ? AND modes like '%o%'");
-			pstmt.setString(1,server+"%");
-			rs = pstmt.executeQuery();
-			rs.first();
-			int ops = Integer.parseInt(rs.getString(1));
-			rs.close();
-			pstmt = con.prepareStatement("SELECT COUNT(*) FROM servers WHERE hub = ?");
-			pstmt.setString(1,server);
-			rs = pstmt.executeQuery();
-			rs.first();
-			int servers = Integer.parseInt(rs.getString(1));
-			rs.close();
-			return new int[]{users,ops,servers};
-		}
-		catch(Exception e)
-		{
-			return new int[]{0,0,0,0,0,0,0,0,0,0};
 		}
 	}
 
@@ -957,53 +864,14 @@ public class CoreDBControl
 	}
 
 	/**
-	 * Get all auths
-	 * @return			an array of all auths
+	 * Get all numerics
+	 * @return			an array of all numerics
 	 */
-	public String[] getAuthTable()
+	public String[] getNumericTable()
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths");
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
-			{
-				a.add(rs.getString(2));
-			}
-			if(a.size()>0)
-			{
-				String[] r = (String[]) a.toArray(new String[ a.size() ]);
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-			}
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
-	}
-
-	/**
-	 * Get all users
-	 * @return			an array of all users
-	 */
-	public String[] getUserTable()
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users");
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
-			{
-				a.add(rs.getString(3));
-			}
+			ArrayList<String> a = new ArrayList<String>(usersByNumeric.keySet());
 			if(a.size()>0)
 			{
 				String[] r = (String[]) a.toArray(new String[ a.size() ]);
@@ -1024,17 +892,28 @@ public class CoreDBControl
 	 * Get all numerics
 	 * @return			an array of all numerics
 	 */
-	public String[] getNumericTable()
+	public String[] getNumericTable(String server)
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users");
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
+			Server s = serversByHost.get(server.toLowerCase());
+			String numer = "";
+			if(s instanceof Server)
 			{
-				a.add(rs.getString(2));
+				numer = s.getNumeric();
+			}
+			else
+			{
+				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+			}
+			ArrayList<String> numerics = new ArrayList<String>(usersByNumeric.keySet());
+			ArrayList<String> a = new ArrayList<String>();
+			for(String n : numerics)
+			{
+				if(n.startsWith(numer))
+				{
+					a.add(n);
+				}
 			}
 			if(a.size()>0)
 			{
@@ -1060,13 +939,11 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT DISTINCT(host),numer FROM users GROUP BY host");
-			ResultSet rs = pstmt.executeQuery();
+			ArrayList<String> hosts = new ArrayList<String>(usersByHost.keySet());
 			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
+			for(String s : hosts)
 			{
-				a.add(rs.getString(2));
+					a.add(usersByHost.get(s).get(0).getNumeric());
 			}
 			if(a.size()>0)
 			{
@@ -1084,146 +961,26 @@ public class CoreDBControl
 		}
 	}
 
-	/**
-	 * Get all staff members
-	 * @return			an array of all staff members
-	 */
-	public String[] getStaffList()
+	public String[][] getServerList()
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM auths");
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> staff = new ArrayList<String>();
-			while(rs.next())
-			{
-				int lev = Integer.parseInt(rs.getString(5));
-				String a = rs.getString(2) + " (";
-				String x = "";
-				if(lev>1)
-				{
-					x = "Helper";
-					if(lev>99)
-					{
-						x = "Operator";
-					}
-					if(lev>997)
-					{
-						x = "Administrator";
-					}
-					if(lev>998)
-					{
-						x = "Services Admin/Developer";
-					}
-					a += x+").";
-					staff.add(a);
-				}
-			}
-			String[] r = new String[staff.size()];
-			if(staff.size()>0)
-			{
-				for(int n=0; n<r.length; n++)
-				{
-					r[n] = staff.get(n);
-				}
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-			}
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
-	}
 
-	/**
-	 * Get all user rows connected to an auth
-	 * @param auth		auth to fetch
-	 *
-	 * @return			a double array of all users
-	 */
-	public String[][] getUserRowsViaAuth(String auth)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE authnick = ?");
-			pstmt.setString(1,auth);
-			ResultSet rs = pstmt.executeQuery();
+			ArrayList<String> servers = new ArrayList<String>(serversByNumeric.keySet());
 			ArrayList<String> a = new ArrayList<String>();
 			ArrayList<String> b = new ArrayList<String>();
 			ArrayList<String> c = new ArrayList<String>();
 			ArrayList<String> d = new ArrayList<String>();
-			ArrayList<String> e = new ArrayList<String>();
-			ArrayList<String> f = new ArrayList<String>();
-			ArrayList<String> g = new ArrayList<String>();
-			ArrayList<String> h = new ArrayList<String>();
-			ArrayList<String> i = new ArrayList<String>();
-			while(rs.next())
+			for(String numer : servers)
 			{
-				a.add(rs.getString(2));
-				b.add(rs.getString(3));
-				c.add(rs.getString(4));
-				d.add(rs.getString(5));
-				e.add(rs.getString(6));
-				f.add(rs.getString(7));
-				g.add(rs.getString(8));
-				h.add(rs.getString(9));
-				i.add(rs.getString(10));
-			}
-			String[][] r = new String[a.size()][9];
-			if(a.size()>0)
-			{
-				for(int n=0; n<r.length; n++)
+				Server s = serversByNumeric.get(numer);
+				if(s instanceof Server)
 				{
-					r[n][0] = a.get(n);
-					r[n][1] = b.get(n);
-					r[n][2] = c.get(n);
-					r[n][3] = d.get(n);
-					r[n][4] = e.get(n);
-					r[n][5] = f.get(n);
-					r[n][6] = g.get(n);
-					r[n][7] = h.get(n);
-					r[n][8] = i.get(n);
+					a.add(numer);
+					b.add(s.getHost());
+					c.add(s.getHub());
+					d.add(s.getService().toString());
 				}
-				return r;
-			}
-			else
-			{
-				return new String[][] {{"0","0"},{"0","0"}};
-			}
-		}
-		catch(Exception e)
-		{
-			return new String[][] {{"0","0"},{"0","0"}};
-		}
-	}
-
-	/**
-	 * Get all servers
-	 * @return			a double array of all servers
-	 */
-	public String[][] getServerTable()
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM servers");
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			ArrayList<String> b = new ArrayList<String>();
-			ArrayList<String> c = new ArrayList<String>();
-			ArrayList<String> d = new ArrayList<String>();
-			while(rs.next())
-			{
-				a.add(rs.getString(2));
-				b.add(rs.getString(3));
-				c.add(rs.getString(4));
-				d.add(rs.getString(5));
 			}
 			String[][] r = new String[a.size()][4];
 			if(a.size()>0)
@@ -1248,6 +1005,136 @@ public class CoreDBControl
 		}
 	}
 
+	public String[][] getServerTable()
+	{
+		try
+		{
+
+			ArrayList<String> servers = new ArrayList<String>(serversByHost.keySet());
+			ArrayList<String> a = new ArrayList<String>();
+			ArrayList<String> b = new ArrayList<String>();
+			ArrayList<String> c = new ArrayList<String>();
+			for(String host : servers)
+			{
+				Server s = serversByHost.get(host);
+				String numer = "";
+				if(s instanceof Server)
+				{
+					if(!s.getService())
+					{
+						a.add(host);
+						numer = s.getNumeric();
+						ArrayList<String> numerics = new ArrayList<String>(usersByNumeric.keySet());
+						int users = 0;
+						int opers = 0;
+						for(String n : numerics)
+						{
+							if(n.startsWith(numer))
+							{
+								users++;
+								User u = usersByNumeric.get(n);
+								if(u.getModes().contains("o"))
+								{
+									opers++;
+								}
+							}
+						}
+						b.add(users+"");
+						c.add(opers+"");
+					}
+				}
+			}
+			String[][] r = new String[a.size()][3];
+			if(a.size()>0)
+			{
+				for(int n=0; n<r.length; n++)
+				{
+					r[n][0] = a.get(n);
+					r[n][1] = b.get(n);
+					r[n][2] = c.get(n);
+				}
+				return r;
+			}
+			else
+			{
+				return new String[][] {{"0","0"},{"0","0"}};
+			}
+		}
+		catch(Exception e)
+		{
+			return new String[][] {{"0","0"},{"0","0"}};
+		}
+	}
+
+	/**
+	 * Get all staff members
+	 * @return			an array of all staff members
+	 */
+	public ArrayList<String> getStaffList()
+	{
+		try
+		{
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement("SELECT level,authnick FROM auths WHERE level > 1 AND level < 5000 ORDER BY level ASC;");
+			ResultSet rs = pstmt.executeQuery();
+			ArrayList<String> staff = new ArrayList<String>();
+			while(rs.next())
+			{
+				int lev = rs.getInt("level");
+				String a = rs.getString("authnick") + " (";
+				String x = "Helper";
+				if(lev>99)
+				{
+					x = "Operator";
+				}
+				if(lev>997)
+				{
+					x = "Administrator";
+				}
+				if(lev>998)
+				{
+					x = "Services Administrator";
+				}
+				if(lev>999)
+				{
+					x = "Services Developer";
+				}
+				a += x+").";
+				staff.add(a);
+			}
+			return staff;
+		}
+		catch(Exception e)
+		{
+			return new ArrayList<String>();
+		}
+	}
+
+	/**
+	 * Get all user rows connected to an auth
+	 * @param auth		auth to fetch
+	 *
+	 * @return			a double array of all users
+	 */
+	public ArrayList<String[]> getUserRowsViaAuth(String auth)
+	{
+		try
+		{
+			ArrayList<User> users = usersByAuth.get(auth.toLowerCase());
+			ArrayList<String[]> a = new ArrayList<String[]>();
+			for(User u : users)
+			{
+				String[] user = new String[]{u.getNumeric(),u.getNick(),u.getIdent()+"@"+u.getHost(),u.getModes(),u.getAuth(),u.getOperator()+"",u.getServer(),u.getIp(),u.getFakehost()};
+				a.add(user);
+			}
+			return a;
+		}
+		catch(Exception e)
+		{
+			return new ArrayList<String[]>();
+		}
+	}
+
 	/**
 	 * Set a userline field to a new value
 	 * @param numer		numeric of user to adapt
@@ -1256,20 +1143,106 @@ public class CoreDBControl
 	 */
 	public void setUserField(String numer, int colum, String info)
 	{
-		try
+		User u = usersByNumeric.get(numer);
+		if(u instanceof User)
 		{
-			String set[] = new String[]{"numer", "nick", "host","modes","authnick","isop","server","ip","fake"};
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("UPDATE users SET "+set[colum]+" = ? WHERE BINARY numer = ?");
-			pstmt.setString(1,info);
-			pstmt.setString(2,numer);
-			pstmt.executeUpdate();
+			try
+			{
+				switch(colum)
+				{
+					case 0:
+						u.setNumeric(info);
+						usersByNumeric.remove(numer);
+						usersByNumeric.put(info,u);
+						break;
+					case 1:
+						String oldkey = u.getNick();
+						u.setNick(info);
+						if(usersByNick.containsKey(oldkey.toLowerCase()))
+						{
+							usersByNick.remove(oldkey.toLowerCase());
+						}
+						usersByNick.put(info.toLowerCase(),u);
+						break;
+					case 2:
+						String[] splithost = info.split("@");
+						u.setIdent(splithost[0]);
+						u.setHost(splithost[1]);
+						if(usersByHost.containsKey(info.toLowerCase()))
+						{
+							ArrayList<User> users = usersByHost.get(info.toLowerCase());
+							users.add(u);
+							usersByHost.put(info.toLowerCase(),users);
+						}
+						else
+						{
+							ArrayList<User> users = new ArrayList<User>();
+							users.add(u);
+							usersByHost.put(info.toLowerCase(),users);
+						}
+						break;
+					case 3:
+						u.setModes(info);
+						break;
+					case 4:
+						u.setAuth(info);
+						if(usersByAuth.containsKey(info.toLowerCase()))
+						{
+							ArrayList<User> users = usersByAuth.get(info.toLowerCase());
+							users.add(u);
+							usersByAuth.put(info.toLowerCase(),users);
+						}
+						else
+						{
+							ArrayList<User> users = new ArrayList<User>();
+							users.add(u);
+							usersByAuth.put(info.toLowerCase(),users);
+						}
+						break;
+					case 5:
+						if(Boolean.parseBoolean(info))
+						{
+							u.setOperator(1);
+						}
+						else
+						{
+							u.setOperator(0);
+						}
+						break;
+					case 6:
+						u.setServer(info);
+						break;
+					case 7:
+						u.setIp(info);
+						if(usersByIP.containsKey(info))
+						{
+							ArrayList<User> users = usersByIP.get(info);
+							users.add(u);
+							usersByIP.put(info.toLowerCase(),users);
+						}
+						else
+						{
+							ArrayList<User> users = new ArrayList<User>();
+							users.add(u);
+							usersByIP.put(info,users);
+						}
+						break;
+					case 8:
+						u.setFakehost(info);
+						break;
+				}
+			}
+			catch ( Exception e )
+			{
+				System.out.println( "Error finding user." );
+				C.debug(e);
+				System.exit(0);
+			}
 		}
-		catch ( SQLException e )
+		else
 		{
-			System.out.println ( "Error executing sql statement" );
-			C.debug(e);
-			System.exit(0);
+			System.out.println( "Error finding user." );
+			C.printDebug("Error finding user.");
 		}
 	}
 
@@ -1283,12 +1256,61 @@ public class CoreDBControl
 	{
 		try
 		{
-			String set[] = new String[]{"authnick", "pass", "mail","level","suspended","last","info"};
+			String set[] = new String[]{"authnick", "pass", "mail","level","suspended","last","info","userflags","vhost"};
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement("UPDATE auths SET "+set[colum]+" = ? WHERE authnick = ?");
-			pstmt.setString(1,info);
+			if(colum==3)
+			{
+				pstmt.setInt(1,Integer.parseInt(info));
+			}
+			else if(colum==4)
+			{
+				pstmt.setBoolean(1,Boolean.parseBoolean(info));
+			}
+			else if(colum==5)
+			{
+				pstmt.setLong(1,Long.parseLong(info));
+			}
+			else
+			{
+				pstmt.setString(1,info);
+			}
 			pstmt.setString(2,auth);
 			pstmt.executeUpdate();
+			Auth a = auths.get(auth.toLowerCase());
+			if(a instanceof Auth)
+			{
+				switch(colum)
+				{
+					case 0:
+						a.setAuthnick(info);
+						break;
+					case 1:
+						a.setPassword(info);
+						break;
+					case 2:
+						a.setMail(info);
+						break;
+					case 3:
+						a.setLevel(Integer.parseInt(info));
+						break;
+					case 4:
+						a.setSuspended((Boolean.parseBoolean(info) ? 1 : 0));
+						break;
+					case 5:
+						a.setLast(Long.parseLong(info));
+						break;
+					case 6:
+						a.setInfo(info);
+						break;
+					case 7:
+						a.setUserflags(info);
+						break;
+					case 8:
+						a.setVHost(info);
+						break;
+				}
+			}
 		}
 		catch ( SQLException e )
 		{
@@ -1364,6 +1386,7 @@ public class CoreDBControl
 			pstmt = con.prepareStatement("DELETE FROM auths WHERE authnick = ? LIMIT 1");
 			pstmt.setString(1,auth);
 			pstmt.executeUpdate();
+			auths.remove(auth.toLowerCase());
 		}
 		catch ( SQLException e )
 		{
@@ -1381,19 +1404,29 @@ public class CoreDBControl
 	{
 		try
 		{
+			User u = usersByNumeric.get(numer);
+			usersByNick.remove(u.getNick().toLowerCase());
+			ArrayList<User> users = usersByAuth.get(u.getAuth().toLowerCase());
+			if(users instanceof ArrayList)
+			{
+				users.remove(u);
+				usersByAuth.put(u.getAuth(),users);
+			}
+			users = usersByHost.get(u.getHost());
+			users.remove(u);
+			usersByHost.put(u.getHost(),users);
+			users = usersByIP.get(u.getIp());
+			users.remove(u);
+			usersByIP.put(u.getIp(),users);
+			usersByNumeric.remove(numer);
+			System.gc();
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("DELETE FROM users WHERE BINARY numer = ? LIMIT 1");
-			pstmt.setString(1,numer);
-			pstmt.executeUpdate();
 			pstmt = con.prepareStatement("DELETE FROM userchans WHERE BINARY user = ?");
 			pstmt.setString(1,numer);
 			pstmt.executeUpdate();
 		}
-		catch ( SQLException e )
+		catch ( Exception e )
 		{
-			System.out.println ( "Error executing sql statement" );
-			C.debug(e);
-			System.exit(0);
 		}
 	}
 
@@ -1403,36 +1436,33 @@ public class CoreDBControl
 	 */
 	public void delServer(String host)
 	{
-		try
+		Server s = serversByHost.get(host.toLowerCase());
+		if(s instanceof Server)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM servers WHERE host = ?");
-			pstmt.setString(1,host);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String numer = rs.getString(2);
-			pstmt = con.prepareStatement("SELECT * FROM servers WHERE BINARY hub = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs2 = pstmt.executeQuery();
-			while(rs2.next())
+			String numer = s.getNumeric();
+			ArrayList<Server> servers = serversByHub.get(numer);
+			if(servers instanceof ArrayList)
 			{
-				delServer(rs2.getString(3));
+				for(Server ser : servers)
+				{
+					delServer(ser.getHost());
+				}
 			}
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE BINARY server = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs3 = pstmt.executeQuery();
-			while(rs3.next())
+			ArrayList<String> numerics = new ArrayList<String>(usersByNumeric.keySet());
+			for(String n : numerics)
 			{
-				delUser(rs3.getString(2));
+				if(n.startsWith(numer))
+				{
+					delUser(n);
+				}
 			}
-			pstmt = con.prepareStatement("DELETE FROM servers WHERE host = ?");
-			pstmt.setString(1,host);
-			pstmt.executeUpdate();
+			serversByHub.remove(numer);
+			serversByNumeric.remove(numer);
+			serversByHost.remove(host.toLowerCase());
 		}
-		catch(Exception e)
+		else
 		{
-			System.out.println ( "Error executing sql statement" );
-			C.debug(e);
+			System.out.println ( "Error Removing server." );
 			System.exit(0);
 		}
 	}
@@ -1460,45 +1490,103 @@ public class CoreDBControl
 		}
 	}
 
-	public void addUser(String nume,String nick, String host, String mode, String auth, String isop, String server, String ip, String fake)
+	public void addUser(String nume,String nick, String host, String mode, String auth, boolean isop, String server, String ip, String fake)
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO users VALUES ('',?,?,?,?,?,?,?,?,?)");
-			pstmt.setString(1,nume);
-			pstmt.setString(2,nick);
-			pstmt.setString(3,host);
-			pstmt.setString(4,mode);
-			pstmt.setString(5,auth);
-			pstmt.setString(6,isop);
-			pstmt.setString(7,server);
-			pstmt.setString(8,ip);
-			pstmt.setString(9,fake);
-			pstmt.executeUpdate();
+			User u = new User(nume);
+			u.setNick(nick);
+			String[] splithost = host.split("@");
+			u.setIdent(splithost[0]);
+			u.setHost(splithost[1]);
+			u.setModes(mode);
+			u.setAuth(auth);
+			if(isop)
+			{
+				u.setOperator(1);
+			}
+			else
+			{
+				u.setOperator(0);
+			}
+			u.setServer(server);
+			u.setIp(ip);
+			u.setFakehost(fake);
+			usersByNumeric.put(nume,u);
+			usersByNick.put(nick.toLowerCase(),u);
+			if(!auth.equals("0"))
+			{
+				if(usersByAuth.containsKey(auth.toLowerCase()))
+				{
+					ArrayList<User> users = usersByAuth.get(auth.toLowerCase());
+					users.add(u);
+					usersByAuth.put(auth.toLowerCase(),users);
+				}
+				else
+				{
+					ArrayList<User> users = new ArrayList<User>();
+					users.add(u);
+					usersByAuth.put(auth.toLowerCase(),users);
+				}
+			}
+			if(usersByHost.containsKey(splithost[1]))
+			{
+				ArrayList<User> users = usersByHost.get(splithost[1]);
+				users.add(u);
+				usersByHost.put(splithost[1],users);
+			}
+			else
+			{
+				ArrayList<User> users = new ArrayList<User>();
+				users.add(u);
+				usersByHost.put(splithost[1],users);
+			}
+			if(usersByIP.containsKey(ip))
+			{
+				ArrayList<User> users = usersByIP.get(ip);
+				users.add(u);
+				usersByIP.put(ip,users);
+			}
+			else
+			{
+				ArrayList<User> users = new ArrayList<User>();
+				users.add(u);
+				usersByIP.put(ip,users);
+			}
 		}
-		catch ( SQLException e )
+		catch ( Exception e )
 		{
-			System.out.println ( "Error executing sql statement" );
+			System.out.println ( "Error executing statement" );
 			C.debug(e);
 			System.exit(0);
 		}
 	}
 
-	public void addAuth(String auth,String pass, String mail1, String lev, String suspended, String time, String info)
+	public void addAuth(String auth,String pass, String mail1, int lev, boolean suspended, Long time, String info,String userflags, String vhost)
 	{
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO auths VALUES ('',?,?,?,?,?,?,?)");
+			pstmt = con.prepareStatement("INSERT INTO auths VALUES (?,?,?,?,?,?,?,?,?)");
 			pstmt.setString(1,auth);
 			pstmt.setString(2,pass);
 			pstmt.setString(3,mail1);
-			pstmt.setString(4,lev);
-			pstmt.setString(5,suspended);
-			pstmt.setString(6,time);
+			pstmt.setInt(4,lev);
+			pstmt.setBoolean(5,suspended);
+			pstmt.setLong(6,time);
 			pstmt.setString(7,info);
+			pstmt.setString(8,userflags);
+			pstmt.setString(9,vhost);
 			pstmt.executeUpdate();
+			Auth a = new Auth(auth);
+			a.setPassword(pass);
+			a.setMail(mail1);
+			a.setLevel(lev);
+			a.setSuspended(suspended ? 1 : 0);
+			a.setLast(time);
+			a.setInfo(info);
+			a.setUserflags(userflags);
+			auths.put(auth.toLowerCase(),a);
 		}
 		catch ( SQLException e )
 		{
@@ -1508,21 +1596,32 @@ public class CoreDBControl
 		}
 	}
 
-	public void addServer(String numer, String host ,String hub, String service)
+	public void addServer(String numer, String host ,String hub, boolean service)
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO servers VALUES ('',?,?,?,?)");
-			pstmt.setString(1,numer);
-			pstmt.setString(2,host);
-			pstmt.setString(3,hub);
-			pstmt.setString(4,service);
-			pstmt.executeUpdate();
+			Server s = new Server(numer);
+			s.setHost(host.toLowerCase());
+			s.setHub(hub);
+			s.setService(service);
+			serversByHost.put(host.toLowerCase(),s);
+			serversByNumeric.put(numer,s);
+			if(serversByHub.containsKey(hub))
+			{
+				ArrayList<Server> servers = serversByHub.get(hub);
+				servers.add(s);
+				serversByHub.put(hub,servers);
+			}
+			else
+			{
+				ArrayList<Server> servers = new ArrayList<Server>();
+				servers.add(s);
+				serversByHub.put(hub,servers);
+			}
 		}
-		catch ( SQLException e )
+		catch (Exception e)
 		{
-			System.out.println ( "Error executing sql statement" );
+			System.out.println ( "Error executing statement" );
 			C.debug(e);
 			System.exit(0);
 		}
@@ -1533,7 +1632,7 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO userchans VALUES ('',?,?,?)");
+			pstmt = con.prepareStatement("INSERT INTO userchans VALUES (?,?,?)");
 			pstmt.setString(1,channel);
 			pstmt.setString(2,user);
 			pstmt.setString(3,modes);
@@ -1553,10 +1652,9 @@ public class CoreDBControl
 		{
 			PreparedStatement pstmt;
 			C.report("Creating DB Backup...");
-			long btime = System.nanoTime();
-			String time2 = "" + btime;
-			String t = time2.substring(0,10);
-			long now = Long.parseLong(t);
+
+			Calendar cal = Calendar.getInstance();
+			long now = (cal.getTimeInMillis() / 1000);
 
 			Runtime rt = Runtime.getRuntime();
 			File backup=new File("backup/"+name+".sql");
@@ -1564,8 +1662,6 @@ public class CoreDBControl
 
 			Process child = rt.exec("mysqldump -u"+user+" -p"+password+" "+db);
 			ps=new PrintStream(backup);
-			ps.println ("BACKUP OF:"+now);
-
 			InputStream in = child.getInputStream();
 			int ch;
 			while ((ch = in.read()) != -1)
@@ -1655,20 +1751,20 @@ public class CoreDBControl
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				if(rs.getString(3).contains("@"))
+				if(rs.getString("host").contains("@"))
 				{
-					String user[] = getUserRowViaHost(rs.getString(3));
-					if(!isOpChan(user[0],rs.getString(2)))
+					String user[] = getUserRowViaHost(rs.getString("host"));
+					if(!isOpChan(user[0],rs.getString("channel")))
 					{
-						chanfix_delpoint(rs.getString(2),rs.getString(3));
+						chanfix_delpoint(rs.getString("channel"),rs.getString("host"));
 					}
 				}
 				else
 				{
-					String user[] = getUserRowViaAuth(rs.getString(3));
-					if(!isOpChan(user[0],rs.getString(2)))
+					String user[] = getUserRowViaAuth(rs.getString("host"));
+					if(!isOpChan(user[0],rs.getString("channel")))
 					{
-						chanfix_delpoint(rs.getString(2),rs.getString(3));
+						chanfix_delpoint(rs.getString("channel"),rs.getString("host"));
 					}
 				}
 			}
@@ -1691,17 +1787,17 @@ public class CoreDBControl
 			pstmt.setString(2,chan);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			if(Integer.parseInt(rs.getString(4))<4033)
+			if(Integer.parseInt(rs.getString("points"))<4033)
 			{
-				String points = ""+(Integer.parseInt(rs.getString(4))+1);
+				String points = ""+(Integer.parseInt(rs.getString("points"))+1);
 				pstmt = con.prepareStatement("UPDATE chanfix SET points = ? WHERE host = ? AND channel = ?");
-				pstmt.setString(1,points);
+				pstmt.setInt(1,Integer.parseInt(points));
 				pstmt.setString(2,host);
 				pstmt.setString(3,chan);
 				pstmt.executeUpdate();
 			}
 			pstmt = con.prepareStatement("UPDATE chanfix SET last = ? WHERE host = ? AND channel = ?");
-			pstmt.setString(1,C.get_time());
+			pstmt.setLong(1,Long.parseLong(C.get_time()));
 			pstmt.setString(2,host);
 			pstmt.setString(3,chan);
 			pstmt.executeUpdate();
@@ -1724,11 +1820,11 @@ public class CoreDBControl
 			pstmt.setString(2,chan);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
-			if(Integer.parseInt(rs.getString(4))>1)
+			if(rs.getInt("points")>1)
 			{
-				String points = ""+(Integer.parseInt(rs.getString(4))-1);
+				int points = rs.getInt("points")-1;
 				pstmt = con.prepareStatement("UPDATE chanfix SET points = ? WHERE host = ? AND channel = ?");
-				pstmt.setString(1,points);
+				pstmt.setInt(1,points);
 				pstmt.setString(2,host);
 				pstmt.setString(3,chan);
 				pstmt.executeUpdate();
@@ -1751,11 +1847,11 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO chanfix VALUES ('',?,?,?,?)");
+			pstmt = con.prepareStatement("INSERT INTO chanfix VALUES (?,?,?,?)");
 			pstmt.setString(1,chan);
 			pstmt.setString(2,host);
-			pstmt.setString(3,"1");
-			pstmt.setString(4,C.get_time());
+			pstmt.setInt(3,1);
+			pstmt.setLong(4,Long.parseLong(C.get_time()));
 			pstmt.executeUpdate();
 		}
 		catch ( SQLException e )

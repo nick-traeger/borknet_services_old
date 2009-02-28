@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 //package borknet_services.core.commands;
 import java.io.*;
@@ -57,7 +51,7 @@ public class Unload implements Cmds
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >999)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >999)
 		{
 			//tell my reportchannel what's happening
 
@@ -102,7 +96,7 @@ public class Unload implements Cmds
 	{
 		if(lev>999)
 		{
-			C.cmd_notice(bot, username, "unload - Unload a module.");
+			C.cmd_notice(bot, username, "UNLOAD              Unload a module. - level 1000.");
 		}
 	}
 }

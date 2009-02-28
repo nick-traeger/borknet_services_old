@@ -20,13 +20,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
+
+
+/*
+Showcommands, doesn't actually do anything.
+*/
+
 import java.io.*;
 import java.util.*;
 import borknet_services.core.*;
@@ -47,7 +47,6 @@ public class Showcommands implements Command
 
 	public void parse_command(Core C, G Bot, String numeric, String botnum, String username, String params)
 	{
-		C.cmd_notice(numeric, botnum,username,"moo!");
 	}
 
 	public void parse_help(Core C, G Bot, String numeric, String botnum, String username, int lev)
@@ -57,6 +56,6 @@ public class Showcommands implements Command
 	}
 	public void showcommand(Core C, G Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "showcommands - Shows you this list.");
+		C.cmd_notice(numeric, botnum, username, "SHOWCOMMANDS        Shows you this list.");
 	}
 }
