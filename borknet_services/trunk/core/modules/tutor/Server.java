@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 /*
@@ -49,8 +43,6 @@ public class Server
 {
 	/** the main bot */
 	private Core C;
-	/** the connection to the database */
-	private DBControl dbc;
 	/** Core commands */
 	private Commands CC;
 	/** the bot's nick */
@@ -76,11 +68,10 @@ public class Server
 	 * @param B		The main bot
 	 * @param dbc	The connection to the database
 	 */
-    public Server(Core C, DBControl dbc, Tutor Bot)
+    public Server(Core C, Tutor Bot)
 	{
 		this.C = C;
 		this.Bot = Bot;
-		this.dbc = dbc;
 		CC = new Commands(C,Bot);
 		nick = C.get_nick();
 		host = C.get_host();

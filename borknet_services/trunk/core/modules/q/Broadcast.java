@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Broadcast implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >949)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >949)
 		{
 			//did he give me a neat msg to die with?
 			String[] result = params.split("\\s");
@@ -106,7 +100,7 @@ public class Broadcast implements Command
 	{
 		if(lev > 949)
 		{
-			C.cmd_notice(numeric, botnum, username, "broadcast <message> - Broadcast a message to all users. - level 950.");
+			C.cmd_notice(numeric, botnum, username, "BROADCAST           Broadcast a message to all users. - level 950.");
 		}
 	}
 }

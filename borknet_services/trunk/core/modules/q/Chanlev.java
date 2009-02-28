@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -85,7 +79,7 @@ public class Chanlev implements Command
 			String minflags = min_flags(result[3]);
 			//get his access to the channel
 			String acc = get_access(userinfo[4], channel,dbc);
-			boolean isop = Boolean.parseBoolean(userinfo[5]);
+			boolean isop = userinfo[5].equals("1");
 			//he wants to edit +mn, but has no +n
 			if((flags.contains("m") || flags.contains("n")) && !acc.contains("n") && !isop)
 			{
@@ -256,7 +250,11 @@ public class Chanlev implements Command
 				}
 				//do they have access?
 				String access = get_access(userinfo[4], channel,dbc);
-				boolean isop = Boolean.parseBoolean(userinfo[5]);
+				boolean isop = false;
+				if(userinfo[5].equals("1"))
+				{
+					isop=true;
+				}
 				//they do
 				if(access.contains("n") || access.contains("m") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
 				{
@@ -310,7 +308,7 @@ public class Chanlev implements Command
 					}
 					//do they have access?
 					String access = get_access(userinfo[4], channel,dbc);
-					boolean isop = Boolean.parseBoolean(userinfo[5]);
+					boolean isop = userinfo[5].equals("1");
 					//they do
 					if(access.contains("n") || access.contains("m") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
 					{
@@ -401,7 +399,7 @@ public class Chanlev implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "chanlev <#channel> [#username] [+/-flags] - Shows or changes the access levels on a channel.");
+			C.cmd_notice(numeric, botnum, username, "CHANLEV             Shows or changes the access levels on a channel.");
 		}
 	}
 

@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -36,7 +30,7 @@ public class R implements Modules
 {
 	private Core C;
 	private Server ser;
-	private DBControl dbc;
+	private CoreDBControl dbc;
 	private String description = "";
 	private String nick = "";
 	private String ident = "";
@@ -64,8 +58,8 @@ public class R implements Modules
 		this.C = C;
 		load_conf();
 		numeric = C.get_numeric();
-		dbc = new DBControl(C,this,C.getDBCon());
-		ser = new Server(C,dbc,this);
+		dbc = C.get_dbc();
+		ser = new Server(C,this);
 		C.cmd_create_service(num, nick, ident, host, "+oXwkgdsr", description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
@@ -152,10 +146,6 @@ public class R implements Modules
 	{
 		return host;
 	}
-	public DBControl getDBC()
-	{
-		return dbc;
-	}
 	public void clean()
 	{
 		//gets issued every 24 hours, can be used to cleanup the db, or other stuff
@@ -189,5 +179,35 @@ public class R implements Modules
 	public void reop(String chan)
 	{
 		//gets issued if services got restarted during a split for resync reasons.
+	}
+
+	public CoreDBControl getDBC()
+	{
+		return dbc;
+	}
+
+	/**
+	 * Get an auth's access on a channel
+	 * @param nick		auth to fetch
+	 * @param channel	channel to fetch
+	 *
+	 * @return			an array of all fields
+	 */
+	public boolean getAccRow(String nick,String channel)
+	{
+		try
+		{
+			PreparedStatement pstmt;
+			pstmt = dbc.getCon().prepareStatement("SELECT flags FROM q_access WHERE user = ? AND channel = ?");
+			pstmt.setString(1,nick);
+			pstmt.setString(2,channel);
+			ResultSet rs = pstmt.executeQuery();
+			rs.first();
+			return rs.getString("flags").contains("n");
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
 	}
 }

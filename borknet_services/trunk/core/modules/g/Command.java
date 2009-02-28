@@ -20,13 +20,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
+
+/*
+This is an interface in the form of commands.
+It is used by the Commands class to relay raw server data
+to the right command.
+
+This shouldn't need changing.
+*/
+
 import java.io.*;
 import java.util.*;
 import borknet_services.core.*;

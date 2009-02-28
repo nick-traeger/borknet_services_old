@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -51,7 +45,7 @@ public class Enable implements Command
 		{
 			String result[] = params.split("\\s");
 			int enable = Integer.parseInt(result[1]);
-			DBControl dbc = Bot.getDBC();
+			CoreDBControl dbc = C.get_dbc();
 			String user[] = dbc.getUserRow(username);
 			if(Boolean.parseBoolean(user[5]))
 			{
@@ -95,7 +89,7 @@ public class Enable implements Command
 	{
 		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "enable <0|1> - Enable the request system. - level 100");
+			C.cmd_notice(numeric, botnum, username, "ENABLE              Enable the request system. - level 100");
 		}
 	}
 }

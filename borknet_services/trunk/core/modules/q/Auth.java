@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -78,7 +72,7 @@ public class Auth implements Command
 				return;
 			}
 			//the auth is suspended
-			if(Boolean.parseBoolean(authinfo[4]))
+			if(authinfo[4].equals("1"))
 			{
 				C.cmd_notice(numeric, botnum, username, "That AUTH is suspended!");
 				return;
@@ -94,9 +88,9 @@ public class Auth implements Command
 				if(dbc.getAuthUsers(auth) > 0)
 				{
 					//Warning: Ozafy- (ozafy@d54C2D04E.access.telenet.be) authed with your password.
-					String olduser[] = dbc.getUserRowViaAuth(auth);
+					String olduser = dbc.getNumViaAuth(auth);
 					String newuser[] = dbc.getUserRow(username);
-					C.cmd_notice(numeric, botnum, olduser[0], "Warning "+newuser[1]+" ("+newuser[2]+") authed with your password.");
+					C.cmd_notice(numeric, botnum, olduser, "Warning "+newuser[1]+" ("+newuser[2]+") authed with your password.");
 				}
 				//give the users autharray index to the userinfo arrays
 				dbc.setUserField(username,4, auth);
@@ -129,6 +123,11 @@ public class Auth implements Command
 						C.cmd_mode_me(numeric, botnum, username, access[n][0], "+v");
 					}
 				}
+				if(authinfo[7].contains("h") && !authinfo[8].equals("0"))
+				{
+					String vhost[] = authinfo[8].split("@");
+					C.cmd_sethost(username, vhost[0], vhost[1], user[3]);
+				}
 				return;
 			}
 			else
@@ -155,6 +154,6 @@ public class Auth implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "auth <username> <password> - AUTH's you with the bot.");
+		C.cmd_notice(numeric, botnum, username, "AUTH                AUTH's you with the bot.");
 	}
 }

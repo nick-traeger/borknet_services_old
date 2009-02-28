@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Trustlist implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >899)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >899)
 		{
 			String[] result = params.split("\\s");
 			try
@@ -76,7 +70,7 @@ public class Trustlist implements Command
 							StringBuffer sb = new StringBuffer();
 							FieldPosition f = new FieldPosition(0);
 							sdf.format(theDate,sb,f);
-							C.cmd_notice(numeric, botnum,username, gl[a][0] + " for " + gl[a][1] + " connections, trusted to " + gl[a][2] + ", untill " + sb + " (ident needed: " + gl[a][4] + ").");
+							C.cmd_notice(numeric, botnum,username, gl[a][0] + " for " + gl[a][1] + " connections, trusted to " + gl[a][2] + ", untill " + sb + " (ident needed: " + (gl[a][4].equals("1") ? "True" : "False") + ").");
 						}
 					}
 				}
@@ -113,7 +107,7 @@ public class Trustlist implements Command
 	{
 		if(lev > 899)
 		{
-			C.cmd_notice(numeric, botnum, username, "trustlist <pattern> - Lists all trusts matching a given pattern. - level 900.");
+			C.cmd_notice(numeric, botnum, username, "TRUSTLIST           Lists all trusts matching a given pattern. - level 900.");
 		}
 	}
 }

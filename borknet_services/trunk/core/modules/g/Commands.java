@@ -20,13 +20,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
+
+/*
+This class handles private messages.
+
+It checks if the message was sent to this bot/server,
+then checks if it was help/showcommands or a command
+and sends it to the correct class.
+*/
+
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -57,7 +60,7 @@ public class Commands
 
 	public void privmsg(String target, String username, String message)
 	{
-		if(!target.equals(numeric) && !target.equals(numeric+botnum) && !target.startsWith("#") && !target.equalsIgnoreCase(Bot.get_nick()+"@"+Bot.get_host())) return;
+		if(!target.equals(numeric) && !target.equals(numeric+botnum) && !target.equalsIgnoreCase(Bot.get_nick()+"@"+Bot.get_host())) return;
 		String command = "";
 		try
 		{
@@ -67,20 +70,6 @@ public class Commands
 		catch(ArrayIndexOutOfBoundsException e)
 		{
 			command = message.toLowerCase();
-		}
-		if(target.startsWith("#"))
-		{
-			if(command.startsWith("!"))
-			{
-				if(!Bot.onChan(target)) return;
-				int compo = cmdn.indexOf(command.replace("!",""));
-				if(compo > -1)
-				{
-					Command ccommand = (Command) cmds.get(compo);
-					ccommand.parse_command(C,Bot,numeric,botnum,username,message);
-				}
-			}
-			return;
 		}
 		if(command.equals("help"))
 		{
@@ -100,13 +89,7 @@ public class Commands
 			{
 				Command ccommand = (Command) cmds.get(compo);
 				CoreDBControl dbc = C.get_dbc();
-				String user[] = dbc.getUserRow(username);
-				int lev = 0;
-				if(!user[4].equals("0"))
-				{
-					String auth[] = dbc.getAuthRow(user[4]);
-					lev = Integer.parseInt(auth[3]);
-				}
+				int lev = dbc.getAuthLev(username);
 				ccommand.parse_help(C,Bot,numeric,botnum,username,lev);
 			}
 			else
@@ -118,14 +101,9 @@ public class Commands
 		if(command.equals("showcommands"))
 		{
 			C.cmd_notice(numeric, botnum,username,"The following commands are available to you:");
+			C.cmd_notice(numeric, botnum,username,"For more information on a specific command, type HELP <command>:");
 			CoreDBControl dbc = C.get_dbc();
-			String user[] = dbc.getUserRow(username);
-			int lev = 0;
-			if(!user[4].equals("0"))
-			{
-				String auth[] = dbc.getAuthRow(user[4]);
-				lev = Integer.parseInt(auth[3]);
-			}
+			int lev = dbc.getAuthLev(username);
 			for(int n=0; n<cmds.size(); n++)
 			{
 				Command ccommand = (Command) cmds.get(n);

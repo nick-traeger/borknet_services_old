@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -53,37 +47,42 @@ public class Invite implements Command
 		try
 		{
 			//what channel
-			String channel = result[1];
+			String channels[] = result[1].split(",");
 			// :)
-			if(!channel.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
-			if(!dbc.chanExists(channel))
+			for(String channel : channels)
 			{
-				C.cmd_notice(numeric, botnum, username, "Can't find that channel!");
-				return;
+				if(!channel.startsWith("#") || !dbc.chanExists(channel))
+				{
+					C.cmd_notice(numeric, botnum, username, "Can't find "+channel+"!");
+				}
+				else
+				{
+					if(dbc.isOnChan(username, channel))
+					{
+						C.cmd_notice(numeric, botnum, username, "You're already on "+channel+"!");
+					}
+					else
+					{
+						String user[] = dbc.getUserRow(username);
+						//users access
+						String acc = get_access(user[4], channel,dbc);
+						if(acc.contains("o") || acc.contains("a") || acc.contains("n") || acc.contains("m") || acc.contains("v") || acc.contains("g") || Boolean.parseBoolean(user[5]))
+						{
+							C.cmd_invite(numeric, botnum, user[1], channel);
+							C.cmd_notice(numeric, botnum, username, "Invited to "+channel+".");
+						}
+						else
+						{
+							C.cmd_notice(numeric, botnum, username, "Insufficient rights for "+channel+".");
+						}
+					}
+				}
 			}
-			if(dbc.isOnChan(username, channel))
-			{
-				C.cmd_notice(numeric, botnum, username, "You're already on "+channel+"!");
-				return;
-			}
-			String user[] = dbc.getUserRow(username);
-			//users access
-			String acc = get_access(user[4], channel,dbc);
-			if(acc.contains("o") || acc.contains("a") || acc.contains("n") || acc.contains("m") || acc.contains("v") || acc.contains("g") || Boolean.parseBoolean(user[5]))
-			{
-				C.cmd_invite(numeric, botnum, user[1], channel);
-				C.cmd_notice(numeric, botnum, username, "Done.");
-				return;
-			}
-			else
-			{
-				C.cmd_notice(numeric, botnum, username, "Insufficient rights.");
-				return;
-			}
+			C.cmd_notice(numeric, botnum, username, "Done.");
 		}
 		catch(ArrayIndexOutOfBoundsException e)
 		{
-			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " invite #channel");
+			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " invite #channels");
 			return;
 		}
 	}
@@ -92,9 +91,10 @@ public class Invite implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " invite <channel>");
-			C.cmd_notice(numeric, botnum, username, "Invites you to a channel which the bot is sitting on. The bot *must* be on the channel, and you must have a high enough level on that channel.");
+			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " invite <channels>");
+			C.cmd_notice(numeric, botnum, username, "Invites you to channels tou have access to.");
 			C.cmd_notice(numeric, botnum, username, "eg: /msg " + Bot.get_nick() + " invite #borknet");
+			C.cmd_notice(numeric, botnum, username, "eg: /msg " + Bot.get_nick() + " invite #borknet,#help");
 		}
 		else
 		{
@@ -105,7 +105,7 @@ public class Invite implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "invite <#channel> - Invites you to a channel.");
+			C.cmd_notice(numeric, botnum, username, "INVITE              Invites you to a set of channels.");
 		}
 	}
 

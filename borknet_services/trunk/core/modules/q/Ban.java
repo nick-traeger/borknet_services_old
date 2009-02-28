@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -111,7 +105,7 @@ public class Ban implements Command
 	{
 		if(lev > 0)
 		{
-			C.cmd_notice(numeric, botnum, username, "ban <#channel> <hostmask> - Ban a hostmask permenantly.");
+			C.cmd_notice(numeric, botnum, username, "BAN                 Ban a hostmask permenantly.");
 		}
 	}
 

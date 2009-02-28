@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Clearchan implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >899)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >899)
 		{
 			try
 			{
@@ -114,7 +108,7 @@ public class Clearchan implements Command
 						{
 							if(Integer.parseInt(authinfo[n][3]) < 2)
 							{
-								C.cmd_dis(numeric, botnum,users[n],reason);
+								C.cmd_dis(numeric, users[n],reason);
 							}
 						}
 						break;
@@ -200,7 +194,7 @@ public class Clearchan implements Command
 	{
 		if(lev > 899)
 		{
-			C.cmd_notice(numeric, botnum, username, "clearchan <#channel> <#type> [reason]- Clear a channel. - level 900.");
+			C.cmd_notice(numeric, botnum, username, "CLEARCHAN           Clear a channel. - level 900.");
 		}
 	}
 }

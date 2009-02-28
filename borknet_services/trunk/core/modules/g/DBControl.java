@@ -20,12 +20,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
+*/
 
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
 
+
+/*
+This class can be used to communicate with the Core's db,
+or if you want your own db connection.
+
+I've included one example method.
 */
 import java.sql.*;
 import java.util.*;
@@ -34,25 +37,21 @@ import java.security.*;
 import borknet_services.core.*;
 
 /**
- * The database communication class of the Q IRC Bot.
+ * The database communication class of the BorkNet IRC Core.
  * @author Ozafy - ozafy@borknet.org - http://www.borknet.org
  */
 public class DBControl
 {
-	/** Database server */
-	private String server;
-	/** Database user */
-	private String user;
-	/** Database password */
-	private String password;
-	/** Database */
-	private String db;
-	/** Database connection */
-	private Connection con;
 	/** Main bot */
 	private Core C;
 
 	private G Bot;
+
+	private int c4game = 0;
+
+	private HashMap<String,Game> c4id = new HashMap<String,Game>();
+	private HashMap<String,Game> c4user1 = new HashMap<String,Game>();
+	private HashMap<String,Game> c4user2 = new HashMap<String,Game>();
 
 	/**
 	 * Constructs a Database connection.
@@ -63,163 +62,12 @@ public class DBControl
 	 * @param debug			Are we debugging?
 	 * @param B				Main bot
 	 */
-	public DBControl(Core C, G Bot, Connection con)
+	public DBControl(Core C, G Bot)
 	{
-		try
-		{
-			this.C = C;
-			this.Bot = Bot;
-			this.con = con;
-		}
-		catch(Exception e)
-		{
-			C.printDebug("Database error!");
-			System.exit(0);
-		}
+		this.C = C;
+		this.Bot = Bot;
 	}
 
-	/**
-	 * Check if a user has a ticket to a channel
-	 * @param user		auth to check
-	 * @param chan		channel to check
-	 *
-	 * @return			true or false
-	 */
-	public boolean hasTicketPending(String user, String chan)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM g_tickets WHERE user = ? AND channel = ?");
-			pstmt.setString(1,user);
-			pstmt.setString(2,chan);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			Long time = Long.parseLong(rs.getString(4));
-			if(time > Long.parseLong(C.get_time()))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
-	}
-	/**
-	 * Delete a ticket
-	 * @param auth		auth of user to delete
-	 * @param channel	channel where ticket should be removed
-	 */
-	public void delTicketRow(String auth, String channel)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("DELETE FROM g_tickets WHERE user = ? AND channel = ?");
-			pstmt.setString(1,auth);
-			pstmt.setString(2,channel);
-			pstmt.executeUpdate();
-		}
-		catch ( SQLException e )
-		{
-			System.out.println ( "Error executing sql statement" );
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
-	public void addTicket(String user,String channel,String time)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO g_tickets VALUES ('',?,?,?)");
-			pstmt.setString(1,user);
-			pstmt.setString(2,channel);
-			pstmt.setString(3,time);
-			pstmt.executeUpdate();
-		}
-		catch ( SQLException e )
-		{
-			System.out.println ( "Error executing sql statement" );
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
-	/**
-	 * Get a numeric's user row
-	 * @param numer		numeric of the user to fetch
-	 *
-	 * @return			an array of all fields
-	 */
-	public String[] getUserRow(String numer)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE BINARY numer = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
-	}
-	/**
-	 * Get a numeric's user row
-	 * @param numer		numeric of the user to fetch
-	 *
-	 * @return			an array of all fields
-	 */
-	public int getAuthLev(String numer)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE BINARY numer = ?");
-			pstmt.setString(1,numer);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			pstmt = con.prepareStatement("SELECT * FROM auths WHERE authnick = ?");
-			pstmt.setString(1,rs.getString(6));
-			rs = pstmt.executeQuery();
-			rs.first();
-			return Integer.parseInt(rs.getString(5));
-		}
-		catch(Exception e)
-		{
-			return 0;
-		}
-	}
-	/**
-	 * Get a nick's user row
-	 * @param nick		nick of the user to fetch
-	 *
-	 * @return			an array of all fields
-	 */
-	public String[] getNickRow(String nick)
-	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM users WHERE nick = ?");
-			pstmt.setString(1,nick);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return new String[]{ rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)};
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
-	}
 	/**
 	 * Check if a numeric is on a channel
 	 * @param user		numeric to check
@@ -227,57 +75,216 @@ public class DBControl
 	 *
 	 * @return			true or false
 	 */
-	public boolean isOnChan(String user, String channel)
+/*	public boolean isOnChan(String user, String channel)
 	{
-		try
+		return dbc.isOnChan(user,channel);
+	}*/
+
+	public boolean C4gameExists(String username)
+	{
+		return (c4user1.containsKey(username) || c4user2.containsKey(username));
+	}
+
+	public boolean C4turn(String username)
+	{
+		Game g;
+		if(c4user1.containsKey(username))
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE BINARY user = ? AND channel = ?");
-			pstmt.setString(1,user);
-			pstmt.setString(2,channel);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String mode = rs.getString(4);
-			return true;
+			g = c4user1.get(username);
 		}
-		catch(Exception e)
+		else
+		{
+			g = c4user2.get(username);
+		}
+		if(g instanceof Game)
+		{
+			return username.equals(g.getTurn());
+		}
+		else
 		{
 			return false;
 		}
 	}
 
-	/**
-	 * Get a channel's users
-	 * @param chan		channel to fetch
-	 *
-	 * @return			an array of all users
-	 */
-	public String[] getChannelUsers(String chan)
+	public boolean C4gameIdExists(String id)
 	{
-		try
+		return c4id.containsKey(id);
+	}
+
+	public boolean C4gameFull(String id)
+	{
+		Game g = c4id.get(id);
+		if(g instanceof Game)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT user FROM userchans WHERE channel = ? and modes = '0'");
-			pstmt.setString(1,chan);
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
+			return g.isFull();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public boolean C4gameFullForUser(String user)
+	{
+		Game g;
+		if(c4user1.containsKey(user))
+		{
+			g = c4user1.get(user);
+		}
+		else
+		{
+			g = c4user2.get(user);
+		}
+		if(g instanceof Game)
+		{
+			return g.isFull();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public Long C4newGame(String username)
+	{
+		c4game++;
+		Long game =  System.nanoTime() + c4game;
+		Game g = new Game(game+"",username);
+		c4id.put(game+"",g);
+		c4user1.put(username,g);
+		return game;
+	}
+
+	public void C4joinGame(String id, String username)
+	{
+		Game g = c4id.get(id);
+		if(g instanceof Game)
+		{
+			g.setUser2(username);
+			c4user2.put(username,g);
+		}
+	}
+
+	public void C4setField(String field, String username)
+	{
+		Game g;
+		if(c4user1.containsKey(username))
+		{
+			g = c4user1.get(username);
+		}
+		else
+		{
+			g = c4user2.get(username);
+		}
+		if(g instanceof Game)
+		{
+			g.setField(field);
+		}
+	}
+
+	public void C4setTurn(String username)
+	{
+		Game g;
+		if(c4user1.containsKey(username))
+		{
+			g = c4user1.get(username);
+		}
+		else
+		{
+			g = c4user2.get(username);
+		}
+		if(g instanceof Game)
+		{
+			g.setTurn(username);
+		}
+	}
+
+	public void C4stopGame(String username)
+	{
+		Game g;
+		if(c4user1.containsKey(username))
+		{
+			g = c4user1.get(username);
+		}
+		else
+		{
+			g = c4user2.get(username);
+		}
+		if(g instanceof Game)
+		{
+			String id = g.getId();
+			String user1 = g.getUser1();
+			String user2 = g.getUser2();
+			c4id.remove(id);
+			c4user1.remove(user1);
+			c4user2.remove(user2);
+			g = null;
+			System.gc();
+		}
+	}
+
+	public String C4getOtherUser(String username)
+	{
+		Game g;
+		if(c4user1.containsKey(username))
+		{
+			g = c4user1.get(username);
+			return g.getUser2();
+		}
+		else
+		{
+			g = c4user2.get(username);
+			if(g instanceof Game)
 			{
-				a.add(rs.getString(1));
-			}
-			if(a.size()>0)
-			{
-				String[] r = (String[]) a.toArray(new String[ a.size() ]);
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+				return g.getUser1();
 			}
 		}
-		catch(Exception e)
+		return "0";
+	}
+
+	public String[][] getField(String username)
+	{
+		Game g;
+		if(c4user1.containsKey(username))
 		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+			g = c4user1.get(username);
+		}
+		else
+		{
+			g = c4user2.get(username);
+		}
+		if(g instanceof Game)
+		{
+			char[] f = g.getField().toCharArray();
+			String[][] r = new String[6][7];
+			int k = 0;
+			for(int i=0; i<r.length; i++)
+			{
+				for(int j=0; j<r[i].length; j++)
+				{
+					r[i][j] = f[k] + "";
+					k++;
+				}
+			}
+			return r;
+		}
+		return new String[][] {{"0","0"},{"0","0"}};
+	}
+
+	public String C4getUserColor(String username)
+	{
+		Game g;
+		if(c4user1.containsKey(username))
+		{
+			return "1";
+		}
+		else if(c4user2.containsKey(username))
+		{
+			return "2";
+		}
+		else
+		{
+			return "0";
 		}
 	}
 }

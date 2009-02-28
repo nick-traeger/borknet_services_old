@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 
@@ -80,13 +74,7 @@ public class Forcehost implements Command
 				String host = result[3];
 				if(ident.matches("[\\w]*") && host.matches("[\\w.]*"))
 				{
-					//C.set_host(numeric ,username ,ident ,vhost);
-					C.ircsend(Bot.get_num() + " SH " + forceuserrow[0] + " " + ident + " " + host);
-					if(!user[3].contains("h"))
-					{
-						C.get_dbc().setUserField(forceuserrow[0], 3, user[3]+"h");
-					}
-					C.get_dbc().setUserField(forceuserrow[0], 8, ident+"@"+host);
+					C.cmd_sethost(forceuserrow[0], ident, host, user[3]);
 					C.cmd_notice(numeric, botnum, username, "Done.");
 				}
 				else
@@ -124,7 +112,7 @@ public class Forcehost implements Command
 	{
 		if(lev>949)
 		{
-			C.cmd_notice(numeric, botnum, username, "forcehost <nick> <ident> <host> - makes the bot force an ident and host on <nick> - level 950.");
+			C.cmd_notice(numeric, botnum, username, "FORCEHOST           Makes the bot force an ident and host on a user - level 950.");
 		}
 	}
 }

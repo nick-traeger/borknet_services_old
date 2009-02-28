@@ -21,12 +21,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.net.*;
@@ -57,6 +51,7 @@ public class Tutorial implements Runnable
 
 	private String numeric = "";
 	private String botnum = "";
+	private String botnick = "";
 
     Timer timer;
 
@@ -79,7 +74,7 @@ public class Tutorial implements Runnable
 						{
 							send = false;
 							C.cmd_privmsg(numeric, botnum, tutorchan, "---");
-							C.cmd_privmsg(numeric, botnum, tutorchan, "We will now pause for a short time in order to answer any relevant questions you may have. Remember, to ask a question type /MSG Tutor <your question here>.");
+							C.cmd_privmsg(numeric, botnum, tutorchan, "We will now pause for a short time in order to answer any relevant questions you may have. Remember, to ask a question type /msg "+botnick+" <your question here>.");
 							C.cmd_privmsg(numeric, botnum, tutorchan, "---");
 							line++;
 						}
@@ -88,7 +83,7 @@ public class Tutorial implements Runnable
 							send = false;
 							line = 0;
 							C.cmd_privmsg(numeric, botnum, tutorchan, "---");
-							C.cmd_privmsg(numeric, botnum, tutorchan, "Here we will stop for a few moments while we answer any last questions for tonight. As a reminder, to ask a question, do /msg Tutor <your question here>.");
+							C.cmd_privmsg(numeric, botnum, tutorchan, "Here we will stop for a few moments while we answer any last questions for tonight. As a reminder, to ask a question, do /msg "+botnick+" <your question here>.");
 							C.cmd_privmsg(numeric, botnum, tutorchan, "---");
 						}
 						else
@@ -116,9 +111,10 @@ public class Tutorial implements Runnable
     /**
      * Set the tutorial
      */
-	public void tutorial(Core C, String numeric, String num, String title, ArrayList<String> tutorial, String tutorchan)
+	public void tutorial(Core C, String botnick, String numeric, String num, String title, ArrayList<String> tutorial, String tutorchan)
 	{
 		this.C = C;
+		this.botnick = botnick;
 		this.numeric = numeric;
 		this.botnum = num;
 		this.title = title;

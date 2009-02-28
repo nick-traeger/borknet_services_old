@@ -21,16 +21,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
-import java.io.*;
-import java.net.*;
-import java.util.*;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,7 +49,8 @@ public class DelPoints implements Runnable
 				dbc.delPoints(20);
 			}
 		};
-		new Timer(delay, taskPerformer).start();
+		timer = new Timer(delay, taskPerformer);
+		timer.start();
 	}
 
     /**
@@ -67,5 +59,10 @@ public class DelPoints implements Runnable
 	public DelPoints(DBControl dbc)
 	{
 		this.dbc = dbc;
+	}
+
+	public void stop()
+	{
+		timer.stop();
 	}
 }//end of class

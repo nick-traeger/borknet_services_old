@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -45,6 +39,7 @@ public class Q implements Modules
 	private String numeric = "";
 	private String num = "AAA";
 	private String reportchan = "";
+	private boolean sendmail = true;
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
 
@@ -59,7 +54,7 @@ public class Q implements Modules
 	{
 		this.C = C;
 		load_conf();
-		dbc = new DBControl(C,this,C.getDBCon());
+		dbc = new DBControl(C,this);
 		ser = new Server(C,dbc,this);
 		C.cmd_create_serer(host, numeric, description);
 		C.ircsend(numeric + " EB");
@@ -89,7 +84,7 @@ public class Q implements Modules
 		for(int n=0;n<channels.length;n++)
 		{
 			String channel[] = dbc.getChanRow(channels[n]);
-			if(channel[7].equals("false"))
+			if(channel[7].equals("0"))
 			{
 				C.cmd_join(numeric, num,channels[n]);
 				String bans[] = dbc.getBanList(channels[n]);
@@ -123,6 +118,7 @@ public class Q implements Modules
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
 		*/
+		infoline = dbc.getInfoLine();
 	}
 
 	public void setCmnds(ArrayList<Object> cmds,ArrayList<String> cmdn)
@@ -167,6 +163,7 @@ public class Q implements Modules
 			host = dataSrc.getProperty("host");
 			pass = dataSrc.getProperty("pass");
 			numeric = dataSrc.getProperty("numeric");
+			sendmail = Boolean.parseBoolean(dataSrc.getProperty("sendmail"));
 			/** Or for the client only:
 			num = dataSrc.getProperty("numeric");
 			*/
@@ -226,6 +223,15 @@ public class Q implements Modules
 	public void setInfoLine(String s)
 	{
 		infoline = s;
+		dbc.setInfoLine(s);
+	}
+	public boolean getSendmail()
+	{
+		return sendmail;
+	}
+	public void setSendmail(boolean s)
+	{
+		sendmail = s;
 	}
 	public void clean()
 	{
@@ -235,7 +241,7 @@ public class Q implements Modules
 	public void reop(String chan)
 	{
 		String channel[] = dbc.getChanRow(chan);
-		if(!channel[0].equals("0"))
+		if(!channel[0].equals("0") && channel[7].equals("0"))
 		{
 			C.cmd_mode(numeric, numeric+num , chan , "+o");
 			String bans[] = dbc.getBanList(chan);

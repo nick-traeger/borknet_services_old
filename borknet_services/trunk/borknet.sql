@@ -1,328 +1,272 @@
-BACKUP OF:1151285665
--- MySQL dump 10.9
+-- phpMyAdmin SQL Dump
+-- version 2.11.8.1deb5
+-- http://www.phpmyadmin.net
 --
--- Host: localhost    Database: borknet
--- ------------------------------------------------------
--- Server version	4.1.11-Debian_4sarge4-log
+-- Host: localhost
+-- Generation Time: Feb 28, 2009 at 01:30 PM
+-- Server version: 5.0.51
+-- PHP Version: 5.2.6-1+lenny2
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Database: `borknet`
+--
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `auths`
 --
 
-DROP TABLE IF EXISTS `auths`;
-CREATE TABLE `auths` (
-  `index` int(11) NOT NULL auto_increment,
-  `authnick` text NOT NULL,
-  `pass` text NOT NULL,
-  `mail` text NOT NULL,
-  `level` text NOT NULL,
-  `suspended` text NOT NULL,
-  `last` text NOT NULL,
-  `info` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `info` (`info`)
+CREATE TABLE IF NOT EXISTS `auths` (
+  `authnick` varchar(15) NOT NULL,
+  `pass` varchar(32) NOT NULL,
+  `mail` varchar(100) NOT NULL,
+  `level` int(11) NOT NULL,
+  `suspended` tinyint(1) NOT NULL,
+  `last` bigint(20) NOT NULL,
+  `info` varchar(250) NOT NULL,
+  `userflags` varchar(10) NOT NULL,
+  `vhost` varchar(150) NOT NULL,
+  PRIMARY KEY  (`authnick`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `chanfix`
 --
 
-DROP TABLE IF EXISTS `chanfix`;
-CREATE TABLE `chanfix` (
+CREATE TABLE IF NOT EXISTS `chanfix` (
+  `channel` varchar(100) NOT NULL,
+  `host` varchar(100) NOT NULL,
+  `points` int(11) NOT NULL,
+  `last` bigint(20) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `h_tickets`
+--
+
+CREATE TABLE IF NOT EXISTS `h_tickets` (
+  `user` varchar(15) NOT NULL,
+  `channel` varchar(100) NOT NULL,
+  `time` bigint(20) NOT NULL,
+  PRIMARY KEY  (`user`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `m_messages`
+--
+
+CREATE TABLE IF NOT EXISTS `m_messages` (
   `index` int(11) NOT NULL auto_increment,
-  `channel` text NOT NULL,
-  `host` text NOT NULL,
-  `points` text NOT NULL,
-  `last` text NOT NULL,
+  `authname` varchar(15) NOT NULL,
+  `from` varchar(15) NOT NULL,
+  `message` text NOT NULL,
   PRIMARY KEY  (`index`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
---
--- Table structure for table `g_tickets`
---
-
-DROP TABLE IF EXISTS `g_tickets`;
-CREATE TABLE `g_tickets` (
-  `index` int(11) NOT NULL auto_increment,
-  `user` text NOT NULL,
-  `channel` text NOT NULL,
-  `time` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `user` (`user`,`channel`,`time`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_access`
 --
 
-DROP TABLE IF EXISTS `q_access`;
-CREATE TABLE `q_access` (
-  `index` int(11) NOT NULL auto_increment,
-  `user` text NOT NULL,
-  `channel` text NOT NULL,
-  `flags` text NOT NULL,
-  PRIMARY KEY  (`index`)
+CREATE TABLE IF NOT EXISTS `q_access` (
+  `user` varchar(15) NOT NULL,
+  `channel` varchar(100) NOT NULL,
+  `flags` varchar(10) NOT NULL,
+  PRIMARY KEY  (`user`,`channel`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_bans`
 --
 
-DROP TABLE IF EXISTS `q_bans`;
-CREATE TABLE `q_bans` (
-  `index` int(11) NOT NULL auto_increment,
-  `name` text NOT NULL,
-  `host` text NOT NULL,
-  PRIMARY KEY  (`index`)
+CREATE TABLE IF NOT EXISTS `q_bans` (
+  `name` varchar(100) NOT NULL,
+  `host` varchar(100) NOT NULL,
+  PRIMARY KEY  (`name`,`host`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_challenge`
 --
 
-DROP TABLE IF EXISTS `q_challenge`;
-CREATE TABLE `q_challenge` (
-  `index` int(11) NOT NULL auto_increment,
-  `user` text NOT NULL,
-  `challenge` text NOT NULL,
-  `time` text NOT NULL,
-  PRIMARY KEY  (`index`)
+CREATE TABLE IF NOT EXISTS `q_challenge` (
+  `user` varchar(5) NOT NULL,
+  `challenge` varchar(32) NOT NULL,
+  `time` bigint(20) NOT NULL,
+  PRIMARY KEY  (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_channels`
 --
 
-DROP TABLE IF EXISTS `q_channels`;
-CREATE TABLE `q_channels` (
-  `index` int(11) NOT NULL auto_increment,
-  `name` text NOT NULL,
-  `flags` text NOT NULL,
-  `modes` text NOT NULL,
-  `welcome` text NOT NULL,
-  `topic` text NOT NULL,
-  `last` text NOT NULL,
-  `chanlimit` text NOT NULL,
-  `suspended` text NOT NULL,
-  `chankey` text NOT NULL,
-  `level` text NOT NULL,
-  `owner` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `limit` (`chanlimit`),
-  FULLTEXT KEY `suspended` (`suspended`),
-  FULLTEXT KEY `key` (`chankey`),
-  FULLTEXT KEY `level` (`level`),
-  FULLTEXT KEY `owner` (`owner`)
+CREATE TABLE IF NOT EXISTS `q_channels` (
+  `name` varchar(100) NOT NULL,
+  `flags` varchar(30) NOT NULL,
+  `modes` varchar(20) NOT NULL,
+  `welcome` varchar(250) NOT NULL,
+  `topic` varchar(250) NOT NULL,
+  `last` bigint(20) NOT NULL,
+  `chanlimit` int(11) NOT NULL,
+  `suspended` tinyint(1) NOT NULL,
+  `chankey` varchar(50) NOT NULL,
+  `level` int(11) NOT NULL,
+  `owner` varchar(15) NOT NULL,
+  PRIMARY KEY  (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_fakeusers`
 --
 
-DROP TABLE IF EXISTS `q_fakeusers`;
-CREATE TABLE `q_fakeusers` (
-  `index` int(11) NOT NULL auto_increment,
-  `numer` text NOT NULL,
-  `nick` text NOT NULL,
-  `ident` text NOT NULL,
-  `host` text NOT NULL,
-  `desc` text NOT NULL,
-  PRIMARY KEY  (`index`)
+CREATE TABLE IF NOT EXISTS `q_fakeusers` (
+  `numer` varchar(3) NOT NULL,
+  `nick` varchar(15) NOT NULL,
+  `ident` varchar(50) NOT NULL,
+  `host` varchar(250) NOT NULL,
+  `desc` varchar(250) NOT NULL,
+  PRIMARY KEY  (`numer`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_glines`
 --
 
-DROP TABLE IF EXISTS `q_glines`;
-CREATE TABLE `q_glines` (
-  `index` int(11) NOT NULL auto_increment,
-  `gline` text NOT NULL,
-  `timeset` text NOT NULL,
-  `timeexp` text NOT NULL,
-  `reason` text NOT NULL,
-  `oper` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `reason` (`reason`,`oper`),
-  FULLTEXT KEY `timeset` (`timeset`)
+CREATE TABLE IF NOT EXISTS `q_glines` (
+  `gline` varchar(100) NOT NULL,
+  `timeset` bigint(20) NOT NULL,
+  `timeexp` bigint(20) NOT NULL,
+  `reason` varchar(250) NOT NULL,
+  `oper` varchar(15) NOT NULL,
+  PRIMARY KEY  (`gline`(30))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_jupes`
 --
 
-DROP TABLE IF EXISTS `q_jupes`;
-CREATE TABLE `q_jupes` (
-  `index` int(11) NOT NULL auto_increment,
-  `jupe` text NOT NULL,
-  `numer` text NOT NULL,
-  `timeset` text NOT NULL,
-  `timeexp` text NOT NULL,
-  `reason` text NOT NULL,
-  `oper` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `reason` (`reason`,`oper`),
-  FULLTEXT KEY `timeset` (`timeset`),
-  FULLTEXT KEY `numer` (`numer`)
+CREATE TABLE IF NOT EXISTS `q_jupes` (
+  `jupe` varchar(100) NOT NULL,
+  `numer` varchar(5) NOT NULL,
+  `timeset` int(11) NOT NULL,
+  `timeexp` int(11) NOT NULL,
+  `reason` varchar(250) NOT NULL,
+  `oper` varchar(15) NOT NULL,
+  PRIMARY KEY  (`jupe`),
+  KEY `numer` (`numer`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_mails`
 --
 
-DROP TABLE IF EXISTS `q_mails`;
-CREATE TABLE `q_mails` (
-  `index` int(11) NOT NULL auto_increment,
-  `mail` text NOT NULL,
-  PRIMARY KEY  (`index`)
+CREATE TABLE IF NOT EXISTS `q_mails` (
+  `mail` varchar(100) NOT NULL,
+  PRIMARY KEY  (`mail`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_pwrequest`
 --
 
-DROP TABLE IF EXISTS `q_pwrequest`;
-CREATE TABLE `q_pwrequest` (
-  `index` int(11) NOT NULL auto_increment,
-  `user` text NOT NULL,
-  `pass` text NOT NULL,
-  `code` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `code` (`code`)
+CREATE TABLE IF NOT EXISTS `q_pwrequest` (
+  `user` varchar(15) NOT NULL,
+  `pass` varchar(7) NOT NULL,
+  `code` varchar(100) NOT NULL,
+  PRIMARY KEY  (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `q_trusts`
 --
 
-DROP TABLE IF EXISTS `q_trusts`;
-CREATE TABLE `q_trusts` (
-  `index` int(11) NOT NULL auto_increment,
-  `host` text NOT NULL,
-  `users` text NOT NULL,
-  `auth` text NOT NULL,
-  `time` text NOT NULL,
-  `need-ident` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `reason` (`time`,`need-ident`),
-  FULLTEXT KEY `timeset` (`users`)
+CREATE TABLE IF NOT EXISTS `q_trusts` (
+  `host` varchar(15) NOT NULL,
+  `users` int(11) NOT NULL,
+  `auth` varchar(15) NOT NULL,
+  `time` int(11) NOT NULL,
+  `need-ident` tinyint(1) NOT NULL,
+  PRIMARY KEY  (`host`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `q_variables`
+--
+
+CREATE TABLE IF NOT EXISTS `q_variables` (
+  `info` varchar(500) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `s_channels`
 --
 
-DROP TABLE IF EXISTS `s_channels`;
-CREATE TABLE `s_channels` (
-  `index` int(11) NOT NULL auto_increment,
-  `name` text NOT NULL,
-  `flags` text NOT NULL,
-  PRIMARY KEY  (`index`)
+CREATE TABLE IF NOT EXISTS `s_channels` (
+  `name` varchar(100) NOT NULL,
+  `flags` varchar(5) NOT NULL,
+  PRIMARY KEY  (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `s_kills`
---
-
-DROP TABLE IF EXISTS `s_kills`;
-CREATE TABLE `s_kills` (
-  `index` int(11) NOT NULL auto_increment,
-  `kills` text NOT NULL,
-  PRIMARY KEY  (`index`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `s_users`
---
-
-DROP TABLE IF EXISTS `s_users`;
-CREATE TABLE `s_users` (
-  `index` int(11) NOT NULL auto_increment,
-  `username` text NOT NULL,
-  `points` text NOT NULL,
-  `message` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `message` (`message`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `servers`
---
-
-DROP TABLE IF EXISTS `servers`;
-CREATE TABLE `servers` (
-  `index` int(11) NOT NULL auto_increment,
-  `numer` text NOT NULL,
-  `host` text NOT NULL,
-  `hub` text NOT NULL,
-  `service` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `services` (`service`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `u_connect4`
---
-
-DROP TABLE IF EXISTS `u_connect4`;
-CREATE TABLE `u_connect4` (
-  `id` text NOT NULL,
-  `user1` text NOT NULL,
-  `user2` text NOT NULL,
-  `field` text NOT NULL,
-  `turn` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `userchans`
 --
 
-DROP TABLE IF EXISTS `userchans`;
-CREATE TABLE `userchans` (
-  `index` int(11) NOT NULL auto_increment,
-  `channel` text NOT NULL,
-  `user` text NOT NULL,
-  `modes` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `modes` (`modes`)
+CREATE TABLE IF NOT EXISTS `userchans` (
+  `channel` varchar(100) NOT NULL,
+  `user` varchar(5) NOT NULL,
+  `modes` varchar(3) NOT NULL,
+  KEY `chanuser` (`channel`,`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Table structure for table `users`
+-- Table structure for table `x_stats`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
-  `index` int(11) NOT NULL auto_increment,
-  `numer` text NOT NULL,
-  `nick` text NOT NULL,
-  `host` text NOT NULL,
-  `modes` text NOT NULL,
-  `authnick` text NOT NULL,
-  `isop` text NOT NULL,
-  `server` text NOT NULL,
-  `ip` text NOT NULL,
-  `fake` text NOT NULL,
-  PRIMARY KEY  (`index`),
-  FULLTEXT KEY `server` (`server`),
-  FULLTEXT KEY `ip` (`ip`),
-  FULLTEXT KEY `fake` (`fake`)
+CREATE TABLE IF NOT EXISTS `x_stats` (
+  `maxusers` int(11) NOT NULL,
+  `maxopers` int(11) NOT NULL,
+  `maxservers` int(11) NOT NULL,
+  `maxchannels` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

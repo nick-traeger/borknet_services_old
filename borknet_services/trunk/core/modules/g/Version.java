@@ -20,13 +20,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
+
+/*
+Version reply, replies with both the Core version and Module version,
+and to both ctcp's and pm's.
+*/
+
+
 import java.io.*;
 import java.util.*;
 import borknet_services.core.*;
@@ -48,7 +49,7 @@ public class Version implements Command
 	public void parse_command(Core C, G Bot, String numeric, String botnum, String username, String params)
 	{
 		String version1 = C.get_version();
-		String version2 = "BorkNet Help Service (C) Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
+		String version2 = "BorkNet Game Module (C) Laurens Panier (Ozafy) & BorkNet Dev-Com - http://www.borknet.org";
 		if(params.startsWith("\1"))
 		{
 			version1 = "\1VERSION " + version1 + "\1";
@@ -64,6 +65,6 @@ public class Version implements Command
 	}
 	public void showcommand(Core C, G Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "version - Shows the version.");
+		C.cmd_notice(numeric, botnum, username, "VERSION             Shows the version.");
 	}
 }

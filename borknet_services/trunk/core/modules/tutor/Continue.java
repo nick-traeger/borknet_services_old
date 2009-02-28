@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 
@@ -67,6 +61,6 @@ public class Continue implements Command
 	}
 	public void showcommand(Core C, Tutor Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "continue - Continues a paused tutorial. - level 2.");
+		C.cmd_notice(numeric, botnum, username, "CONTINUE            Continues a paused tutorial. - level 2.");
 	}
 }

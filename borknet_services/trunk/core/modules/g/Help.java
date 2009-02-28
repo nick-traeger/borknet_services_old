@@ -20,13 +20,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
+
+/*
+The help command, doesn't need to do anything command wise
+since that's handled in Commands. It does reply to showcommands
+and help.
+*/
+
+
 import java.io.*;
 import java.util.*;
 import borknet_services.core.*;
@@ -55,6 +57,6 @@ public class Help implements Command
 	}
 	public void showcommand(Core C, G Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "help <command> - Shows help on command.");
+		C.cmd_notice(numeric, botnum, username, "HELP                Shows help on command.");
 	}
 }

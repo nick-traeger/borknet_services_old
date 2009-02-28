@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Splitlist implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >99)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >99)
 		{
 			ArrayList<String> splits = C.get_splitList();
 			C.cmd_notice(numeric, botnum,username , "Split servers:");
@@ -89,7 +83,7 @@ public class Splitlist implements Command
 	{
 		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "splitlist - Shows all currently split servers. - level 100.");
+			C.cmd_notice(numeric, botnum, username, "SPLITLIST           Shows all currently split servers. - level 100.");
 		}
 	}
 }

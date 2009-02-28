@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 package borknet_services.core;
 import java.util.*;
@@ -386,7 +380,7 @@ public class CoreServer
 		String[] result = msg.split("\\s");
 		try
 		{
-			dbc.addServer(result[6].substring(0,2),result[1],numeric,"false");
+			dbc.addServer(result[6].substring(0,2),result[1],numeric,false);
 			sync(result[6].substring(0,2));
 			return;
 		}
@@ -415,7 +409,7 @@ public class CoreServer
 			{
 				service = true;
 			}
-			dbc.addServer(result[7].substring(0,2),result[2],result[0],service+"");
+			dbc.addServer(result[7].substring(0,2),result[2],result[0],service);
 			C.del_split(result[2]);
 			return;
 		}
@@ -471,6 +465,15 @@ public class CoreServer
 		else
 		{
 			nume = nume2;
+		}
+		if(C.get_debug() && C.get_EA())
+		{
+			////@B: user [scrawl43] has quitted [Quit: [SearchIRC] Indexed 586 channels in 10 secs @ Jul 11th, 2008, 9:42 pm]
+			String user[] = dbc.getUserRow(nume);
+			if(!user[2].contains("data.searchirc.org"))
+			{
+				C.report("User: [" + user[1] + "] ["+user[2]+"] has quit ["+params.substring(params.indexOf(":") +1)+"]");
+			}
 		}
 		//remove the disconnected user and deauth him
 		dbc.delUser(nume);
@@ -580,7 +583,20 @@ public class CoreServer
 						C.cmd_notice(corenum,opernume, infoline);
 					}
 				}
-				dbc.addUser(opernume,opernck,operhst,opermde,auth,""+isop,opernume.substring(0,2),ip,fake);
+				dbc.addUser(opernume,opernck,operhst,opermde,auth,isop,opernume.substring(0,2),ip,fake);
+				if(C.get_debug() && C.get_EA())
+				{
+					if(!operhst.contains("data.searchirc.org"))
+					{
+						//user [scrawl43] [dwelabbric@data.searchirc.org] has connected on [hub.webbirc.se]
+						String serverReport=dbc.getServer(opernume);
+						if(serverReport.toLowerCase().contains("ozafy"))
+						{
+							serverReport = "yfazo.de.borknet.org";
+						}
+						C.report("User: [" + opernck + "] ["+operhst+"] has connected on ["+serverReport+"]");
+					}
+				}
 				return;
 			}
 			catch(ArrayIndexOutOfBoundsException e)
@@ -741,7 +757,7 @@ public class CoreServer
 	/**
 	 * Function gets issued every Ping
 	 */
-	public void gotPing()
+	public void timerTick()
 	{
 
 		if(limit == 3)
@@ -773,7 +789,7 @@ public class CoreServer
 			String authinfo[] = dbc.getAuthRow(nick);
 			if(authinfo[0].equals("0"))
 			{
-				dbc.addAuth(auth,"authed by other service","authed by other service","1","false",C.get_time(),"0");
+				dbc.addAuth(auth,"authed by other service","authed by other service",1,false,Long.parseLong(C.get_time()),"0","0","0");
 			}
 			else
 			{

@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 /*
@@ -45,7 +39,6 @@ public class Tutor implements Modules
 {
 	private Core C;
 	private Server ser;
-	private DBControl dbc;
 	private String description = "";
 	private String nick = "";
 	private String ident = "";
@@ -74,8 +67,7 @@ public class Tutor implements Modules
 		this.C = C;
 		load_conf();
 		numeric = C.get_numeric();
-		dbc = new DBControl(C,this,C.getDBCon());
-		ser = new Server(C,dbc,this);
+		ser = new Server(C,this);
 		C.cmd_create_service(num, nick, ident, host, "+oXwkgsr", description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
@@ -152,7 +144,7 @@ public class Tutor implements Modules
 	}
 	public void loadTutorial(String title)
 	{
-		t.tutorial(C, numeric, num, title, tutorialtext, tutorchan);
+		t.tutorial(C, nick, numeric, num, title, tutorialtext, tutorchan);
 	}
 	public void startTutorial()
 	{
@@ -230,10 +222,6 @@ public class Tutor implements Modules
 	public String get_host()
 	{
 		return host;
-	}
-	public DBControl get_dbc()
-	{
-		return dbc;
 	}
 	public void clean()
 	{

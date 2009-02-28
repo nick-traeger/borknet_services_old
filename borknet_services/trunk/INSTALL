@@ -4,6 +4,13 @@ Installation of the BorkNet Services
 Copyright (C) 2004 Ozafy - ozafy@borknet.org - http://www.borknet.org
 ---------------------------------------------------------------------
 
+A guide on installing these services on debian can be found here:
+-----------------------------------------------------------------
+
+http://www.borknet.org/index.php?topic=faqs&page=services
+
+
+
 Table Of Contents:
 ------------------
 1. Requirements
@@ -38,18 +45,6 @@ http://dev.mysql.com/downloads/connector/j/3.0.html
  after this, run the CreateAccount program, which will create the
  Services Admin account.
 
- 2.2 PHP
- =======
- since N uses md5 hashes of passwords in it's db, it is not possible to
- retrieve user passwords. Because of this, we have created a possibility to
- reset user passwords. When a user issues the requestpassword command, a
- mail gets sent to the e-mail belonging to that auth account. In this e-mail
- is a link, which, when clicked, will reset the user's password.
- for this to work, you'll need to put up the requestpassword.php and
- /incs/bork_connect.php files on your networks site, and add your networks
- main address to the config. The links will then look something like
- http://www.yournet.org/requestpassword.php?user=Username&code=dVrt6g .
-
 
 
 3. Configuration
@@ -59,16 +54,21 @@ edit bot.conf.
 
 edit /core/modules/botname/botname.conf for each of the modules.
 
+Disable F:ZANNELS and F:OPLEVELS in your snircd config.
+
+R needs an account with sufficiant level to add channels, you can use CreateAccount for that.
+
 
 
 4. Running
 ==========
 
 ./services
-(To turn off debugging/logging remove the flag from the startupline)
+(To turn off debugging/logging remove the d flag from the startupline)
 
 Makes sure you obey the directory structure, that means the Start.class file
-should be in a directory called borknet_services, with all other dirs below.
+should be in a directory called borknet_services in your home, with all other
+dirs below.
 
 
 

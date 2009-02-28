@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -64,6 +58,6 @@ public class Version implements Command
 	}
 	public void showcommand(Core C, S Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "version - Shows the version.");
+		C.cmd_notice(numeric, botnum, username, "VERSION             Shows the version.");
 	}
 }

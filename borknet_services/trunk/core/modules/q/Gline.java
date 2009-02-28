@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Gline implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >99)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >99)
 		{
 			String[] result = params.split("\\s");
 			try
@@ -88,17 +82,8 @@ public class Gline implements Command
 					}
 				}
 				dbc.addGline(host,C.get_time(),duration+"",reason,auth[0]);
-				String hit;
-				if(host.startsWith("#") || host.startsWith("&"))
-				{
-					hit = dbc.getAffectedC(host.replace("*","%")) + " channels";
-				}
-				else
-				{
-					hit = dbc.getAffectedU(host.substring(0,host.indexOf("!")).replace("*","%"),host.substring(host.indexOf("!")+1).replace("*","%")) + " users";
-				}
-				C.cmd_notice(numeric, botnum, username, "Added GLINE "+host+", expires in "+duration+"s, hit "+hit+".");
-				C.report(auth[0] + " added GLINE "+host+", expires in "+duration+"s, hit "+hit+".");
+				C.cmd_notice(numeric, botnum, username, "Added GLINE "+host+", expires in "+duration+"s.");
+				C.report(auth[0] + " added GLINE "+host+", expires in "+duration+"s.");
 				return;
 			}
 			//he didn't, Yoda time!
@@ -133,7 +118,7 @@ public class Gline implements Command
 	{
 		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "gline <host|#channel> <duration> [reason] - Glines a given host or channel. - level 100.");
+			C.cmd_notice(numeric, botnum, username, "GLINE               Glines a given host or channel. - level 100.");
 		}
 	}
 }

@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -118,7 +112,10 @@ public class Requestowner implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "requestowner <channel> - Can be used to request the owner (+n) flag on channels that have lost all owners.");
+		if(lev>0)
+		{
+			C.cmd_notice(numeric, botnum, username, "REQUESTOWNER        Can be used to request the owner (+n) flag on channels that have lost all owners.");
+		}
 	}
 
 	private boolean check_flag(String[][] access,String flag)

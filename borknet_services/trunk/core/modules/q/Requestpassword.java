@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -80,9 +74,9 @@ public class Requestpassword implements Command
 					//use the %nbsp tag to indicate a space, %newline for a newline
 					String subj = "Your " + Bot.get_nick() + " account password!";
 					String mesg = "Someone has requested your password, if it wasn't you, please disregard this message.%newline";
-					mesg += "To obtain your password, please visit the following link:%newline";
+					mesg += "To obtain your password, please use the following Q command:%newline";
 					mesg += "%nbsp%newline";
-					mesg += C.get_web() + "requestpassword.php?user="+user+"&activation="+code+"%newline";
+					mesg += "/msg " + Bot.get_nick() + " resetpassword " + user + " " + code + "%newline";
 					mesg += "%nbsp%newline";
 					mesg += "%nbsp%newline";
 					//call mail thread
@@ -120,6 +114,6 @@ public class Requestpassword implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "requestpassword <username> <your@mail.here> - Get your login info mailed to your email address in case you have lost it.");
+		C.cmd_notice(numeric, botnum, username, "REQUESTPASSWORD     Get your login info mailed to your email address in case you have lost it.");
 	}
 }

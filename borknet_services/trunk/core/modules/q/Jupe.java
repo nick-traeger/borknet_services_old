@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -56,7 +50,7 @@ public class Jupe implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >949)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >949)
 		{
 			String[] result = params.split("\\s");
 			try
@@ -92,7 +86,7 @@ public class Jupe implements Command
 						reason += " " + result[m];
 					}
 				}
-				dbc.addJupe(host,nume,C.get_time(),duration+"",reason,auth[0],numeric);
+				dbc.addJupe(host,nume,Long.parseLong(C.get_time()),duration,reason,auth[0],numeric);
 				C.cmd_notice(numeric, botnum,username, "Added jupe: "+host+" ("+nume+"), expires in "+duration+"s.");
 				C.report(auth[0] + " added jupe: "+host+" ("+nume+"), expires in "+duration+"s.");
 				return;
@@ -128,7 +122,7 @@ public class Jupe implements Command
 	{
 		if(lev > 949)
 		{
-			C.cmd_notice(numeric, botnum, username, "jupe <host> <numeric> <duration> [reason] - Jupes a server. - level 950.");
+			C.cmd_notice(numeric, botnum, username, "JUPE                Jupes a server. - level 950.");
 		}
 	}
 }

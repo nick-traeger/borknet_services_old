@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 package borknet_services.core;
 import java.util.*;
@@ -107,12 +101,7 @@ public class CoreCommands
 				Cmds ccommand = (Cmds) cmds.get(cmd);
 				CoreDBControl dbc = C.get_dbc();
 				String user[] = dbc.getUserRow(username);
-				int lev = 0;
-				if(!user[4].equals("0"))
-				{
-					String auth[] = dbc.getAuthRow(user[4]);
-					lev = Integer.parseInt(auth[3]);
-				}
+				int lev = dbc.getAuthLev(username);
 				ccommand.parse_help(C,bot,username,lev);
 			}
 			else
@@ -124,15 +113,12 @@ public class CoreCommands
 		if(command.equals("showcommands"))
 		{
 			C.cmd_notice(bot,username,"The following commands are available to you:");
+			C.cmd_notice(bot,username,"For more information on a specific command, type HELP <command>:");
 			CoreDBControl dbc = C.get_dbc();
-			String user[] = dbc.getUserRow(username);
-			int lev = 0;
-			if(!user[4].equals("0"))
-			{
-				String auth[] = dbc.getAuthRow(user[4]);
-				lev = Integer.parseInt(auth[3]);
-			}
-			Set<String> keys = cmds.keySet();
+			int lev = dbc.getAuthLev(username);
+			List<String> keys = new ArrayList<String>(cmds.keySet());
+			Collections.sort(keys);
+			//Set<String> keys = cmds.keySet();
 			for(String key : keys)
 			{
 				Cmds ccommand = (Cmds) cmds.get(key);

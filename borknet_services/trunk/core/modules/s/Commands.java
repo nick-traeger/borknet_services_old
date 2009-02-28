@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Botoston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.util.*;
 import java.net.*;
@@ -65,7 +59,7 @@ public class Commands
 	{
 		if(target.startsWith("#"))
 		{
-			if(dbc.SchanExists(target) && dbc.getAuthLev(username) < 2)
+			if(dbc.SchanExists(target) && dbc.getAuthLev(username) < 2 && !dbc.isService(username))
 			{
 				String f = dbc.getChanFlags(target);
 				if(f.equals("n"))
@@ -74,7 +68,7 @@ public class Commands
 				}
 				else if(f.equals("i"))
 				{
-					C.cmd_dis(numeric, botnum,username, "You are violating "+network+" rules. Please read "+rules+". ID: "+dbc.getID());
+					C.cmd_dis(username, "You are violating "+network+" rules. Please read "+rules+". ID: "+dbc.getID());
 				}
 			}
 		}
@@ -107,13 +101,7 @@ public class Commands
 			{
 				Command ccommand = (Command) cmds.get(compo);
 				CoreDBControl dbc = C.get_dbc();
-				String user[] = dbc.getUserRow(username);
-				int lev = 0;
-				if(!user[4].equals("0"))
-				{
-					String auth[] = dbc.getAuthRow(user[4]);
-					lev = Integer.parseInt(auth[3]);
-				}
+				int lev = dbc.getAuthLev(username);
 				ccommand.parse_help(C,Bot,numeric,botnum,username,lev);
 			}
 			else
@@ -125,14 +113,9 @@ public class Commands
 		if(command.equals("showcommands"))
 		{
 			C.cmd_notice(numeric, botnum,username,"The following commands are available to you:");
+			C.cmd_notice(numeric, botnum,username,"For more information on a specific command, type HELP <command>:");
 			CoreDBControl dbc = C.get_dbc();
-			String user[] = dbc.getUserRow(username);
-			int lev = 0;
-			if(!user[4].equals("0"))
-			{
-				String auth[] = dbc.getAuthRow(user[4]);
-				lev = Integer.parseInt(auth[3]);
-			}
+			int lev = dbc.getAuthLev(username);
 			for(int n=0; n<cmds.size(); n++)
 			{
 				Command ccommand = (Command) cmds.get(n);
@@ -202,7 +185,7 @@ public class Commands
 		}
 		if(dbc.getPoints(username) > 100)
 		{
-			C.cmd_dis(numeric, botnum,username, "You are violating "+network+" rules. Please read "+rules+". ID: "+dbc.getID());
+			C.cmd_dis(username, "You are violating "+network+" rules. Please read "+rules+". ID: "+dbc.getID());
 		}
 	}
 }

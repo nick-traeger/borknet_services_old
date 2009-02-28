@@ -1,3 +1,55 @@
+28/02/2009 REV35
+T: Updated the botnet match.
+V: Removed startup message.
+Core: Fixed all timestamps, which should also fix the db cleanup issue.
+DB: Changed all fields to a more correct datatype than 'text'.
+Global: updated db classes and several others to reflect the new datatypes.
+DB: updated queries to work with mysql connector 5, although the thing still causes out of memory exceptions.
+Core: commands are now sorted alphabetically.
+H: Changed Quit message.
+DB: Optimized alot of queries and code.
+R: Updated DB code and config.
+S: Removed user and kills table, moved to internal memory.
+G: All memory is internal.
+Core: Added garbage collection.
+Core: Changed backup name format and made backups directly importable.
+Core: Users memory is internal.
+S: Now ignores services.
+Q: Stafflist changed, Services dev added. Staff with an authlev of 5000 or over will be ignored (handy for other services).
+Core: Deleting a non existing user no longer causes a crash.
+Core: Trying to load a non existant module on startup no longer causes a crash.
+Core: Auths loaded at startup, saved in real time.
+Core & Modules: Improves the commands processing.
+Q: Shade commands removed.
+Q: Added Userflags.
+Q: Invite works on multiple channels.
+Q: E-mail verification is optional.
+Core: Fixed typo.
+Core: Enabling debug will now also relay more messages to your reportchan.
+Q: Logoninfo is now saved.
+Q: Fixed crash on duplicate G-Line
+GLOBAL: Showcommands changed to a clearer listing
+Q: Fixed Act
+Q: Fixed various spelling mistakes
+Q: Userflags added
+Q: Auto vhost on auth
+V: Link vhosts to an auth
+Q: Fixed sbroadcast.
+X: Created.
+Core: Added internal timer.
+Q: Fixed Q reapplying expired Glines.
+Q: Fixed bug where a chanel that wasn't suspended got unsuspended Q didn't leave the channel.
+Core: Character encoding changed to ISO-8859-1.
+Core: Fixed some spelling.
+T: Added fakeclients to look for trojans.
+Q: Added cyclechannels command.
+Core: Updated showcommands.
+
+Name Changes:
+G->H
+U->G
+N->O
+
 13/04/2008 REV 34
 Core: Updated a Burst error with snircd.
 
@@ -11,7 +63,8 @@ Core: Fixed pong message
 Faulty Revisions.
 
 22/03/2008 REV29
-R: Removed support for L & Logserv.
+R: Removed support for L.
+Logserv: removed.
 
 02/03/2008 REV28
 Q: Now accepts snircd channel modes.
@@ -97,7 +150,7 @@ Q: Added Shade command.
 19/02/2006 V1.0.2
 Core: Fixed bug in startfile.
 
-05/02/2006 V1.0.1
+05/02/2006 V1.0.1 MILESTONE 1.0
 Core: Added changelev command.
       Picks up AC's by other servers.
       Fixed bug in detecting mode changes.

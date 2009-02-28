@@ -1,19 +1,52 @@
+MILESTONE 2.0 STUFF
+
 Urgent:
-Fix/Find/Confirm bug in N not deleting a channel that got closed on net resync? --> We need a second server for that :(
-check compatibility with higher mysql connector
-check db cleanup error
-add automated message to Q that informs users when an admin uses changepass, giving them their new password.
+Find wtf is up with mysql connector 5, keeps causing out of memory errors. --> need to close stuff?
+Jupe bug, servers don't get removed.
+Connect4 allows player to play when not his turn
+
 
 Upgrades:
-Use hashmaps to store module commands instead of arraylists.
-Cleanup mysql queries & indexes to imporve speed (use a memory system).
-Use one central dbcore, with subclasses for bot specific db actions.
-Refactor... lots
+- Optimize to hold atleast 2000 users with ease, this will result in useability on 90% of existing networks. Advertise once done!
+- Store more information about modes, limits, etc. Parse info to check if it is set or not before bursting to reduce traffic.
+- Start looking at revision sql patches instead of full db releases.
 
-(N) Userchans should hold voice and op status, not just op.
-(V) Custom vHosts for users linked to Q accounts -> REQUIRES DB UPDATE
-(Q) Improve limit function -> REQUIRES DB UPDATE
-(Q) Add a rehashable customizable motd file.
-(Q) Add some nifty new features/flags etc..
-(T) Add Fakeclients to check for onjoin/part messages (kill or report)
-(S) Gline after X kills
+- Rename commands to a better name (ungline->glinedel, changechanlev, etc)
+- Use hasmaps to hold auths/users/channels/servers/etc ? Or look for a better internal memory alternative.
+- Give commands a level requirement which is checked before the command is executed (A simple variable will do).
+
+
+- for the partial memory, don't emulate the db, hold some data that is used often with just one key: eg channel modes, topic, 
+  welcome, all have the channel as key, etc. this will also improve 'exists' 
+  and 'getrow' statements.
+- Userchans table has to go to internal.
+- What to do with chanfix? Let it reset on service restarts? Load & save? It's needed for R. --> Load & save at startup/shutdown 
+  seems the best option. Lost data in this table is not *that* important, combined with a 24hour save, we're good.
+- Exits should just update, not insert, inserting should happen when needed. Make an update buffer, which saves changed 
+  data every x minutes (adjustable in config for scalability? Does this work? do we compare the 'old' db line to the new 
+  one before calling the insert, making sure it's needed? Or should we just update realtime? 
+  --> probably should, our hard disk data will be needed alot less, and updates shouldn't happen to often)
+  
+  
+- Clean. Up. Code.
+
+
+(Core) Userchans should hold voice and op status, not just op. (is this realy needed?)
+(Core) When creating a backup, delete the backup of 10 days ago.
+(Core) Chanfix should not hold services.
+(Core) Relay auths through the core and broadcast them to other modules.
+(Q) Improve limit function (hold current channel modes?).
+(Q) Add some nifty new features/flags as per QuakeNet.
+(Q) Whoami: [16:07:37] -Q- Modes: +iowgkXnIPrxhhh (3h's)
+(P) Do some testing.
+(M) Make me! --> with mumbles egg
+(Tutor) Catch filenotfounds.
+
+Update Sourceforge website.
+
+Trustgroups:
+[03:03:41] <+Webbax> (04:02:49) ( O ) Trustgroup 'localhost' (ID #1) last changed by webbax - currently online: 15
+[03:03:43] <+Webbax> (04:02:49) ( O ) Settings: Enforcing ident: no - trusted for 9999 - 9999 per user - expires in 3632d 13h 30m 38s
+[03:03:45] <+Webbax> (04:02:49) ( O ) Contact: Webbax - Comment: [no comment]
+[03:03:47] <+Webbax> (04:02:49) ( O ) Last used: now - Max usage: 15 - Last Maxuse reset: never
+[03:03:49] <+Webbax> (04:02:49) ( O ) `-127.0.0.1 (Cur: 15 Max: 15 Last: now)

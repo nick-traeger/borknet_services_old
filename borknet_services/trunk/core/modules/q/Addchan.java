@@ -20,12 +20,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 import java.io.*;
 import java.util.*;
@@ -55,7 +49,7 @@ public class Addchan implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(Boolean.parseBoolean(user[5]) && Integer.parseInt(auth[3]) >99)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >99)
 		{
 			String[] result = params.split("\\s");
 			try
@@ -82,7 +76,7 @@ public class Addchan implements Command
 					C.cmd_notice(numeric,botnum,username, "Channel is already registered.");
 					return;
 				}
-				dbc.addChan(channel,"ap","nt","0","0",C.get_time(),"10","false","0","1",owner);
+				dbc.addChan(channel,"ap","nt","0","0",Long.parseLong(C.get_time()),10,false,"0",1,owner);
 				dbc.addAccess(owner,channel,"an");
 				C.cmd_join(numeric,botnum,channel);
 				C.cmd_notice(numeric,botnum,username, "Done.");
@@ -117,7 +111,7 @@ public class Addchan implements Command
 	{
 		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "addchan <#channel> <#owner> - Adds the bot to #channel with #owner. - level 100.");
+			C.cmd_notice(numeric, botnum, username, "ADDCHAN             Adds " + Bot.get_nick() + " to a channel. - level 100.");
 		}
 	}
 }
