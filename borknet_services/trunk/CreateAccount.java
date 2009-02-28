@@ -80,7 +80,7 @@ class CreateAccount
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO auths VALUES ('',?,?,?,?,?,?,?)");
+			pstmt = con.prepareStatement("INSERT INTO auths VALUES (?,?,?,?,?,?,?)");
 			pstmt.setString(1,readFromConsole("Bot Account Username:"));
 			pstmt.setString(2,encrypt(readFromConsole("Bot Account Password:")));
 			pstmt.setString(3,readFromConsole("Bot Account E-Mail:"));
@@ -93,6 +93,12 @@ class CreateAccount
 		catch ( SQLException e )
 		{
 			System.out.println ( "Error executing sql statement" );
+			StackTraceElement[] te = e.getStackTrace();
+			System.out.println(e.toString());
+			for(StackTraceElement el : te)
+			{
+				System.out.println("\tat "+el.getClassName()+"."+el.getMethodName()+"("+el.getFileName()+":"+el.getLineNumber()+")");
+			}
 			System.exit(1);
 		}
 	}
