@@ -80,14 +80,16 @@ class CreateAccount
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO auths VALUES (?,?,?,?,?,?,?)");
+			pstmt = con.prepareStatement("INSERT INTO auths VALUES (?,?,?,?,?,?,?,?,?)");
 			pstmt.setString(1,readFromConsole("Bot Account Username:"));
 			pstmt.setString(2,encrypt(readFromConsole("Bot Account Password:")));
 			pstmt.setString(3,readFromConsole("Bot Account E-Mail:"));
-			pstmt.setString(4,"1000");
-			pstmt.setString(5,"false");
-			pstmt.setString(6,"0");
+			pstmt.setInt(4,1000);
+			pstmt.setBoolean(5,false);
+			pstmt.setLong(6,0);
 			pstmt.setString(7,"0");
+			pstmt.setString(8,"0");
+			pstmt.setString(9,"0");
 			pstmt.executeUpdate();
 		}
 		catch ( SQLException e )
