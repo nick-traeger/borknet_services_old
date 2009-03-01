@@ -15,8 +15,8 @@ Table Of Contents:
 ------------------
 1. Requirements
 2. Preparations
- 2.1 MySQL
- 2.2 PHP
+ 2.1 New MySQL Install
+ 2.2 Updating MySQL
 3. Configuration
 4. Running
 5. Closing stuff
@@ -39,11 +39,17 @@ http://dev.mysql.com/downloads/connector/j/3.0.html
 2. Preparations
 ===============
 
- 2.1 MySQL
- =========
- create the correct database/user and import the borknet.sql file.
+ 2.1 New MySQL Install
+ =====================
+ Create the correct database/user and import the borknet.sql file.
  after this, run the CreateAccount program, which will create the
  Services Admin account.
+ 
+ 2.2 Updating MySQL
+ ==================
+ Make sure you have the borknet databse selected, then apply the sql patches as needed.
+ eg: the latest revision you installed was rev 38, then install all sql patches with a
+ later revision number (rev39.sql and up).
 
 
 

@@ -34,18 +34,20 @@ O: Services Core: it can load/unload and rehash the modules.
   1.1. Modules
   ------------
 
+      G: Game Service: It has a few games built in and can be easely expanded.
+      H: Help Service: It can issue tickets for help channels, and has a queue
+         system.
+      M: Memo Service.
       Q: Channel & Oper Service: It has all functions needed for user to
          authenticate and manage their channels. It also has an extensive
          set of oper commands.
+      R: Request Service: It can be used to request Q and S.
       S: Spamscan: It will scan channels for spam & advertising and will take 
          appropriate action against malicious persons.
-      R: Request Service: It can be used to request Q and S.
-      H: Help Service: It can issue tickets for help channels, and has a queue
-         system.
-      G: Game Service: It has a few games built in and can be easely expanded.
-  Tutor: Tutorial Service: can give automated tutorials to a channel.
       T: Trojanscan Module: It scans users against bot patterns.
-      V: vHost service.
+  Tutor: Tutorial Service: can give automated tutorials to a channel.    
+      V: vHost Service.
+      X: Stats Service.
 
 2. Installation
 ===============

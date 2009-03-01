@@ -5,13 +5,14 @@ rem
 
 set CLASSPATH=G:\borknet
 
-javac *.java
+rem javac *.java
 rem javac core/*.java
 rem javac core/commands/*.java
 rem javac core/modules/basic/*.java
 rem javac core/modules/bob/*.java
 rem javac core/modules/g/*.java
 rem javac core/modules/h/*.java
+javac core/modules/m/*.java
 rem javac core/modules/p/*.java
 rem javac core/modules/q/*.java
 rem javac core/modules/r/*.java
