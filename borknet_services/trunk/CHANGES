@@ -1,3 +1,8 @@
+28/02/2009 REV38
+Core: fixed sethost.
+Q: Added a modes field to auth whois.
+V: Fixed a bug in forcehost (using user modes of the setter not settie).
+
 28/02/2009 REV36 & Rev 37
 Updated CreateAccount.
 

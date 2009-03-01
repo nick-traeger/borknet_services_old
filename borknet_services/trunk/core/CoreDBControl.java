@@ -168,8 +168,6 @@ public class CoreDBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("TRUNCATE TABLE `servers`");
-			pstmt.execute();
 			pstmt = con.prepareStatement("TRUNCATE TABLE `userchans`");
 			pstmt.execute();
 			usersByNumeric = new HashMap<String,User>();

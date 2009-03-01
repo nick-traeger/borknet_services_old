@@ -37,7 +37,6 @@ Upgrades:
 (Core) Relay auths through the core and broadcast them to other modules.
 (Q) Improve limit function (hold current channel modes?).
 (Q) Add some nifty new features/flags as per QuakeNet.
-(Q) Whoami: [16:07:37] -Q- Modes: +iowgkXnIPrxhhh (3h's)
 (P) Do some testing.
 (M) Make me! --> with mumbles egg
 (Tutor) Catch filenotfounds.

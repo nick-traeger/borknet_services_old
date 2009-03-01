@@ -160,6 +160,7 @@ public class Whois implements Command
 								}
 								C.cmd_notice(numeric, botnum, username, "IP: " + userinfoline[7]);
 								C.cmd_notice(numeric, botnum, username, "Numeric: " + userinfoline[0]);
+								C.cmd_notice(numeric, botnum, username, "Modes: " + userinfoline[3]);
 								String chans[] = dbc.getUserChans(userinfoline[0]);
 								if(!chans[0].equals("0"))
 								{
