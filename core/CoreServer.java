@@ -159,6 +159,9 @@ public class CoreServer
 		//[>in <] >> AB M #programming.help -oo ABAyJ AQAAA 1134578560
 		//[>in <] >> ABArk M #FLE +oo ABAvx ABAv0
 		//[>in <] >> ADACf M #elitesabbers +tnCN
+
+		//usermodes
+		//[>in <] >> ABASv M Ozafy +h moo@moop
 		String[] result = params.split("\\s");
 		try
 		{
@@ -206,7 +209,17 @@ public class CoreServer
 				}
 				else
 				{
-					dbc.setUserField(opernume,3 , userinfo[3] + flags);
+					if(flags.equals("h"))
+					{
+						if (!userinfo[3].contains("h"))
+						{
+							dbc.setUserField(opernume,3 , userinfo[3] + flags);
+						}
+					}
+					else
+					{
+						dbc.setUserField(opernume,3 , userinfo[3] + flags);
+					}
 				}
 				if(flags.contains("o"))
 				{

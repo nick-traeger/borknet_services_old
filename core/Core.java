@@ -595,6 +595,7 @@ public class Core
 					if(params.startsWith("M "))
 					{
 						//[>in <] >> ABAXs M #BorkNet -ov+ov ABBlK ABBli ABBly ABBlb
+						//[>in <] >> ABASv M Ozafy +h moo@moop
 						ser.mode(command, params);
 					}
 					//someone cleared modes.

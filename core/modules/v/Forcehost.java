@@ -74,7 +74,7 @@ public class Forcehost implements Command
 				String host = result[3];
 				if(ident.matches("[\\w]*") && host.matches("[\\w.]*"))
 				{
-					C.cmd_sethost(forceuserrow[0], ident, host, user[3]);
+					C.cmd_sethost(forceuserrow[0], ident, host, forceuserrow[3]);
 					C.cmd_notice(numeric, botnum, username, "Done.");
 				}
 				else
