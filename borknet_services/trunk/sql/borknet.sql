@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 28, 2009 at 01:30 PM
+-- Generation Time: Mar 01, 2009 at 11:58 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.2.6-1+lenny2
 
@@ -75,8 +75,9 @@ CREATE TABLE IF NOT EXISTS `m_messages` (
   `authname` varchar(15) NOT NULL,
   `from` varchar(15) NOT NULL,
   `message` text NOT NULL,
+  `senttime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`index`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 

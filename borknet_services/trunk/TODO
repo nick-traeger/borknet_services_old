@@ -35,6 +35,8 @@ Upgrades:
 (Core) When creating a backup, delete the backup of 10 days ago.
 (Core) Chanfix should not hold services.
 (Core) Relay auths through the core and broadcast them to other modules.
+(Core) There's an issue with removing servers on rehash on some networks, apperantly.
+(Core) get_time();
 (Q) Improve limit function (hold current channel modes?).
 (Q) Add some nifty new features/flags as per QuakeNet.
 (P) Do some testing.
