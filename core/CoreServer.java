@@ -481,9 +481,8 @@ public class CoreServer
 		}
 		if(C.get_debug() && C.get_EA())
 		{
-			////@B: user [scrawl43] has quitted [Quit: [SearchIRC] Indexed 586 channels in 10 secs @ Jul 11th, 2008, 9:42 pm]
 			String user[] = dbc.getUserRow(nume);
-			if(!user[2].contains("data.searchirc.org"))
+			if(!user[2].contains("data.searchirc.org") && !user[2].contains("echo940.server4you.de"))
 			{
 				C.report("User: [" + user[1] + "] ["+user[2]+"] has quit ["+params.substring(params.indexOf(":") +1)+"]");
 			}
@@ -599,7 +598,7 @@ public class CoreServer
 				dbc.addUser(opernume,opernck,operhst,opermde,auth,isop,opernume.substring(0,2),ip,fake);
 				if(C.get_debug() && C.get_EA())
 				{
-					if(!operhst.contains("data.searchirc.org"))
+					if(!operhst.contains("data.searchirc.org") && !operhst.contains("echo940.server4you.de"))
 					{
 						//user [scrawl43] [dwelabbric@data.searchirc.org] has connected on [hub.webbirc.se]
 						String serverReport=dbc.getServer(opernume);
