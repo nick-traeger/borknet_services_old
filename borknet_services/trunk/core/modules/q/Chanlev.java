@@ -65,7 +65,7 @@ public class Chanlev implements Command
 			String flags = "";
 			String plusflags = plus_flags(result[3]);
 			//filter bad flags in plusflags
-			Pattern patt = Pattern.compile("[^abdgmnoqtvw]");
+			Pattern patt = Pattern.compile("[^abdgkmnoqtvw]");
 			Matcher mt = patt.matcher(plusflags);
 			StringBuffer st = new StringBuffer();
 			boolean notok = mt.find();
@@ -185,7 +185,7 @@ public class Chanlev implements Command
 				//there are flags left, for some reason, do another check, this time on all remaining flags
 				if(flags.trim().length()>0)
 				{
-					Pattern pat = Pattern.compile("[^abdgmnoqtvw]");
+					Pattern pat = Pattern.compile("[^abdgkmnoqtvw]");
 					Matcher m = pat.matcher(flags);
 					StringBuffer sb = new StringBuffer();
 					boolean nok = m.find();
@@ -256,7 +256,7 @@ public class Chanlev implements Command
 					isop=true;
 				}
 				//they do
-				if(access.contains("n") || access.contains("m") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
+				if(access.contains("n") || access.contains("m") || access.contains("k") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
 				{
 					if(user.startsWith("#"))
 					{
@@ -310,7 +310,7 @@ public class Chanlev implements Command
 					String access = get_access(userinfo[4], channel,dbc);
 					boolean isop = userinfo[5].equals("1");
 					//they do
-					if(access.contains("n") || access.contains("m") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
+					if(access.contains("n") || access.contains("m") || access.contains("k") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
 					{
 						//cool counters
 						int owner = 0;
@@ -378,6 +378,7 @@ public class Chanlev implements Command
 			C.cmd_notice(numeric, botnum, username, "eg: /msg " + Bot.get_nick() + " chanlev #Feds #Ozafy +a");
 			C.cmd_notice(numeric, botnum, username, "Would give auto op to Ozafy on #Feds.");
 			C.cmd_notice(numeric, botnum, username, "Possible flags are:");
+			C.cmd_notice(numeric, botnum, username, "k - known");
 			C.cmd_notice(numeric, botnum, username, "v - voice");
 			C.cmd_notice(numeric, botnum, username, "g - auto voice");
 			C.cmd_notice(numeric, botnum, username, "o - op");

@@ -66,7 +66,7 @@ public class Invite implements Command
 						String user[] = dbc.getUserRow(username);
 						//users access
 						String acc = get_access(user[4], channel,dbc);
-						if(acc.contains("o") || acc.contains("a") || acc.contains("n") || acc.contains("m") || acc.contains("v") || acc.contains("g") || Boolean.parseBoolean(user[5]))
+						if(acc.contains("o") || acc.contains("a") || acc.contains("n") || acc.contains("m") || acc.contains("k") || acc.contains("v") || acc.contains("g") || Boolean.parseBoolean(user[5]))
 						{
 							C.cmd_invite(numeric, botnum, user[1], channel);
 							C.cmd_notice(numeric, botnum, username, "Invited to "+channel+".");
