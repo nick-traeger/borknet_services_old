@@ -1,8 +1,12 @@
 17/03/2009 REV41
+Core: removed crawler exempts.
+Q: Added chanlev +j
+
+17/03/2009 REV41
 Core: Exempt netsplit.de crawler.
 
 17/03/2009 REV40
-Q: Added chanflag +k
+Q: Added chanlev +k
 
 01/03/2009 REV39
 M: Added to SVN.

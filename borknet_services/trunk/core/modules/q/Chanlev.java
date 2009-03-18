@@ -65,7 +65,7 @@ public class Chanlev implements Command
 			String flags = "";
 			String plusflags = plus_flags(result[3]);
 			//filter bad flags in plusflags
-			Pattern patt = Pattern.compile("[^abdgkmnoqtvw]");
+			Pattern patt = Pattern.compile("[^abdgjkmnoqtvw]");
 			Matcher mt = patt.matcher(plusflags);
 			StringBuffer st = new StringBuffer();
 			boolean notok = mt.find();
@@ -185,7 +185,7 @@ public class Chanlev implements Command
 				//there are flags left, for some reason, do another check, this time on all remaining flags
 				if(flags.trim().length()>0)
 				{
-					Pattern pat = Pattern.compile("[^abdgkmnoqtvw]");
+					Pattern pat = Pattern.compile("[^abdgjkmnoqtvw]");
 					Matcher m = pat.matcher(flags);
 					StringBuffer sb = new StringBuffer();
 					boolean nok = m.find();
@@ -379,6 +379,7 @@ public class Chanlev implements Command
 			C.cmd_notice(numeric, botnum, username, "Would give auto op to Ozafy on #Feds.");
 			C.cmd_notice(numeric, botnum, username, "Possible flags are:");
 			C.cmd_notice(numeric, botnum, username, "k - known");
+			C.cmd_notice(numeric, botnum, username, "j - auto invite");
 			C.cmd_notice(numeric, botnum, username, "v - voice");
 			C.cmd_notice(numeric, botnum, username, "g - auto voice");
 			C.cmd_notice(numeric, botnum, username, "o - op");

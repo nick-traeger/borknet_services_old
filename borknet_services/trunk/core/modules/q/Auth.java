@@ -122,6 +122,10 @@ public class Auth implements Command
 					{
 						C.cmd_mode_me(numeric, botnum, username, access[n][0], "+v");
 					}
+					if(access[n][1].contains("j"))
+					{
+						C.cmd_invite(numeric, botnum, user[1], access[n][0]);
+					}
 				}
 				if(authinfo[7].contains("h") && !authinfo[8].equals("0"))
 				{
