@@ -55,43 +55,16 @@ public class Chanlev implements Command
 		{
 			//get the needed data
 			String channel = result[1];
-			boolean found2 = dbc.chanExists(channel);
-			if(!found2)
+			String user = result[2];
+			String flags = result[3];
+			if(!dbc.chanExists(channel))
 			{
 				C.cmd_notice(numeric,botnum,username, "Can't find that channel!");
 				return;
 			}
-			String user = result[2];
-			String flags = "";
-			String plusflags = plus_flags(result[3]);
-			//filter bad flags in plusflags
-			Pattern patt = Pattern.compile("[^abdgjkmnoqtvw]");
-			Matcher mt = patt.matcher(plusflags);
-			StringBuffer st = new StringBuffer();
-			boolean notok = mt.find();
-			while(notok)
-			{
-				mt.appendReplacement(st, "");
-				notok = mt.find();
-			}
-			mt.appendTail(st);
-			plusflags = st.toString();
-			String minflags = min_flags(result[3]);
 			//get his access to the channel
 			String acc = get_access(userinfo[4], channel,dbc);
 			boolean isop = userinfo[5].equals("1");
-			//he wants to edit +mn, but has no +n
-			if((flags.contains("m") || flags.contains("n")) && !acc.contains("n") && !isop)
-			{
-				C.cmd_notice(numeric,botnum,username, "You have to be owner to change a master's flags!");
-				return;
-			}
-			//he wants to change access but doesn't have +mn
-			if(!acc.contains("n") && !acc.contains("m") && !isop)
-			{
-				C.cmd_notice(numeric,botnum,username, "You have to be master to change someone's flags!");
-				return;
-			}
 			//it's a nick, we need the auth
 			String auth;
 			String num = "0";
@@ -112,8 +85,7 @@ public class Chanlev implements Command
 						auth = userauth[4];
 						num = userauth[0];
 						host = userauth[2];
-						boolean found6 = dbc.authExists(auth);
-						if(!found6)
+						if(!dbc.authExists(auth))
 						{
 							C.cmd_notice(numeric,botnum,username, "Who on earth is that?");
 							return;
@@ -129,8 +101,7 @@ public class Chanlev implements Command
 			else
 			{
 				//check if the user they want to mod exists
-				boolean found4 = dbc.authExists(user.substring(1));
-				if(!found4)
+				if(!dbc.authExists(user.substring(1)))
 				{
 					C.cmd_notice(numeric,botnum,username, "Who on earth is that?");
 					return;
@@ -143,6 +114,92 @@ public class Chanlev implements Command
 					host = userauth[2];
 				}
 			}
+			/* at this point we know both users exist, and so does the channel, now we can check if we can apply flags */
+			flags = "";
+			String plusflags = plus_flags(result[3]);
+			String minflags = min_flags(result[3]);
+			String allowedPlusFlags = "";
+			String allowedMinFlags = "";
+			//The user is an owner, he can change all flags
+			if(acc.contains("n") || isop)
+			{
+				allowedPlusFlags = "abdgjkmnoqtvw";
+				allowedMinFlags = "abdgjkmnoqtvw";
+			}
+			//the user is banned
+			else if(acc.contains("b") || acc.contains("q") || acc.contains("d"))
+			{
+				C.cmd_notice(numeric,botnum,username, "You are not known or banned on this channel!");
+				return;
+			}
+			//the user is something else
+			else
+			{
+				//he's trying to change his own flags
+				if(auth.equalsIgnoreCase(userinfo[4]))
+				{
+					//a normal user can remove any flag he has
+					allowedMinFlags = acc;
+					//if they have more access, they can add +j
+					if(acc.contains("k") || acc.contains("v") || acc.contains("g") || acc.contains("o") || acc.contains("a"))
+					{
+						allowedPlusFlags = "wj";
+					}
+					//they can only add w (no welcome)
+					else
+					{
+						allowedPlusFlags = "w";
+					}
+					//a master can set any flag on himself, and remove any flag off himself (except +n obviously)
+					if(acc.contains("m"))
+					{
+						allowedPlusFlags = "abdgjkmoqtvw";
+						allowedMinFlags = "abdgjkmoqtvw";
+					}
+				}
+				//they're attempting to change someone else's flags
+				else
+				{
+					//a master can make anything but other masters/owners
+					if(acc.contains("m"))
+					{
+						allowedPlusFlags = "abdgjkoqtvw";
+						allowedMinFlags = "abdgjkoqtvw";
+					}
+					//other people can't change other people
+					else
+					{
+						C.cmd_notice(numeric,botnum,username, "You have to be master to change someone's flags!");
+						return;
+					}
+				}
+			}
+
+			//filter the flags based on the previously set patterns
+			//plus
+			Pattern pat = Pattern.compile("[^"+allowedPlusFlags+"]");
+			Matcher m = pat.matcher(plusflags);
+			StringBuffer sb = new StringBuffer();
+			boolean nok = m.find();
+			while(nok)
+			{
+				m.appendReplacement(sb, "");
+				nok = m.find();
+			}
+			m.appendTail(sb);
+			plusflags = sb.toString();
+			//min
+			pat = Pattern.compile("[^"+allowedMinFlags+"]");
+			m = pat.matcher(minflags);
+			sb = new StringBuffer();
+			nok = m.find();
+			while(nok)
+			{
+				m.appendReplacement(sb, "");
+				nok = m.find();
+			}
+			m.appendTail(sb);
+			minflags = sb.toString();
 			//needed for later string handling
 			String chaninfo[] = dbc.getAccRow(auth,channel);
 			//he had access on the channel
@@ -182,20 +239,9 @@ public class Chanlev implements Command
 						flags += mod[i];
 					}
 				}
-				//there are flags left, for some reason, do another check, this time on all remaining flags
+				//check the remaining flags
 				if(flags.trim().length()>0)
 				{
-					Pattern pat = Pattern.compile("[^abdgjkmnoqtvw]");
-					Matcher m = pat.matcher(flags);
-					StringBuffer sb = new StringBuffer();
-					boolean nok = m.find();
-					while(nok)
-					{
-						m.appendReplacement(sb, "");
-						nok = m.find();
-					}
-					m.appendTail(sb);
-					flags = sb.toString();
 					//add the flags
 					dbc.setAccessRow(auth,channel,chanlev_sort(flags));
 					if(!num.equals("0") && flags.contains("b"))
@@ -242,8 +288,7 @@ public class Chanlev implements Command
 				String channel = result[1];
 				String user = result[2];
 				//just a test to see if the channel exists.
-				boolean found1 = dbc.chanExists(channel);
-				if(!found1)
+				if(!dbc.chanExists(channel))
 				{
 					C.cmd_notice(numeric,botnum,username, "Can't find that channel!");
 					return;
@@ -255,8 +300,23 @@ public class Chanlev implements Command
 				{
 					isop=true;
 				}
+				//they're requesting their own flags, allow it
+				if(user.startsWith("#"))
+				{
+					if(user.substring(1).equalsIgnoreCase(userinfo[4]))
+					{
+						isop=true;
+					}
+				}
+				else
+				{
+					if(user.equalsIgnoreCase(userinfo[1]))
+					{
+						isop=true;
+					}
+				}
 				//they do
-				if(access.contains("n") || access.contains("m") || access.contains("k") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
+				if(access.contains("o") || access.contains("a") || access.contains("n") || access.contains("m") || isop)
 				{
 					if(user.startsWith("#"))
 					{
@@ -300,8 +360,7 @@ public class Chanlev implements Command
 					//they do
 					String channel = result[1];
 					//just a test to see if the channel exists.
-					boolean found1 = dbc.chanExists(channel);
-					if(!found1)
+					if(!dbc.chanExists(channel))
 					{
 						C.cmd_notice(numeric,botnum,username, "Can't find that channel!");
 						return;
@@ -310,7 +369,7 @@ public class Chanlev implements Command
 					String access = get_access(userinfo[4], channel,dbc);
 					boolean isop = userinfo[5].equals("1");
 					//they do
-					if(access.contains("n") || access.contains("m") || access.contains("k") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || isop)
+					if(access.contains("k") || access.contains("v") || access.contains("g") || access.contains("o") || access.contains("a") || access.contains("m") || access.contains("n") || isop)
 					{
 						//cool counters
 						int owner = 0;
@@ -319,6 +378,7 @@ public class Chanlev implements Command
 						int voice = 0;
 						int ban = 0;
 						int total = 0;
+						int known = 0;
 						String acc[][] = dbc.getChanlev(channel);
 						C.cmd_notice(numeric,botnum,username, "Known users on " + channel + " are:");
 						for(int a=0;a<acc.length;a++)
@@ -347,9 +407,13 @@ public class Chanlev implements Command
 							{
 								voice++;
 							}
+							else if(acc[a][1].contains("k"))
+							{
+								known++;
+							}
 						}
 						C.cmd_notice(numeric,botnum,username, "End of list.");
-						C.cmd_notice(numeric,botnum,username, "Total: "+total+" (owner: "+owner+", master: "+master+", op: "+op+", voice: "+voice+", ban: "+ban+").");
+						C.cmd_notice(numeric,botnum,username, "Total: "+total+" (owner: "+owner+", master: "+master+", op: "+op+", voice: "+voice+", known: "+known+", ban: "+ban+").");
 						return;
 					}
 					//he can't request the flags
