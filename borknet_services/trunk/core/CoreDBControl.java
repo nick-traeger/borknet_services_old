@@ -1714,28 +1714,31 @@ public class CoreDBControl
 		String users[] = getNumericTableUniqueHosts();
 		for(int n=0; n<users.length; n++)
 		{
-			String channels[] = getUserChans(users[n]);;
-			for(int p=0; p<channels.length; p++)
+			if(!isService(users[n]))
 			{
-				if(isOpChan(users[n], channels[p]))
+				String channels[] = getUserChans(users[n]);;
+				for(int p=0; p<channels.length; p++)
 				{
-					String user[] = getUserRow(users[n]);
-					if(!user[2].startsWith("~") && !user[2].equalsIgnoreCase(C.get_ident() + "@" + C.get_host()))
+					if(isOpChan(users[n], channels[p]))
 					{
-						String userid = user[2];
-						if(!user[4].equalsIgnoreCase("0"))
+						String user[] = getUserRow(users[n]);
+						if(!user[2].startsWith("~") && !user[2].equalsIgnoreCase(C.get_ident() + "@" + C.get_host()))
 						{
-							userid = user[4];
-						}
-						if(hasChanfix(userid, channels[p]))
-						{
-							chanfix_addpoint(userid, channels[p]);
-						}
-						else
-						{
-							if(getChanUsers(channels[p]) > 2)
+							String userid = user[2];
+							if(!user[4].equalsIgnoreCase("0"))
 							{
-								add_chanfix(userid, channels[p]);
+								userid = user[4];
+							}
+							if(hasChanfix(userid, channels[p]))
+							{
+								chanfix_addpoint(userid, channels[p]);
+							}
+							else
+							{
+								if(getChanUsers(channels[p]) > 2)
+								{
+									add_chanfix(userid, channels[p]);
+								}
 							}
 						}
 					}
