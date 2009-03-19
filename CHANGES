@@ -1,5 +1,11 @@
-19/03/2009 REV 42
+19/03/2009 REV 44
+Discovered svn fluke. recommited.
+
+19/03/2009 REV 43
 Q: chanlev: users can now rmove their own flags, +w and +j are now also changeable by all users
+
+XX/03/2009 REV42
+SVN fluke.
 
 17/03/2009 REV41
 Core: removed crawler exempts.
