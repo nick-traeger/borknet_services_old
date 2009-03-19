@@ -1,52 +1,33 @@
 MILESTONE 2.0 STUFF
 
-Urgent:
-Find wtf is up with mysql connector 5, keeps causing out of memory errors. --> need to close stuff?
-Jupe bug, servers don't get removed.
-Connect4 allows player to play when not his turn
-
-
-Upgrades:
-- Optimize to hold atleast 2000 users with ease, this will result in useability on 90% of existing networks. Advertise once done!
-- Store more information about modes, limits, etc. Parse info to check if it is set or not before bursting to reduce traffic.
-- Start looking at revision sql patches instead of full db releases.
-
-- Rename commands to a better name (ungline->glinedel, changechanlev, etc)
-- Use hasmaps to hold auths/users/channels/servers/etc ? Or look for a better internal memory alternative.
-- Give commands a level requirement which is checked before the command is executed (A simple variable will do).
-
-
-- for the partial memory, don't emulate the db, hold some data that is used often with just one key: eg channel modes, topic, 
-  welcome, all have the channel as key, etc. this will also improve 'exists' 
-  and 'getrow' statements.
-- Userchans table has to go to internal.
-- What to do with chanfix? Let it reset on service restarts? Load & save? It's needed for R. --> Load & save at startup/shutdown 
-  seems the best option. Lost data in this table is not *that* important, combined with a 24hour save, we're good.
-- Exits should just update, not insert, inserting should happen when needed. Make an update buffer, which saves changed 
-  data every x minutes (adjustable in config for scalability? Does this work? do we compare the 'old' db line to the new 
-  one before calling the insert, making sure it's needed? Or should we just update realtime? 
-  --> probably should, our hard disk data will be needed alot less, and updates shouldn't happen to often)
-  
-  
-- Clean. Up. Code.
-
-
+(Core) Close resultset and preparedstatements --> http://bugs.mysql.com/bug.php?id=5022
 (Core) Include mysqlConnector J in the release instead of a seperate install (just add the jar to the classpath), while doing this,
-       Maibe make an installer, it could check out the svn and configure some basic bot stuff, then start createaccount, this would
+       Maybe make an installer, it could check out the svn and configure some basic bot stuff, then start createaccount, this would
        also mean the user can decide where to install it without knowing anything about java.
 (Core) Userchans should hold voice and op status, not just op. (is this realy needed?)
-(Core) When creating a backup, delete the backup of 10 days ago.
-(Core) Chanfix should not hold services.
+(Core) When creating a backup, delete the backup of 10 days ago. --> start using unix time backup names.
 (Core) Relay auths through the core and broadcast them to other modules.
 (Core) There's an issue with removing servers on rehash on some networks, apperantly.
+(Core) Juped servers don't get deleted.
+(Core) Userchans in memory.
 (Q) Improve limit function (hold current channel modes?).
 (Q) Add some nifty new features/flags as per QuakeNet.
 (P) Do some testing.
+(G) Connect4 allows players to play when it's not their turn.
 (Tutor) Catch filenotfounds.
 
 Trustgroups:
-[03:03:41] <+Webbax> (04:02:49) ( O ) Trustgroup 'localhost' (ID #1) last changed by webbax - currently online: 15
-[03:03:43] <+Webbax> (04:02:49) ( O ) Settings: Enforcing ident: no - trusted for 9999 - 9999 per user - expires in 3632d 13h 30m 38s
-[03:03:45] <+Webbax> (04:02:49) ( O ) Contact: Webbax - Comment: [no comment]
-[03:03:47] <+Webbax> (04:02:49) ( O ) Last used: now - Max usage: 15 - Last Maxuse reset: never
-[03:03:49] <+Webbax> (04:02:49) ( O ) `-127.0.0.1 (Cur: 15 Max: 15 Last: now)
+[03:03:41] <+******> (04:02:49) ( O ) Trustgroup 'localhost' (ID #1) last changed by webbax - currently online: 15
+[03:03:43] <+******> (04:02:49) ( O ) Settings: Enforcing ident: no - trusted for 9999 - 9999 per user - expires in 3632d 13h 30m 38s
+[03:03:45] <+******> (04:02:49) ( O ) Contact: Webbax - Comment: [no comment]
+[03:03:47] <+******> (04:02:49) ( O ) Last used: now - Max usage: 15 - Last Maxuse reset: never
+[03:03:49] <+******> (04:02:49) ( O ) `-127.0.0.1 (Cur: 15 Max: 15 Last: now)
+
+Upgrades:
+- Store more information about modes, limits, etc. Parse info to check if it is set or not before bursting to reduce traffic.
+- Rename commands to a better name (ungline->glinedel, changechanlev, etc)
+- Give commands a level requirement which is checked before the command is executed (A simple variable will do).
+- What to do with chanfix? Let it reset on service restarts? Load & save? It's needed for R. --> Load & save at startup/shutdown 
+  seems the best option. Lost data in this table is not *that* important, combined with a 24hour save, we're good.
+  
+- Clean. Up. Code.

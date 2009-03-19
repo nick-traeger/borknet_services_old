@@ -1,3 +1,6 @@
+19/03/2009 REV 45
+Core: Chanfix no longer saves services.
+
 19/03/2009 REV 44
 Discovered svn fluke. recommited.
 
