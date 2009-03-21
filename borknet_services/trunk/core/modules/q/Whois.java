@@ -89,14 +89,9 @@ public class Whois implements Command
 						C.cmd_notice(numeric, botnum, username, auth[0] + " is an IRC Operator.");
 					}
 					//he's a captain
-					if(Integer.parseInt(auth[3])>997)
+					if(Integer.parseInt(auth[3])>949)
 					{
 						C.cmd_notice(numeric, botnum, username, auth[0] + " is an IRC Administrator.");
-					}
-					//he's a boss
-					if(Integer.parseInt(auth[3])>998)
-					{
-						C.cmd_notice(numeric, botnum, username, auth[0] + " is a Services Administrator.");
 					}
 					//he's my daddy <3
 					if(Integer.parseInt(auth[3])>999)
@@ -254,14 +249,9 @@ public class Whois implements Command
 						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is an IRC Operator.");
 					}
 					//he's a captain
-					if(levl>997)
+					if(levl>949)
 					{
 						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is an IRC Administrator.");
-					}
-					//he's a boss
-					if(levl>998)
-					{
-						C.cmd_notice(numeric, botnum, username, userinfo[1] + " is a Services Administrator.");
 					}
 					//he's my daddy <3
 					if(levl>999)

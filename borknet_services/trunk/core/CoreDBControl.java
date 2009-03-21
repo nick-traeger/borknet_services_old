@@ -1083,17 +1083,13 @@ public class CoreDBControl
 				String x = "Helper";
 				if(lev>99)
 				{
-					x = "Operator";
+					x = "IRC Operator";
 				}
-				if(lev>997)
+				if(lev>949)
 				{
-					x = "Administrator";
+					x = "IRC Administrator";
 				}
-				if(lev>998)
-				{
-					x = "Services Administrator";
-				}
-				if(lev>999)
+				if(lev>=999)
 				{
 					x = "Services Developer";
 				}
