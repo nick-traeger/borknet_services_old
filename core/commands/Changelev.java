@@ -106,11 +106,11 @@ public class Changelev implements Cmds
 		if(lev > 949)
 		{
 			C.cmd_notice(bot, username, "/msg " + C.get_nick() + " changelev <#username> <newlev>");
-			C.cmd_notice(bot, username, "Level 1: Normal User");
-			C.cmd_notice(bot, username, "Level 2: Helper");
-			C.cmd_notice(bot, username, "Level 100: Operator");
-			C.cmd_notice(bot, username, "Level 998: Administrator");
-			C.cmd_notice(bot, username, "Level 999: Services Admin/Developer");
+			C.cmd_notice(bot, username, "Level 1:   Normal User");
+			C.cmd_notice(bot, username, "Level 2:   Helper");
+			C.cmd_notice(bot, username, "Level 100: IRC Operator");
+			C.cmd_notice(bot, username, "Level 950: IRC Administrator");
+			C.cmd_notice(bot, username, "Level 999: Services Developer");
 		}
 		else
 		{
