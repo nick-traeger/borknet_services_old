@@ -84,7 +84,7 @@ public class Serverlist implements Command
 	{
 		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "SERVERLIST          Shows all currently split servers. - level 100.");
+			C.cmd_notice(numeric, botnum, username, "SERVERLIST          Shows all currently connected servers. - level 100.");
 		}
 	}
 

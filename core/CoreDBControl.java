@@ -941,7 +941,7 @@ public class CoreDBControl
 			ArrayList<String> a = new ArrayList<String>();
 			for(String s : hosts)
 			{
-					a.add(usersByHost.get(s).get(0).getNumeric());
+				a.add(usersByHost.get(s).get(0).getNumeric());
 			}
 			if(a.size()>0)
 			{
@@ -950,6 +950,7 @@ public class CoreDBControl
 			}
 			else
 			{
+
 				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
 			}
 		}
@@ -1404,14 +1405,35 @@ public class CoreDBControl
 			if(users instanceof ArrayList)
 			{
 				users.remove(u);
-				usersByAuth.put(u.getAuth(),users);
+				if(users.size()>0)
+				{
+					usersByAuth.put(u.getAuth(),users);
+				}
+				else
+				{
+					usersByAuth.remove(u.getAuth());
+				}
 			}
 			users = usersByHost.get(u.getHost());
 			users.remove(u);
-			usersByHost.put(u.getHost(),users);
+			if(users.size()>0)
+			{
+				usersByHost.put(u.getHost(),users);
+			}
+			else
+			{
+				usersByHost.remove(u.getHost());
+			}
 			users = usersByIP.get(u.getIp());
 			users.remove(u);
-			usersByIP.put(u.getIp(),users);
+			if(users.size()>0)
+			{
+				usersByIP.put(u.getIp(),users);
+			}
+			else
+			{
+				usersByIP.remove(u.getIp());
+			}
 			usersByNumeric.remove(numer);
 			System.gc();
 			PreparedStatement pstmt;

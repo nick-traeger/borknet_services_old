@@ -51,7 +51,7 @@ public class Die implements Cmds
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(user[5].equals("1") && Integer.parseInt(auth[3]) >999)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >998)
 		{
 			//tell my reportchannel what's happening
 			C.report(user[1] + " asked me to die.");
@@ -88,7 +88,7 @@ public class Die implements Cmds
 
 	public void parse_help(Core C, String bot, String username, int lev)
 	{
-		if(lev>999)
+		if(lev>998)
 		{
 			C.cmd_notice(bot, username, "/msg "+C.get_nick()+" die");
 			C.cmd_notice(bot, username, "Exit.");
@@ -100,7 +100,7 @@ public class Die implements Cmds
 	}
 	public void showcommand(Core C, String bot, String username, int lev)
 	{
-		if(lev>999)
+		if(lev>998)
 		{
 			C.cmd_notice(bot, username, "DIE                 Exit. - level 1000.");
 		}
