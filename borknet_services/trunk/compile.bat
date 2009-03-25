@@ -6,8 +6,8 @@ rem
 set CLASSPATH=D:\java
 
 rem javac *.java
-rem javac core/*.java
-rem javac core/commands/*.java
+ javac core/*.java
+ javac core/commands/*.java
 rem javac core/modules/basic/*.java
 rem javac core/modules/bob/*.java
 rem javac core/modules/g/*.java
@@ -16,7 +16,7 @@ rem javac core/modules/m/*.java
 rem javac core/modules/p/*.java
 javac core/modules/q/*.java
 rem javac core/modules/r/*.java
-rem javac core/modules/s/*.java
+ javac core/modules/s/*.java
 rem javac core/modules/tutor/*.java
 rem javac core/modules/v/*.java
 rem javac core/modules/x/*.java

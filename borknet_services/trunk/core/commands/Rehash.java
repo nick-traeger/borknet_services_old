@@ -51,7 +51,7 @@ public class Rehash implements Cmds
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(user[5].equals("1") && Integer.parseInt(auth[3]) >999)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >998)
 		{
 			//tell my reportchannel what's happening
 
@@ -85,7 +85,7 @@ public class Rehash implements Cmds
 
 	public void parse_help(Core C, String bot, String username, int lev)
 	{
-		if(lev>999)
+		if(lev>998)
 		{
 			C.cmd_notice(bot, username, "/msg "+C.get_nick()+" rehash [module]");
 			C.cmd_notice(bot, username, "Rehashes [a module].");
@@ -97,9 +97,9 @@ public class Rehash implements Cmds
 	}
 	public void showcommand(Core C, String bot, String username, int lev)
 	{
-		if(lev>999)
+		if(lev>998)
 		{
-			C.cmd_notice(bot, username, "REHASH              Rehashes a module. - level 1000.");
+			C.cmd_notice(bot, username, "REHASH              Rehashes a module. - level 999.");
 		}
 	}
 }

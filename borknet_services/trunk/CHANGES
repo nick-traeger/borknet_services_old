@@ -1,3 +1,10 @@
+25/03/2009 REV 47
+Core: Updated the userlevels on Die, rehash, Load and Unload.
+Core: Fixed a bug in removing users that would cause the host,ip and auth to keep exisitng in memory.
+Q: Fixed bug in Serverlist.
+Q: Added deop command.
+S: Updated S chanflags help.
+
 21/03/2009 REV 46
 Core: Changed the authlevels to a more logical set.
 Q: Changed the authlevels to a more logical set.

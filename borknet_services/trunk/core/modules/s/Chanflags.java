@@ -142,6 +142,10 @@ public class Chanflags implements Command
 		if(lev>99)
 		{
 			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " chanflags <#channel> [flag]");
+			C.cmd_notice(numeric, botnum, username, "Possible flags are:");
+			C.cmd_notice(numeric, botnum, username, "d: Deaf.");
+			C.cmd_notice(numeric, botnum, username, "i: Instagib.");
+			C.cmd_notice(numeric, botnum, username, "n: Normal.");
 		}
 		else
 		{
