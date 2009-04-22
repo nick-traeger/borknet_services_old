@@ -139,6 +139,9 @@ public class Challengeauth implements Command
 					String vhost[] = authinfo[8].split("@");
 					C.cmd_sethost(username, vhost[0], vhost[1], user[3]);
 				}
+    //auth to other services interested
+    CoreModControl mod = C.get_modCore();
+    mod.parse(numeric + " AC " + username + " " + authinfo[0]);
 				return;
 			}
 			else
