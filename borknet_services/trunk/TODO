@@ -1,12 +1,12 @@
 MILESTONE 2.0 STUFF
 
 (Core) Close resultset and preparedstatements --> http://bugs.mysql.com/bug.php?id=5022
-(Core) Include mysqlConnector J in the release instead of a seperate install (just add the jar to the classpath), while doing this,
-       Maybe make an installer, it could check out the svn and configure some basic bot stuff, then start createaccount, this would
-       also mean the user can decide where to install it without knowing anything about java.
+(Core) Include mysqlConnector J in the release instead of a seperate install (just add the jar to the classpath), 
+       while doing this, Maybe make an installer, it could check out the svn and configure some basic bot stuff, 
+       then start createaccount, this would also mean the user can decide where to install it without knowing
+       anything about java.
 (Core) Userchans should hold voice and op status, not just op. (is this realy needed?)
 (Core) When creating a backup, delete the backup of 10 days ago. --> start using unix time backup names.
-(Core) Relay auths through the core and broadcast them to other modules.
 (Core) There's an issue with removing servers on rehash on some networks, apperantly.
 (Core) Juped servers don't get deleted.
 (Core) Userchans in memory.

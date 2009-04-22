@@ -76,7 +76,7 @@ public class Server
 	 * @param B		The main bot
 	 * @param dbc	The connection to the database
 	 */
-    public Server(Core C, DBControl dbc, M Bot)
+ public Server(Core C, DBControl dbc, M Bot)
 	{
 		this.C = C;
 		this.Bot = Bot;
@@ -109,6 +109,23 @@ public class Server
 			String me = params.substring(2, params.indexOf(":")-1);
 			privmsg(me, command, message);
 		}
+  else if(params.startsWith("AC "))
+  {
+   //[>out<] >> ]Q AC ABAlA Nesjamag
+   String[] result = params.split("\\s");
+   try
+   {
+    int countMsgs = dbc.hasMessage(result[2].toLowerCase());
+    if (countMsgs > 0)
+    {
+     C.cmd_notice(numeric, Bot.get_corenum(), result[1], "You have " + countMsgs + " message(s).");
+    }
+   }
+   catch (Exception e)
+   {
+    return;
+   }
+  }
 	}
 
 	/**

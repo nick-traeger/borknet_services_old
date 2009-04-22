@@ -1,3 +1,7 @@
+22/04/2009 REV 53
+Q: Updated Auth and Challengeauth to relay their auth message to other modules.
+M: Now picks up on auths and notices the user when they have new messages.
+
 22/04/2009 REV 48-52
 SVN: updated directory structures, removed obsolete tag. Edge renamed branches and emptied out until major changes come along.
 
