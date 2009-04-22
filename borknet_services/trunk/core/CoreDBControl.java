@@ -1662,7 +1662,7 @@ public class CoreDBControl
 		}
 	}
 
-	public void save(String name)
+	public void save()
 	{
 		try
 		{
@@ -1673,7 +1673,7 @@ public class CoreDBControl
 			long now = (cal.getTimeInMillis() / 1000);
 
 			Runtime rt = Runtime.getRuntime();
-			File backup=new File("backup/"+name+".sql");
+			File backup=new File("backup/"+now+".sql");
 			PrintStream ps;
 
 			Process child = rt.exec("mysqldump -u"+user+" -p"+password+" "+db);

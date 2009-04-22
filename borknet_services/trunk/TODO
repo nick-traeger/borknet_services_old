@@ -6,7 +6,6 @@ MILESTONE 2.0 STUFF
        then start createaccount, this would also mean the user can decide where to install it without knowing
        anything about java.
 (Core) Userchans should hold voice and op status, not just op. (is this realy needed?)
-(Core) When creating a backup, delete the backup of 10 days ago. --> start using unix time backup names.
 (Core) There's an issue with removing servers on rehash on some networks, apperantly.
 (Core) Juped servers don't get deleted.
 (Core) Userchans in memory.
@@ -15,6 +14,7 @@ MILESTONE 2.0 STUFF
 (P) Do some testing.
 (G) Connect4 allows players to play when it's not their turn.
 (Tutor) Catch filenotfounds.
+(X) Some issue with the maximums.
 
 Trustgroups:
 [03:03:41] <+******> (04:02:49) ( O ) Trustgroup 'localhost' (ID #1) last changed by webbax - currently online: 15
