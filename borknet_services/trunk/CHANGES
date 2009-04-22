@@ -1,3 +1,6 @@
+22/04/2009 REV 48-52
+SVN: updated directory structures, removed obsolete tag. Edge renamed branches and emptied out until major changes come along.
+
 25/03/2009 REV 47
 Core: Updated the userlevels on Die, rehash, Load and Unload.
 Core: Fixed a bug in removing users that would cause the host,ip and auth to keep exisitng in memory.
