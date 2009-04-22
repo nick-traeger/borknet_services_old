@@ -120,15 +120,14 @@ public class Core
 	private boolean debug = false;
 
 	/** logging stuff */
-    private Logger logger = Logger.getLogger("");
-    private FileHandler fh;
-    private SimpleDateFormat format = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
-    private SimpleDateFormat sqlformat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-    /**
-     * Constructs an IRCClient.
-     * @param dataSrc	Holds all the configuration file settings.
-     * @param debug		If we're running in debug.
-     */
+ private Logger logger = Logger.getLogger("");
+ private FileHandler fh;
+ private SimpleDateFormat format = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
+ /**
+  * Constructs an IRCClient.
+  * @param dataSrc	Holds all the configuration file settings.
+  * @param debug		If we're running in debug.
+  */
 	public Core(boolean debug)
 	{
 		this.debug = debug;
@@ -1582,8 +1581,10 @@ public class Core
 	{
 		if(cleaner == 960)
 		{
-			java.util.Date now = new java.util.Date();
-			dbc.save(sqlformat.format(now));
+   if(debug)
+   {
+			 dbc.save();
+   }
 			mod.clean();
 			cleaner = 0;
 			System.gc();
