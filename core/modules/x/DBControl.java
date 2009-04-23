@@ -98,6 +98,7 @@ public class DBControl
 	{
 		try
 		{
+   getOperCount();
 			PreparedStatement pstmt;
 			pstmt = con.prepareStatement("UPDATE x_stats SET maxusers = ?, maxopers = ?,maxservers = ?,maxchannels = ?");
 			pstmt.setInt(1,maxUsers);
@@ -154,6 +155,10 @@ public class DBControl
 	}
 	public int getMaxServerCount()
 	{
+		if(dbc.getServerCount()>maxServers)
+		{
+			maxServers = dbc.getServerCount();
+		}
 		return maxServers;
 	}
 	public String[][] getServerTable()
