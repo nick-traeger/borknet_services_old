@@ -1509,7 +1509,7 @@ public class Core
 	public void cmd_create_service(String numeric, String num, String nick, String ident, String host, String ip, String modes, String desc)
 	{
 		String time = get_time();
-		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + nick + " "+base64Encode(ipToInt(ip))+" " + numeric+num+" :" + desc);
+		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + nick + " "+base64Encode(ipToLong(ip))+" " + numeric+num+" :" + desc);
 		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,true,numeric,"0.0.0.0","0");
 	}
 
@@ -1597,10 +1597,10 @@ public class Core
 	/**
 	 * Base64 decoding
 	 */
-	public String base64Decode(String numer)
+	public long base64Decode(String numer)
 	{
 		char num[] = numer.toCharArray();
-		int base64n = 0;
+		long base64n = 0;
 		int pwr = num.length-1;
 		for(char c : num)
 		{
@@ -1650,44 +1650,44 @@ public class Core
 			}
 			pwr--;
 		}
-		return base64n+"";
+		return base64n;
 	}
 
-	public String base64Encode(Integer numer)
+	public String base64Encode(long numer)
 	{
 		String base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]";
 		char base[] = base64.toCharArray();
 		String encoded = "";
 		while(numer>0)
 		{
-			int index = numer%64;
+   long i = numer%64;
+			int index = (int) i;
 			encoded = base[index] + encoded;
 			numer = (int) Math.ceil(numer/64);
 		}
 		return encoded;
-
 	}
 
-	public Integer ipToInt(String addr)
+	public long ipToLong(String addr)
 	{
 		String[] addrArray = addr.split("\\.");
-		int num = 0;
+		long num = 0;
 		for (int i=0;i<addrArray.length;i++)
 		{
 			int power = 3-i;
-			num += ((Integer.parseInt(addrArray[i])%256 * Math.pow(256,power)));
+			num += ((Long.parseLong(addrArray[i])%256 * Math.pow(256,power)));
 		}
 		return num;
 	}
 
-	public String intToIp(int i)
+	public String longToIp(long i)
 	{
 		return ((i >> 24 ) & 0xFF) + "." + ((i >> 16 ) & 0xFF) + "." + ((i >> 8 ) & 0xFF) + "." + (i & 0xFF);
 	}
 
-    /**
-     * process the End of Burst
-     */
+/**
+ * process the End of Burst
+ */
 	private void srv_EB()
 	{
 		//get the time

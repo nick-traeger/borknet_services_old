@@ -1,3 +1,10 @@
+24/04/2009 REV 56
+Core: Fixed ip to integer conversion (uses longs now).
+Core: No longer tries to actually resolve the ips but uses the ircds resolving.
+Q: Serverlist fixed according to core ip changes.
+Q: Server fixed according to core ip changes.
+Q: Sbroadcast updated to relfect changes to memory.
+
 23/04/2009 REV 55
 X: Fixed fault in maxServers.
 

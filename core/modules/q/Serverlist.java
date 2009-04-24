@@ -56,7 +56,7 @@ public class Serverlist implements Command
 			C.cmd_notice(numeric, botnum,username , "Network servers:");
 			for(int n=0; n<servers.length; n++)
 			{
-				String numericInt = C.base64Decode(servers[n][0]);
+				String numericInt = C.base64Decode(servers[n][0])+"";
 				C.cmd_notice(numeric, botnum,username, "("+servers[n][0]+" - "+numericInt+padding(numericInt,4)+") "+servers[n][1]+padding(servers[n][1],35)+" "+(Boolean.parseBoolean(servers[n][3])?"Service":"Server ")+" Uplink: "+servers[n][2]);
 			}
 			C.cmd_notice(numeric, botnum,username, "End of list.");
