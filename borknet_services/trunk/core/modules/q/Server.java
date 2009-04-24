@@ -683,22 +683,16 @@ public class Server
 			{
 				String opernck = result[1];
 				String operhst = result[4] + "@" + result[5];
-				String ip;
-				try
-				{
-					ip = InetAddress.getByName(result[5]).getHostAddress();
-				}
-				catch(UnknownHostException e)
-				{
-					ip = "0.0.0.0";
-				}
+				String ip = templist[templist.length -2];
+    String ipv4 = C.longToIp(C.base64Decode(ip));
 				String opernume = templist[templist.length -1];
 				int count = dbc.getIpCount(ip);
 				if(count > 4)
 				{
-					if(dbc.hostHasTrust(ip))
+     
+					if(dbc.hostHasTrust(ipv4))
 					{
-						if(count > dbc.getTrustCount(ip))
+						if(count > dbc.getTrustCount(ipv4))
 						{
 							dbc.addGline(operhst,C.get_time(),"1800","Your trust has reached it's maximum capacity.","Q");
 							return;
@@ -710,7 +704,7 @@ public class Server
 						return;
 					}
 				}
-				if(dbc.hostNeedsIdent(ip))
+				if(dbc.hostNeedsIdent(ipv4))
 				{
 					if(operhst.startsWith("~"))
 					{

@@ -75,7 +75,7 @@ public class Sbroadcast implements Command
 				C.cmd_notice(numeric, botnum,username,"/msg "+Bot.get_nick()+" sbroadcast <server> <message>");
 				return;
 			}
-			String usertable[] = dbc.getNumericTable(server+"%");
+			String usertable[] = dbc.getNumericTable(server);
 			for(int n=0; n<usertable.length; n++)
 			{
 				C.cmd_notice(numeric, botnum,usertable[n], "(Server Broadcast) "+br);

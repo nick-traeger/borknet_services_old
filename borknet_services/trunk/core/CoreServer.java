@@ -536,15 +536,7 @@ public class CoreServer
 					noplus = true;
 				}
 				String operhst = result[4] + "@" + result[5];
-				String ip;
-				try
-				{
-					ip = InetAddress.getByName(result[5]).getHostAddress();
-				}
-				catch(UnknownHostException e)
-				{
-					ip = "0.0.0.0";
-				}
+				String ip = templist[templist.length -2];
 				String opernume = templist[templist.length -1];
 				if(C.get_defcon() < 4)
 				{
