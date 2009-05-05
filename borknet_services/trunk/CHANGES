@@ -1,3 +1,6 @@
+05/05/2009 REV 57
+M: Changed Command names to be more logical.
+
 24/04/2009 REV 56
 Core: Fixed ip to integer conversion (uses longs now).
 Core: No longer tries to actually resolve the ips but uses the ircds resolving.
