@@ -40,12 +40,12 @@ import java.io.*;
 import java.util.*;
 import borknet_services.core.*;
 
-public class Msgcheck implements Command
+public class List implements Command
 {
     /**
      * Constructs a Loader
      */
-	public Msgcheck()
+	public List()
 	{
 	}
 
@@ -85,10 +85,10 @@ public class Msgcheck implements Command
 
 	public void parse_help(Core C, M Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" msgcheck");
+		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" list");
 	}
 	public void showcommand(Core C, M Bot, String numeric, String botnum, String username, int lev)
 	{
-			C.cmd_notice(numeric, botnum, username, "MSGCHECK            Checks for memos.");
+			C.cmd_notice(numeric, botnum, username, "LIST                Checks for memos.");
 	}
 }

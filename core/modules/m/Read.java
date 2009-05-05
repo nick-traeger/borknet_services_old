@@ -40,12 +40,12 @@ import java.io.*;
 import java.util.*;
 import borknet_services.core.*;
 
-public class Retrieve implements Command
+public class Read implements Command
 {
     /**
      * Constructs a Loader
      */
-	public Retrieve()
+	public Read()
 	{
 	}
 
@@ -70,7 +70,7 @@ public class Retrieve implements Command
 		}
 		catch(Exception e) // Badly formatted?
 		{
-			C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" retrieve <message id>");
+			C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" read <message id>");
 			return;
 		}
 
@@ -87,10 +87,10 @@ public class Retrieve implements Command
 
 	public void parse_help(Core C, M Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" retrieve <message id>");
+		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" read <message id>");
 	}
 	public void showcommand(Core C, M Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "RETRIEVE            Retrieves a memo.");
+		C.cmd_notice(numeric, botnum, username, "READ                Retrieves a memo.");
 	}
 }
