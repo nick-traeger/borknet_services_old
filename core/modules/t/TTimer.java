@@ -1,6 +1,7 @@
 /**
 #
-# BorkNet Services Core
+# The Q bot
+# Channelservice
 #
 
 #
@@ -23,46 +24,48 @@
 */
 import java.io.*;
 import java.net.*;
-import borknet_services.core.*;
+import java.util.*;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
- * The proxyscanners scanning object
+ * The mail class of the Q IRC Bot.
  * @author Ozafy - ozafy@borknet.org - http://www.borknet.org
  */
-public class BlacklistScanner implements Runnable
+public class TTimer implements Runnable
 {
-	private Core C;
-	private P Bot;
- private String user;
-	private String ip;
- private String host;
+	private T Bot;
+
+    Timer timer;
+
+ /**
+  * Runnable programs need to define this class.
+  */
 	public void run()
 	{
-  String parts[] = ip.split("\\.");
-  String blacklist[] = Bot.getBlacklist();
-  for(int i =0; i<blacklist.length; i++)
-  {
-   String droneHost = parts[3]+"."+parts[2]+"."+parts[1]+"."+parts[0]+"."+blacklist[i];
-   try
-   {
-    InetAddress resolved = InetAddress.getByName(droneHost);
-    C.report(ip+" found on DroneBL, adding G-Line.");
-    C.cmd_gline(user, host, Bot.getCachec(), "Blacklisted ("+droneHost+")");
-    break;
-   }
-   catch(Exception e)
-   {
-    //C.report(ip+" not found on DroneBL.");
-   }
-  }
+		int delay = 60*1000; //milliseconds
+		ActionListener taskPerformer = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent evt)
+			{
+				Bot.tick();
+			}
+		};
+		timer = new Timer(delay, taskPerformer);
+		timer.start();
 	}
 
-	public void settings(Core C,P Bot, String user, String ip, String host)
+    /**
+     * Set the tutorial
+     */
+	public TTimer(T Bot)
 	{
-		this.C = C;
-		this.Bot= Bot;
-		this.user = user;
-  this.ip=ip;
-  this.host=host;
+		this.Bot = Bot;
 	}
-}
+
+	public void stop()
+	{
+		timer.stop();
+	}
+}//end of class
