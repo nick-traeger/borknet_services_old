@@ -45,7 +45,7 @@ public class T implements Modules
 {
 	private Core C;
 	private Server ser;
-	private DBControl dbc;
+	private CoreDBControl dbc;
 	private String description = "";
 	private String nick = "";
 	private String ident = "";
@@ -54,10 +54,10 @@ public class T implements Modules
 	private String numeric = "";
 	private String num = "AAA";
 	private String reportchan = "";
-	private String vhost = "";
-	private boolean automatic = true;
+	private boolean fakes = true;
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
+ private TTimer tTimer = null;
 
 	public T()
 	{
@@ -68,7 +68,7 @@ public class T implements Modules
 		/* Creates a server */
 		this.C = C;
 		load_conf();
-		dbc = new DBControl(C,this,C.getDBCon());
+		dbc = C.get_dbc();
 		ser = new Server(C,dbc,this);
 		C.cmd_create_serer(host, numeric, description);
 		C.ircsend(numeric + " EB");
@@ -76,6 +76,13 @@ public class T implements Modules
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
 		C.ircsend(numeric + " EA");
+  if(fakes)
+  {
+   tTimer = new TTimer(this);
+   Thread thread = new Thread(tTimer);
+   thread.setDaemon(true);
+   thread.start();
+  }
 	}
 
 	public void setCmnds(ArrayList<Object> cmds,ArrayList<String> cmdn)
@@ -96,12 +103,14 @@ public class T implements Modules
 
 	public void stop()
 	{
+  tTimer.stop();
 		C.cmd_kill_service(numeric+num, "Quit: Soon will I rest, yes, forever sleep. Earned it I have. Twilight is upon me, soon night must fall.");
 		C.cmd_kill_server(host, "Module unloaded.");
 	}
 
 	public void hstop()
 	{
+  tTimer.stop();
 		C.cmd_kill_service(numeric+num, "Quit: Happens to every guy sometimes this does.");
 		C.cmd_kill_server(host, "Module unloaded.");
 	}
@@ -121,8 +130,7 @@ public class T implements Modules
 			pass = dataSrc.getProperty("pass");
 			/* remove the next line if you build a client only */
 			numeric = dataSrc.getProperty("numeric");
-			automatic = Boolean.parseBoolean(dataSrc.getProperty("automatic"));
-			vhost = dataSrc.getProperty("vhost");
+			fakes = Boolean.parseBoolean(dataSrc.getProperty("fakes"));
 		}
 		catch(Exception e)
 		{
@@ -160,14 +168,18 @@ public class T implements Modules
 	{
 		return host;
 	}
-	public boolean get_automatic()
+	public boolean getFakes()
 	{
-		return automatic;
+		return fakes;
 	}
-	public String get_vhost()
-	{
-		return vhost;
-	}
+ public void tick()
+ {
+  ser.tick();
+ }
+ public void stopTimer()
+ {
+  tTimer.stop();
+ }
 	public void clean()
 	{
 		//gets issued every 24 hours, can be used to cleanup the db, or other stuff

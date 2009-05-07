@@ -51,7 +51,7 @@ public class P implements Modules
 	private String connectIp = "";
 	private Boolean warning = true;
 	private String[] ports = {"80","3128","8080"};
- private String blacklist = "dnsbl.dronebl.org";
+ private String blacklist[] = {"dnsbl.dronebl.org"};
  private String caches = "7200";
  private String cachec = "3600";
 	private ArrayList<Object> cmds = new ArrayList<Object>();
@@ -124,7 +124,7 @@ public class P implements Modules
 			connectIp = dataSrc.getProperty("connectIp");
 			warning = Boolean.parseBoolean(dataSrc.getProperty("warning"));
 			ports = dataSrc.getProperty("ports").split(",");
-   blacklist = dataSrc.getProperty("blacklist");
+   blacklist = dataSrc.getProperty("blacklist").split(",");
    caches = dataSrc.getProperty("caches");
    cachec = dataSrc.getProperty("cachec");
 		}
@@ -180,7 +180,7 @@ public class P implements Modules
 	{
 		return ports;
 	}
-	public String getBlacklist()
+	public String[] getBlacklist()
 	{
 		return blacklist;
 	}

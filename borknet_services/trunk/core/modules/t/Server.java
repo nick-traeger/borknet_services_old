@@ -41,6 +41,7 @@ import java.util.*;
 import java.util.regex.*;
 import java.net.*;
 import java.security.*;
+import java.io.*;
 import borknet_services.core.*;
 
 /**
@@ -52,7 +53,7 @@ public class Server
 	/** the main bot */
 	private Core C;
 	/** the connection to the database */
-	private DBControl dbc;
+	private CoreDBControl dbc;
 	/** Core commands */
 	private Commands CC;
 	/** the bot's nick */
@@ -69,6 +70,17 @@ public class Server
 	private String version;
 	/**  counts the number of received pings, used as a timer for channel limits */
 	private int limit = 0;
+ 
+ private boolean loadUsers;
+ private boolean inchannel;
+ private String channels[] = {"#BorkNet"};
+ private int channelIndex;
+ private String channel;
+ private ArrayList<String> nicks = new ArrayList<String>();
+ private ArrayList<String> idents = new ArrayList<String>();
+ private ArrayList<String> hosts = new ArrayList<String>();
+ private ArrayList<String> ips = new ArrayList<String>();
+ private ArrayList<String> names = new ArrayList<String>();
 
 	private T Bot;
 
@@ -78,7 +90,7 @@ public class Server
 	 * @param B		The main bot
 	 * @param dbc	The connection to the database
 	 */
-    public Server(Core C, DBControl dbc, T Bot)
+ public Server(Core C, CoreDBControl dbc, T Bot)
 	{
 		this.C = C;
 		this.Bot = Bot;
@@ -125,6 +137,11 @@ public class Server
 	 */
 	public void privmsg(String me, String username, String message)
 	{
+  if(dbc.isOnChan(username, channel) && me.equals(Bot.get_num()+"BBB"))
+  {
+   String user[] = dbc.getUserRow(username);
+   C.cmd_privmsg(Bot.get_num(), "AAA", reportchan, "Suspicious activity from " + user[1] + " on " + channel + ": '" + message + "'");
+  }
 		CC.privmsg(me, username, message);
 	}
 
@@ -170,4 +187,85 @@ public class Server
 		}
 		return false;
 	}
+ 
+ public void tick()
+ {
+  if(!loadUsers)
+  {
+   loadUsers();
+   return;
+  }
+  if(channelIndex < channels.length)
+  {
+   if(!inchannel)
+   {
+    inchannel = true;
+    channel = channels[channelIndex];
+    C.cmd_kill_service((new StringBuilder()).append(Bot.get_num()).append("BBB").toString(), "Signed off");
+    Random random = new Random();
+    int i = random.nextInt(nicks.size());
+    C.cmd_create_service(Bot.get_num(), "BBB", (String)nicks.get(i), (String)idents.get(i), (String)hosts.get(i), (String)ips.get(i), "+ir", (String)names.get(i));
+    C.cmd_join(Bot.get_num(), "BBB", channel, false);
+   }
+   else
+   {
+    inchannel = false;
+    C.cmd_part(Bot.get_num(), "BBB", channel, "");
+    channelIndex++;
+   }
+  }
+  else
+  {
+   channelIndex = 0;
+   channels = dbc.getUserChanTable();
+   if(channels[channelIndex].equals("0"))
+   {
+    channelIndex = 50;
+   }
+  }
+ }
+ 
+ public void loadUsers()
+ {
+  try
+  {
+   FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+ File.separator + "core" + File.separator + "modules" + File.separator + "t" + File.separator + "users");
+   DataInputStream dis = new DataInputStream(fis);
+   BufferedReader br = new BufferedReader(new InputStreamReader(dis));
+   int i = 0;
+   String s;
+   while((s = br.readLine())!=null)
+   {
+    if(!s.startsWith("#"))
+    {
+     try
+     {
+      String as[] = s.split(";");
+      String nick = as[0];
+      String ident = as[1];
+      String host = as[2];
+      String ip = as[3];
+      String name = as[4];
+      nicks.add(nick);
+      idents.add(ident);
+      hosts.add(host);
+      ips.add(ip);
+      names.add(name);
+      i++;
+     }
+     catch(ArrayIndexOutOfBoundsException ae)
+     {
+     }
+    }
+   }
+   dis.close();
+   C.cmd_privmsg(Bot.get_num(), "AAA", reportchan, "Loaded " + i + " users.");
+   loadUsers = true;
+  }
+  catch(Exception exception)
+  {
+   Bot.stopTimer();
+   C.cmd_privmsg(Bot.get_num(), "AAA", reportchan, "Failed loading userfile." + exception.toString());
+  }
+ }
 }
