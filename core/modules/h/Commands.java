@@ -39,10 +39,13 @@ public class Commands
 	private H Bot;
 	private String numeric = "";
 	private String botnum = "";
-    public Commands(Core C, H Bot)
+ 
+ private Faqs faqs;
+ public Commands(Core C, H Bot)
 	{
 		this.C = C;
 		this.Bot = Bot;
+  faqs = Bot.getFaqs();
 		numeric = Bot.get_num();
 		botnum = Bot.get_corenum();
 		cmds = Bot.getCmds();
@@ -86,7 +89,8 @@ public class Commands
 			}
 			catch(ArrayIndexOutOfBoundsException e)
 			{
-				C.cmd_notice(numeric, botnum,username,"/msg "+Bot.get_nick()+" help <command>");
+    faqs.startSession(username);
+				C.cmd_notice(numeric, botnum,username,"If you want help on a certain command try: /msg "+Bot.get_nick()+" help <command>");
 				return;
 			}
 			int compo = cmdn.indexOf(cmd);
@@ -99,7 +103,14 @@ public class Commands
 			}
 			else
 			{
-				C.cmd_notice(numeric, botnum,username,"This command is either unknown, or you need to be opered up to use it.");
+    if(faqs.hasSession(username))
+    {
+     faqs.continueSession(username, cmd);
+    }
+    else
+    {
+				 C.cmd_notice(numeric, botnum,username,"This command is either unknown, or you need to be opered up to use it.");
+    }
 			}
 			return;
 		}
