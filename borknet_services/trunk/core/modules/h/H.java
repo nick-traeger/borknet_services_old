@@ -46,6 +46,8 @@ public class H implements Modules
 	private boolean[] queon = { false,false };
 	private String[] quelast = { "0","0" };
 	private ArrayList<LinkedList<String>> queues = new ArrayList<LinkedList<String>>();
+ 
+ private Faqs faqs;
 
 	public H()
 	{
@@ -56,6 +58,7 @@ public class H implements Modules
 		this.C = C;
 		load_conf();
 		numeric = C.get_numeric();
+  faqs = new Faqs(C,this);
 		dbc = new DBControl(C,this);
 		ser = new Server(C,dbc,this);
 		C.cmd_create_service(num, nick, ident, host, "+oXwkgsr", description);
@@ -150,6 +153,10 @@ public class H implements Modules
 	{
 		return host;
 	}
+ public Faqs getFaqs()
+ {
+  return faqs;
+ }
 	public void clean()
 	{
 		//gets issued every 24 hours, can be used to cleanup the db, or other stuff

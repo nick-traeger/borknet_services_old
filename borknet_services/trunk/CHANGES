@@ -1,4 +1,7 @@
-07/05/2009 REV 58
+08/05/2009 REV 60
+H: Pre-Alpha implementation of the F.A.Q. System, advise to ignore this rev.
+
+07/05/2009 REV 59
 P: Added possibility to add more then one blacklist
 T: Now has the possibility to scan channels using fakeusers.
 
