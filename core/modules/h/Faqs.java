@@ -10,7 +10,7 @@ import borknet_services.core.*;
 public class Faqs
 {
  private File xmlDocument;
- private HashMap<String,String> sessions = new HashMap<String,String>();
+ private HashMap<String,ArrayList<Integer>> sessions = new HashMap<String,ArrayList<Integer>>();
  private Core C;
  private H Bot;
  private String numeric = "";
@@ -28,7 +28,7 @@ public class Faqs
  public void startSession(String username)
  {
   sessions.remove(username);
-  sessions.put(username,"");
+  sessions.put(username,new ArrayList<Integer>());
   showMainMenu(username);
  }
  
@@ -43,38 +43,28 @@ public class Faqs
   {
    index=index.substring(1);
   }
-  String position=sessions.get(username);
-  if(index.equals("0"))
+  int i = Integer.parseInt(index);
+  ArrayList<Integer> positions=sessions.get(username);
+  if(i==0)
   {
-   String splitpos[]=position.split(";");
-   position="";
-   if(splitpos.length>1)
-   {
-    for(int i=0; i<splitpos.length-1;i++)
-    {
-     position+=splitpos[i];
-    }
-   }
-   sessions.put(username,position);
+   positions.remove(positions.size()-1);
+   sessions.put(username,positions);
   }
   else
   {
-   position+=index+";";
-   sessions.put(username,position);
+   positions.add(i);
+   sessions.put(username,positions);
   }
-  String[] splitpos=position.split(";");
-  switch(splitpos.length)
+  switch(positions.size())
   {
    case 0:
     showMainMenu(username);
     break;
    case 1:
-    C.cmd_privmsg(numeric, botnum,username,"/faqs/section[@id="+splitpos[0]+"]");
-    listItems(username,"/faqs/section[@id="+splitpos[0]+"]");
+    listItems(username,"/faqs/section[@id="+positions.get(0)+"]/faq/q");
     break;
    default:
-    C.cmd_privmsg(numeric, botnum,username,"/faqs/section[@id="+splitpos[0]+"]/faq[@id="+splitpos[1]+"]");
-    listItems(username,"/faqs/section[@id="+splitpos[0]+"]/faq[@id="+splitpos[1]+"]");
+    listItems(username,"/faqs/section[@id="+positions.get(0)+"]/faq[@id="+positions.get(1)+"]");
     break;
   }
  }
@@ -101,7 +91,7 @@ public class Faqs
    {
     for(int i=0; i<nodeList.getLength(); i++)
     {
-     String answer = showItem(username, path+"[@id="+(i+1)+"]/name");
+     String answer = showItem(username, path+"[@id="+(i+1)+"]/head");
      if(answer.equals("0"))
      {
       C.cmd_privmsg(numeric, botnum,username,"Invalid Selection");
