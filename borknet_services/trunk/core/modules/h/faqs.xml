@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <faqs>
  <section id="1">
-  <name>G-1</name>
+  <head>G-1</head>
   <faq id="1">
-   <q>Q-1.1</q>
+   <head>Q-1.1</head>
    <a>A-1.1</a>
   </faq>
   <faq id="2">
-   <q>Q-1.2</q>
+   <head>Q-1.2</head>
    <a>A-1.2</a>
   </faq>
  </section>
  <section id="2">
-  <name>G-2</name>
+  <head>G-2</head>
   <faq id="1">
-   <q>Q-2.1</q>
+   <head>Q-2.1</head>
    <a>A-2.1</a>
   </faq>
   <faq id="2">
-   <q>Q-2.2</q>
+   <head>Q-2.2</head>
    <a>A-2.2</a>
   </faq>
  </section>
