@@ -1,25 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <faqs>
+ <howto>
+ <info><![CDATA[This is a comment section, it will be used to explain the format of the file]]></info>
+ <info><![CDATA[This file should always be wellformed XML, you can validate it here:]]></info>
+ <info><![CDATA[http://www.w3schools.com/XML/xml_validator.asp]]></info>
+ <info><![CDATA[Tags should always be enclosed by a CDATA block.]]></info>
+ <info><![CDATA[Markup is available using the following tags:]]></info>
+ <info><![CDATA[@newline@ will put a linebreak at that position]]></info>
+ <info><![CDATA[@bold@ can be used as a bold tag]]></info>
+ <info><![CDATA[The id attribute *must* correspond to the actual placement of the tag]]></info>
+ <info><![CDATA[subsection names are inbetween <head> tags, the <a> tag is used for answers]]></info>
+ </howto>
  <section id="1">
-  <head>G-1</head>
+  <head><![CDATA[G-1]]></head>
   <faq id="1">
-   <head>Q-1.1</head>
-   <a>A-1.1</a>
+   <head><![CDATA[Q-1.1]]></head>
+   <a><![CDATA[A-1.1]]></a>
   </faq>
   <faq id="2">
-   <head>Q-1.2</head>
-   <a>A-1.2</a>
+   <head><![CDATA[Q-1.2]]></head>
+   <a><![CDATA[A-1.2]]></a>
   </faq>
  </section>
  <section id="2">
-  <head>G-2</head>
+  <head><![CDATA[G-2]]></head>
   <faq id="1">
-   <head>Q-2.1</head>
-   <a>A-2.1</a>
+   <head><![CDATA[Q-2.1]]></head>
+   <a><![CDATA[A-2.1]]></a>
   </faq>
   <faq id="2">
-   <head>Q-2.2</head>
-   <a>A-2.2</a>
+   <head><![CDATA[Q-2.2]]></head>
+   <a><![CDATA[A-2.2]]></a>
   </faq>
  </section>
 </faqs>

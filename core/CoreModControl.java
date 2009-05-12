@@ -40,7 +40,7 @@ public class CoreModControl
 	private Core C;
 	private String bot = "";
 
-    public CoreModControl(Core C, ArrayList<String> modulelist)
+ public CoreModControl(Core C, ArrayList<String> modulelist)
 	{
 		this.C = C;
 		bot = C.get_corenum();
