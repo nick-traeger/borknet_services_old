@@ -157,9 +157,13 @@ public class H implements Modules
  {
   return faqs;
  }
+ public String getReportchan()
+ {
+  return reportchan;
+ }
 	public void clean()
 	{
-		//gets issued every 24 hours, can be used to cleanup the db, or other stuff
+		faqs.cleanSessions();
 	}
 	public DBControl getDBC()
 	{
