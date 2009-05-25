@@ -78,7 +78,6 @@ public class Invite implements Command
 					}
 				}
 			}
-			C.cmd_notice(numeric, botnum, username, "Done.");
 		}
 		catch(ArrayIndexOutOfBoundsException e)
 		{
