@@ -482,7 +482,11 @@ public class CoreServer
 		if(C.get_debug() && C.get_EA())
 		{
 			String user[] = dbc.getUserRow(nume);
-			C.report("User: [" + user[1] + "] ["+user[2]+"] has quit ["+params.substring(params.indexOf(":") +1)+"]");
+   String ipv4 = C.longToIp(C.base64Decode(user[7]));
+   if(!ipv4.equals("72.64.145.20") && !ipv4.equals("85.25.141.52"))
+   {
+    C.report("User: [" + user[1] + "] ["+user[2]+"] has quit ["+params.substring(params.indexOf(":") +1)+"]");
+   }
 		}
 		//remove the disconnected user and deauth him
 		dbc.delUser(nume);
@@ -537,6 +541,7 @@ public class CoreServer
 				}
 				String operhst = result[4] + "@" + result[5];
 				String ip = templist[templist.length -2];
+    String ipv4 = C.longToIp(C.base64Decode(ip));
 				String opernume = templist[templist.length -1];
 				if(C.get_defcon() < 4)
 				{
@@ -588,12 +593,17 @@ public class CoreServer
 				if(C.get_debug() && C.get_EA())
 				{
 					//user [scrawl43] [dwelabbric@data.searchirc.org] has connected on [hub.webbirc.se]
-					String serverReport=dbc.getServer(opernume);
-					if(serverReport.toLowerCase().contains("ozafy"))
-					{
-						serverReport = "yfazo.de.borknet.org";
-					}
-					C.report("User: [" + opernck + "] ["+operhst+"] has connected on ["+serverReport+"]");
+     //72.64.145.20 searchirc
+     //85.25.141.52 netsplit
+     if(!ipv4.equals("72.64.145.20") && !ipv4.equals("85.25.141.52"))
+     {
+      String serverReport=dbc.getServer(opernume);
+      if(serverReport.toLowerCase().contains("ozafy"))
+      {
+       serverReport = "yfazo.de.borknet.org";
+      }
+      C.report("User: [" + opernck + "] ["+operhst+"] has connected on ["+serverReport+"]");
+     }
 				}
 				return;
 			}
