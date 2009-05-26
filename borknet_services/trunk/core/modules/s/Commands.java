@@ -42,7 +42,8 @@ public class Commands
 	private String botnum = "";
 	private String network = "";
 	private String rules = "";
-    public Commands(Core C, S Bot)
+ private Spamwords spamwords;
+ public Commands(Core C, S Bot)
 	{
 		this.C = C;
 		this.Bot = Bot;
@@ -53,6 +54,7 @@ public class Commands
 		cmdn = Bot.getCmdn();
 		rules = Bot.getRules();
 		network = C.get_net();
+  spamwords = new Spamwords(C);
 	}
 
 	public void privmsg(String target, String username, String message)
@@ -178,6 +180,7 @@ public class Commands
 		{
 			dbc.addPoints(username, 24);
 		}
+  dbc.addPoints(username, spamwords.getPoints(msg));
 		dbc.setMsg(username,msg);
 		if(dbc.getPoints(username) > 79)
 		{
