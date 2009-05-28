@@ -92,7 +92,32 @@ public class Draw implements Command
 					C.cmd_privmsg(numeric, botnum,chan,"888   d88P Y88..88P 888     888 \"88b 888   Y8888 Y8b.     Y88b. ");
 					C.cmd_privmsg(numeric, botnum,chan,"8888888P\"   \"Y88P\"  888     888  888 888    Y888  \"Y8888   \"Y888");
 					C.cmd_notice(numeric, botnum,username, "Done.");
-
+				}
+				else if(what.equals("facepalm"))
+				{
+					C.cmd_privmsg(numeric, botnum,chan,"  .-´¯¯¯`-.");
+     C.cmd_privmsg(numeric, botnum,chan,",´          `.");
+     C.cmd_privmsg(numeric, botnum,chan,"|             \\");
+     C.cmd_privmsg(numeric, botnum,chan,"|              \\");
+     C.cmd_privmsg(numeric, botnum,chan,"\\           _  \\");
+     C.cmd_privmsg(numeric, botnum,chan,",\\  _    ,´¯,/¯)\\");
+     C.cmd_privmsg(numeric, botnum,chan,"( q \\ \\,´ ,´ ,´¯)");
+     C.cmd_privmsg(numeric, botnum,chan," `._,)     -´,-´)");
+     C.cmd_privmsg(numeric, botnum,chan,"   \\/         ,´/");
+     C.cmd_privmsg(numeric, botnum,chan,"    )        / /");
+     C.cmd_privmsg(numeric, botnum,chan,"   /       ,´-´");
+					C.cmd_notice(numeric, botnum,username, "Done.");
+				}
+				else if(what.equals("trex"))
+				{
+					C.cmd_privmsg(numeric, botnum,chan,"     ,             . - ' '                    boing         boing         boing");
+     C.cmd_privmsg(numeric, botnum,chan,"  __/ \\_/(_     .                   e-e           . - .         . - .         . - .");
+     C.cmd_privmsg(numeric, botnum,chan,"_/        _\\                       (\\_/)\\       '       `.   ,'       `.   ,'       .");
+     C.cmd_privmsg(numeric, botnum,chan,") SPLAT! _\\  .        ,_            `-'\\ `--.___,         . .           . .          .");
+     C.cmd_privmsg(numeric, botnum,chan,"\\__  ___(      ,-\"-._//                '\\( ,_.-'");
+     C.cmd_privmsg(numeric, botnum,chan,"   \\/    _xx=.'_._(_./==-                 \\\\               \"             \"");
+     C.cmd_privmsg(numeric, botnum,chan,"        '^^^`  \\                          ^'");
+					C.cmd_notice(numeric, botnum,username, "Done.");
 				}
 				else
 				{
@@ -115,7 +140,7 @@ public class Draw implements Command
 
 	public void parse_help(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		if(lev > 998)
+		if(lev > 949)
 		{
 			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " draw #channel <batman|moose|borknet>");
 		}
@@ -126,9 +151,9 @@ public class Draw implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		if(lev > 998)
+		if(lev > 949)
 		{
-			C.cmd_notice(numeric, botnum, username, "DRAW                Draw some ascii art - level 999.");
+			C.cmd_notice(numeric, botnum, username, "DRAW                Draw some ascii art - level 950.");
 		}
 	}
 }
