@@ -49,6 +49,7 @@ Serverlist
 Splitlist
 Splitdel
 Chanfix
+Changepass
 Suspend
 Unsuspend
 Csuspend
@@ -72,7 +73,6 @@ Blockmaildel
 Jupe
 Jupelist
 Jupedel
-Changepass
 Defcon
 Draw
 Version

@@ -50,7 +50,7 @@ public class Changepass implements Command
 		}
 		String auth[] = dbc.getAuthRow(user[4]);
 		//check if he's an operator and has a high enough level to kill me
-		if(user[5].equals("1") && Integer.parseInt(auth[3]) >998)
+		if(user[5].equals("1") && Integer.parseInt(auth[3]) >99)
 		{
 			String[] result = params.split("\\s");
 			try
@@ -102,7 +102,7 @@ public class Changepass implements Command
 
 	public void parse_help(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		if(lev > 998)
+		if(lev > 99)
 		{
 			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " changepass <#username> <newpass>");
 		}
@@ -113,9 +113,9 @@ public class Changepass implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		if(lev > 998)
+		if(lev > 99)
 		{
-			C.cmd_notice(numeric, botnum, username, "CHANGEPASS          Change a users password. - level 999.");
+			C.cmd_notice(numeric, botnum, username, "CHANGEPASS          Change a users password. - level 100.");
 		}
 	}
 }

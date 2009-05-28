@@ -62,7 +62,7 @@ public class Defcon implements Command
 				return;
 			}
 			String auth[] = dbc.getAuthRow(user[4]);
-			if(Integer.parseInt(auth[3]) > 998 && user[5].equals("1"))
+			if(Integer.parseInt(auth[3]) > 949 && user[5].equals("1"))
 			{
 				if(lev>0 && lev < 6)
 				{
@@ -179,7 +179,7 @@ public class Defcon implements Command
 
 	public void parse_help(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		if(lev > 998)
+		if(lev > 949)
 		{
 			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " defcon <#level>");
 			C.cmd_notice(numeric, botnum,username, "5: Normal.");
@@ -195,9 +195,9 @@ public class Defcon implements Command
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{
-		if(lev > 998)
+		if(lev > 949)
 		{
-			C.cmd_notice(numeric, botnum, username, "DEFCON              Secure the network. - level 999.");
+			C.cmd_notice(numeric, botnum, username, "DEFCON              Secure the network. - level 950.");
 		}
 	}
 }
