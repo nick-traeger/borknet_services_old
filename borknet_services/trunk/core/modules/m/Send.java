@@ -21,11 +21,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 
-#
-# Thx to:
-# Oberjaeger, as allways :)
-#
-
 */
 
 
@@ -74,37 +69,42 @@ public class Send implements Command
 			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " send <to> <message>");
 			return;
 		}
+		String[] msgToAry = msgTo.split(",");
 
-		if (!msgTo.startsWith("#"))
+		for (String toAuth : msgToAry)
 		{
-			String[] toRow = C.get_dbc().getNickRow(msgTo);
-			msgTo = toRow[4];
-		}
-		else
-		{
-			msgTo = msgTo.substring(1);
-		}
-
-		if (!C.get_dbc().authExists(msgTo))
-		{
-			C.cmd_notice(numeric, botnum, username, "That recipient is non-existant.");
-			return;
-		}
-
-		boolean sent = Bot.getDBC().addMessage(user[4], msgTo, msgText);
-		if (sent)
-		{
-			C.cmd_notice(numeric, botnum, username, "Sent.");
-			if (C.get_dbc().authOnline(msgTo)) {
-				String[] toRow = C.get_dbc().getUserRowViaAuth(msgTo);
-				String toNum = toRow[0];
-				C.cmd_notice(numeric, botnum, toNum, "You have a new message from: " + user[1]);
+			String sendTo;
+			if (!toAuth.startsWith("#"))
+			{
+				String[] toRow = C.get_dbc().getNickRow(toAuth);
+				sendTo = toRow[4];
+			}
+			else
+			{
+				sendTo = toAuth.substring(1);
+			}
+			if (!C.get_dbc().authExists(sendTo))
+			{
+				C.cmd_notice(numeric, botnum, username, "That recipient ("+toAuth+") is non-existant.");
+				return;
+			}
+			boolean val = Bot.getDBC().addMessage(user[4], sendTo, msgText);
+			if (val)
+			{
+				if (C.get_dbc().authOnline(sendTo))
+				{
+					String[] toRow = C.get_dbc().getUserRowViaAuth(sendTo);
+					String toNum = toRow[0];
+					C.cmd_notice(numeric, botnum, toNum, "You have a new message from: " + user[1]);
+				}
+			}
+			else
+			{
+				C.cmd_notice(numeric, botnum, username, "An error occured sending your message. Please try again at a later time.");
+				return;
 			}
 		}
-		else
-		{
-			C.cmd_notice(numeric, botnum, username, "An error occured sending your message. Please try again at a later time.");
-		}
+		C.cmd_notice(numeric, botnum, username, "Sent.");
 	} //end parse_command
 
 	public void parse_help(Core C, M Bot, String numeric, String botnum, String username, int lev)
