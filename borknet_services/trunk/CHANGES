@@ -1,5 +1,8 @@
+15/06/2009 REV 66
+M: Made it not stop when one of the recipients doesn't exist.
+
 12/06/2009 REV 66
-M: Allows send to multiple recipients (DimeCadmium)
+M: Allows send to multiple recipients. (DimeCadmium)
 
 28/05/2009 REV 65
 Q: Updated levels on draw, changepas and defcon.
@@ -55,7 +58,7 @@ Core: Updated the userlevels on Die, rehash, Load and Unload.
 Core: Fixed a bug in removing users that would cause the host,ip and auth to keep exisitng in memory.
 Q: Fixed bug in Serverlist.
 Q: Added deop command.
-S: Updated S chanflags help.
+S: Updated S chanflags help. (Darkpsy)
 
 21/03/2009 REV 46
 Core: Changed the authlevels to a more logical set.

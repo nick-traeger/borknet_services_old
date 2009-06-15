@@ -24,13 +24,6 @@
 */
 
 
-/*
-
-GIVECOOKIE <nick>
-
-*/
-
-
 import java.io.*;
 import java.util.*;
 import borknet_services.core.*;
@@ -70,7 +63,7 @@ public class Send implements Command
 			return;
 		}
 		String[] msgToAry = msgTo.split(",");
-
+		// send now that we've got that out of the way...
 		for (String toAuth : msgToAry)
 		{
 			String sendTo;
@@ -83,35 +76,35 @@ public class Send implements Command
 			{
 				sendTo = toAuth.substring(1);
 			}
-			if (!C.get_dbc().authExists(sendTo))
-			{
-				C.cmd_notice(numeric, botnum, username, "That recipient ("+toAuth+") is non-existant.");
-				return;
-			}
-			boolean val = Bot.getDBC().addMessage(user[4], sendTo, msgText);
-			if (val)
-			{
-				if (C.get_dbc().authOnline(sendTo))
-				{
-					String[] toRow = C.get_dbc().getUserRowViaAuth(sendTo);
-					String toNum = toRow[0];
-					C.cmd_notice(numeric, botnum, toNum, "You have a new message from: " + user[1]);
-				}
-			}
-			else
-			{
-				C.cmd_notice(numeric, botnum, username, "An error occured sending your message. Please try again at a later time.");
-				return;
-			}
+   if(C.get_dbc().authExists(sendTo))
+   {
+    if (Bot.getDBC().addMessage(user[4], sendTo, msgText))
+    {
+     if (C.get_dbc().authOnline(sendTo))
+     {
+      String[] toRow = C.get_dbc().getUserRowViaAuth(sendTo);
+      String toNum = toRow[0];
+      C.cmd_notice(numeric, botnum, toNum, "You have a new message from: " + user[1]);
+     }
+    }
+    else
+    {
+     C.cmd_notice(numeric, botnum, username, "An error occured sending your message to "+toAuth+". Please try again at a later time.");
+    }
+   }
+   else
+   {
+    C.cmd_notice(numeric, botnum, username, "The recipient '"+toAuth+"' is non-existant.");
+   }
 		}
-		C.cmd_notice(numeric, botnum, username, "Sent.");
+		C.cmd_notice(numeric, botnum, username, "Done.");
 	} //end parse_command
 
 	public void parse_help(Core C, M Bot, String numeric, String botnum, String username, int lev)
 	{
-		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" send <#to> <message>");
-		C.cmd_notice(numeric, botnum, username, "Where #to is the auth of the person you're trying to reach.");
-		C.cmd_notice(numeric, botnum, username, "eg: /msg "+Bot.get_nick()+" send #Ozafy moo!.");
+		C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" send <to1[,to2[,...]]> <message>");
+		C.cmd_notice(numeric, botnum, username, "Where to1, etc. (or #to1, etc.) are the auths of the people you're trying to send to.");
+		C.cmd_notice(numeric, botnum, username, "eg: /msg "+Bot.get_nick()+" send Ozafy,DimeCadmium moo!.");
 	}
 	public void showcommand(Core C, M Bot, String numeric, String botnum, String username, int lev)
 	{
