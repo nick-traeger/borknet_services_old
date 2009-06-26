@@ -13,10 +13,10 @@ rem javac core/modules/basic/*.java
 rem javac core/modules/bob/*.java
 rem javac core/modules/g/*.java
 rem javac core/modules/h/*.java
- javac core/modules/m/*.java
+rem javac core/modules/m/*.java
 rem javac core/modules/p/*.java
 rem javac core/modules/q/*.java
-rem javac core/modules/r/*.java
+ javac core/modules/r/*.java
 rem javac core/modules/s/*.java
 rem javac core/modules/t/*.java
 rem javac core/modules/tutor/*.java

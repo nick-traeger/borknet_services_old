@@ -47,7 +47,7 @@ public class Enable implements Command
 			int enable = Integer.parseInt(result[1]);
 			CoreDBControl dbc = C.get_dbc();
 			String user[] = dbc.getUserRow(username);
-			if(Boolean.parseBoolean(user[5]))
+			if(user[5].equals("1"))
 			{
 				switch(enable) {
 					case 0:
