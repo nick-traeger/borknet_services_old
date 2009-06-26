@@ -66,7 +66,7 @@ public class Commands
 		{
 			CoreDBControl dbc = C.get_dbc();
 			String user[] = dbc.getUserRow(username);
-			if(!Boolean.parseBoolean(user[5]))
+			if(!user[5].equals("1"))
 			{
 				C.cmd_notice(numeric, botnum,username, Bot.get_nick()+" has been disabled due to overload, please try again later.");
 				return;

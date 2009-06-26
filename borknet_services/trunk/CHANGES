@@ -1,4 +1,7 @@
-15/06/2009 REV 66
+15/06/2009 REV 68
+R: Fixed bug in enable/disable
+
+15/06/2009 REV 67
 M: Made it not stop when one of the recipients doesn't exist.
 
 12/06/2009 REV 66
