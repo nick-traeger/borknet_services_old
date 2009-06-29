@@ -177,7 +177,24 @@ public class Core
 		if(debug)
 		{
 			java.util.Date now = new java.util.Date();
-			logger.info("["+format.format(now)+"]"+s);
+   //filter out Q passwords
+   //[Mon 29/06/2009 17:13:34][>in <] >> ABCAE P Q@CServe.borknet.org :AUTH test test
+   try
+   {
+    String result[] = s.split("\\s");
+    if(result[4].equals("P") && result[6].equals(":AUTH"))
+    {
+     s=result[0]+" "+result[1]+" "+result[2]+" "+result[3]+" "+result[4]+" "+result[5]+" "+result[6]+" "+result[7]+" *****";
+    }
+   }
+   catch(Exception e)
+   {
+    //moo
+   }
+   finally
+   {
+    logger.info("["+format.format(now)+"]"+s);
+   }
 		}
 	}
 
