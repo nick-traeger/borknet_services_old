@@ -363,13 +363,10 @@ public class Core
 			bw.write("PASS " + pass);
 			bw.newLine();
 			printDebug("[>---<] >> *** Identify the Service...");
-			//get system time and split it
-			long time = System.nanoTime();
-			String time2 = "" + time;
-			String time2a = time2.substring(0,10);
+			String time = get_time();
 			//itroduce myself properly
-			printDebug("[>out<] >> SERVER " + host + " 1 " + time2a + " " + time2a + " J10 " + numeric + "]]] +s :" + description);
-			bw.write("SERVER " + host + " 1 " + time2a + " " + time2a + " J10 " + numeric + "]]] +s :" + description);
+			printDebug("[>out<] >> SERVER " + host + " 1 " + time + " " + time + " J10 " + numeric + "]]] +s :" + description);
+			bw.write("SERVER " + host + " 1 " + time + " " + time + " J10 " + numeric + "]]] +s :" + description);
 			bw.newLine();
 			dbc.addServer(numeric,host,"0",true);
 			printDebug("[>---<] >> *** Sending EB");
