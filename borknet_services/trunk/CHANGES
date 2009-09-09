@@ -1,3 +1,7 @@
+09/09/2009 REV 72
+Core: Fixed a bug where a server would remain linked to a hub after it had split.
+Q: Fixed services dieing on duplicate Q ban.
+
 29/06/2009 REV 71
 Core: updated logon to use get_time
 
