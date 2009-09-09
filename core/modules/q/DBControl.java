@@ -1688,7 +1688,7 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO q_bans VALUES (?,?)");
+			pstmt = con.prepareStatement("INSERT IGNORE INTO q_bans VALUES (?,?)");
 			pstmt.setString(1,channel);
 			pstmt.setString(2,ban);
 			pstmt.executeUpdate();

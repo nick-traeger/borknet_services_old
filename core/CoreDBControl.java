@@ -1456,7 +1456,20 @@ public class CoreDBControl
 		if(s instanceof Server)
 		{
 			String numer = s.getNumeric();
-			ArrayList<Server> servers = serversByHub.get(numer);
+   String hub = s.getHub();
+   ArrayList<Server> servers = serversByHub.get(hub);
+			if(servers instanceof ArrayList)
+			{
+				for(int i=0; i<servers.size(); i++)
+				{
+					if(servers.get(i).equals(s))
+     {
+      servers.remove(i);
+      break;
+     }
+				}
+			}
+			servers = serversByHub.get(numer);
 			if(servers instanceof ArrayList)
 			{
 				for(Server ser : servers)
@@ -1478,7 +1491,7 @@ public class CoreDBControl
 		}
 		else
 		{
-			System.out.println ( "Error Removing server." );
+			System.out.println ( "Error Removing server: "+host );
 			System.exit(0);
 		}
 	}
