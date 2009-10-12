@@ -153,7 +153,7 @@ public class Whois implements Command
 								{
 									C.cmd_notice(numeric, botnum, username, "Vhost: " + auth[8]);
 								}
-								C.cmd_notice(numeric, botnum, username, "IP: " + userinfoline[7]);
+								C.cmd_notice(numeric, botnum, username, "IP: " + C.longToIp(C.base64Decode(userinfoline[7])));
 								C.cmd_notice(numeric, botnum, username, "Numeric: " + userinfoline[0]);
 								C.cmd_notice(numeric, botnum, username, "Modes: " + userinfoline[3]);
 								String chans[] = dbc.getUserChans(userinfoline[0]);
@@ -277,7 +277,7 @@ public class Whois implements Command
 						{
 							C.cmd_notice(numeric, botnum, username, "Fakehost: " + userinfo[8]);
 						}
-						C.cmd_notice(numeric, botnum, username, "IP: " + userinfo[7]);
+						C.cmd_notice(numeric, botnum, username, "IP: " + C.longToIp(C.base64Decode(userinfo[7])));
 						C.cmd_notice(numeric, botnum, username, "Numeric: " + userinfo[0]);
 						C.cmd_notice(numeric, botnum, username, "Modes: " + userinfo[3]);
 						//user was authed, JACKPOT!
