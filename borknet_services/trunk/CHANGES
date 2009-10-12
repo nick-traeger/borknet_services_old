@@ -1,3 +1,6 @@
+12/10/2009 REV 73
+Q: Updated IP display in Whois.
+
 09/09/2009 REV 72
 Core: Fixed a bug where a server would remain linked to a hub after it had split.
 Q: Fixed services dieing on duplicate Q ban.
