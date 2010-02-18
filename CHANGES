@@ -1,3 +1,6 @@
+18/02/2010 REV 75
+P: Added exceptions.
+
 18/02/2010 REV 74
 Core: Stopped crashing when backup directory is invalid.
 Core: Help without arguments shows showcommands.
