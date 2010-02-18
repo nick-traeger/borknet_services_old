@@ -154,7 +154,7 @@ public class Hello implements Command
 	{
 		C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " hello <your@mail.here> <your@mail.here>");
 		C.cmd_notice(numeric, botnum, username, "Will get you an account with your current nick.");
-		C.cmd_notice(numeric, botnum, username, "eg: /msg " + Bot.get_nick() + " hello ozafy@oberjaeger.net ozafy@oberjaeger.net");
+		C.cmd_notice(numeric, botnum, username, "eg: /msg " + Bot.get_nick() + " hello ozafy@borknet.org ozafy@borknet.org");
 	}
 	public void showcommand(Core C, Q Bot, String numeric, String botnum, String username, int lev)
 	{

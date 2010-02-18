@@ -1679,31 +1679,39 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			C.report("Creating DB Backup...");
+   File file=new File("backup/");
+   if(file.exists())
+   {
+    PreparedStatement pstmt;
+    C.report("Creating DB Backup...");
 
-			Calendar cal = Calendar.getInstance();
-			long now = (cal.getTimeInMillis() / 1000);
+    Calendar cal = Calendar.getInstance();
+    long now = (cal.getTimeInMillis() / 1000);
 
-			Runtime rt = Runtime.getRuntime();
-			File backup=new File("backup/"+now+".sql");
-			PrintStream ps;
+    Runtime rt = Runtime.getRuntime();
+    File backup=new File("backup/"+now+".sql");
+    PrintStream ps;
 
-			Process child = rt.exec("mysqldump -u"+user+" -p"+password+" "+db);
-			ps=new PrintStream(backup);
-			InputStream in = child.getInputStream();
-			int ch;
-			while ((ch = in.read()) != -1)
-			{
-				ps.write(ch);
-			}
+    Process child = rt.exec("mysqldump -u"+user+" -p"+password+" "+db);
+    ps=new PrintStream(backup);
+    InputStream in = child.getInputStream();
+    int ch;
+    while ((ch = in.read()) != -1)
+    {
+     ps.write(ch);
+    }
 
-			InputStream err = child.getErrorStream();
-			while ((ch = err.read()) != -1)
-			{
-				System.out.write(ch);
-			}
-			C.report("Done.");
+    InputStream err = child.getErrorStream();
+    while ((ch = err.read()) != -1)
+    {
+     System.out.write(ch);
+    }
+    C.report("Done.");
+   }
+   else
+   {
+    C.report("Could not access backup directory.");
+   }
 		}
 		catch(Exception e)
 		{

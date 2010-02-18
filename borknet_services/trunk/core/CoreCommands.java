@@ -93,7 +93,7 @@ public class CoreCommands
 			}
 			catch(ArrayIndexOutOfBoundsException e)
 			{
-				C.cmd_notice(bot,username,"/msg "+C.get_nick()+" help <command>");
+				showCommands(username);
 				return;
 			}
 			if(cmds.containsKey(cmd))
@@ -112,19 +112,7 @@ public class CoreCommands
 		}
 		if(command.equals("showcommands"))
 		{
-			C.cmd_notice(bot,username,"The following commands are available to you:");
-			C.cmd_notice(bot,username,"For more information on a specific command, type HELP <command>:");
-			CoreDBControl dbc = C.get_dbc();
-			int lev = dbc.getAuthLev(username);
-			List<String> keys = new ArrayList<String>(cmds.keySet());
-			Collections.sort(keys);
-			//Set<String> keys = cmds.keySet();
-			for(String key : keys)
-			{
-				Cmds ccommand = (Cmds) cmds.get(key);
-				ccommand.showcommand(C,bot,username,lev);
-			}
-			C.cmd_notice(bot,username,"End of list.");
+   showCommands(username);
 			return;
 		}
 		if(command.startsWith("\1"))
@@ -146,4 +134,20 @@ public class CoreCommands
 			C.cmd_notice(bot,username,"/msg "+C.get_nick()+" showcommands");
 		}
 	}
+ private void showCommands(String username)
+ {
+  C.cmd_notice(bot,username,"The following commands are available to you:");
+  C.cmd_notice(bot,username,"For more information on a specific command, type HELP <command>:");
+  CoreDBControl dbc = C.get_dbc();
+  int lev = dbc.getAuthLev(username);
+  List<String> keys = new ArrayList<String>(cmds.keySet());
+  Collections.sort(keys);
+  //Set<String> keys = cmds.keySet();
+  for(String key : keys)
+  {
+   Cmds ccommand = (Cmds) cmds.get(key);
+   ccommand.showcommand(C,bot,username,lev);
+  }
+  C.cmd_notice(bot,username,"End of list.");
+ }
 }

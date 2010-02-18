@@ -46,8 +46,11 @@ public class BlacklistScanner implements Runnable
    try
    {
     InetAddress resolved = InetAddress.getByName(droneHost);
-    C.report(ip+" found on DroneBL, adding G-Line.");
-    C.cmd_gline(user, host, Bot.getCachec(), "Blacklisted ("+droneHost+")");
+    C.report(ip+" found on "+droneHost+".");
+    if(Bot.gline())
+    {
+     C.cmd_gline(Bot.get_num(), host, Bot.getCachec(), "Blacklisted ("+droneHost+")");
+    }
     break;
    }
    catch(Exception e)

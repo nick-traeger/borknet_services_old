@@ -95,7 +95,7 @@ public class Commands
 			}
 			catch(ArrayIndexOutOfBoundsException e)
 			{
-				C.cmd_notice(numeric, botnum,username,"/msg "+Bot.get_nick()+" help <command>");
+				showCommands(username);
 				return;
 			}
 			int compo = cmdn.indexOf(cmd);
@@ -114,16 +114,7 @@ public class Commands
 		}
 		if(command.equals("showcommands"))
 		{
-			C.cmd_notice(numeric, botnum,username,"The following commands are available to you:");
-			C.cmd_notice(numeric, botnum,username,"For more information on a specific command, type HELP <command>:");
-			CoreDBControl dbc = C.get_dbc();
-			int lev = dbc.getAuthLev(username);
-			for(int n=0; n<cmds.size(); n++)
-			{
-				Command ccommand = (Command) cmds.get(n);
-				ccommand.showcommand(C,Bot,numeric,botnum,username,lev);
-			}
-			C.cmd_notice(numeric, botnum,username,"End of list.");
+			showCommands(username);
 			return;
 		}
 		int compo = cmdn.indexOf(command);
@@ -142,7 +133,24 @@ public class Commands
 			C.cmd_notice(numeric, botnum,username,"/msg "+Bot.get_nick()+" showcommands");
 		}
 	}
-
+ private void showCommands(String username)
+ {
+  C.cmd_notice(numeric, botnum,username,"The following commands are available to you:");
+  CoreDBControl dbc = C.get_dbc();
+  String user[] = dbc.getUserRow(username);
+  int lev = 0;
+  if(!user[4].equals("0"))
+  {
+   String auth[] = dbc.getAuthRow(user[4]);
+   lev = Integer.parseInt(auth[3]);
+  }
+  for(int n=0; n<cmds.size(); n++)
+  {
+   Command ccommand = (Command) cmds.get(n);
+   ccommand.showcommand(C,Bot,numeric,botnum,username,lev);
+  }
+  C.cmd_notice(numeric, botnum,username,"End of list.");
+ }
 	private void spamscan(String username, String msg)
 	{
 		dbc.addPoints(username, 16);
