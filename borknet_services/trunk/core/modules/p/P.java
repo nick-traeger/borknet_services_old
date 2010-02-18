@@ -53,6 +53,7 @@ public class P implements Modules
  private Boolean gline = false;
 	private String[] ports = {"80","3128","8080"};
  private String blacklist[] = {"dnsbl.dronebl.org"};
+ private ArrayList<String> exceptions = new ArrayList<String>();
  private String caches = "7200";
  private String cachec = "3600";
 	private ArrayList<Object> cmds = new ArrayList<Object>();
@@ -129,6 +130,8 @@ public class P implements Modules
    blacklist = dataSrc.getProperty("blacklist").split(",");
    caches = dataSrc.getProperty("caches");
    cachec = dataSrc.getProperty("cachec");
+   String temp[] = dataSrc.getProperty("exceptions").split(",");
+   exceptions=new ArrayList<String>(Arrays.asList(temp));
 		}
 		catch(Exception e)
 		{
@@ -185,6 +188,10 @@ public class P implements Modules
 	public String[] getBlacklist()
 	{
 		return blacklist;
+	}
+	public ArrayList<String> getExceptions()
+	{
+		return exceptions;
 	}
 	public String getCachec()
 	{

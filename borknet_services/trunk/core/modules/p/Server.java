@@ -140,12 +140,15 @@ public class Server
     String ip = templist[templist.length -2];
     ip = C.longToIp(C.base64Decode(ip));
 				//C.report("Scanning "+ip+"...");
-				if(Bot.getWarning())
-				{
-					C.cmd_notice(Bot.get_num(), Bot.get_corenum(), numer, "Your host is now being scanned for open proxies.");
-					C.cmd_notice(Bot.get_num(), Bot.get_corenum(), numer, "If you see a connection from "+Bot.get_host()+" or "+Bot.getMyIp()+" please ignore it.");
-				}
-				scan(numer, ip, host);
+    if(!Bot.getExceptions().contains(ip))
+    {
+     if(Bot.getWarning())
+     {
+      C.cmd_notice(Bot.get_num(), Bot.get_corenum(), numer, "Your host is now being scanned for open proxies.");
+      C.cmd_notice(Bot.get_num(), Bot.get_corenum(), numer, "If you see a connection from "+Bot.get_host()+" or "+Bot.getMyIp()+" please ignore it.");
+     }
+     scan(numer, ip, host);
+    }
 			}
 			catch(Exception e)
 			{
