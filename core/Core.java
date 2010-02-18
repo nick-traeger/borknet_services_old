@@ -449,7 +449,7 @@ public class Core
 					//the mothership
 					if(command.equals("SERVER"))
 					{
-						//SERVER oberjaeger.net.borknet.org 1 1000000000 1129325005 J10 ABAP] +h :BorkNet IRC Server
+						//SERVER bob.be.borknet.org 1 1000000000 1129325005 J10 ABAP] +h :BorkNet IRC Server
 						//compare to:
 						//AB S lightweight.borknet.org 2 0 1123847781 P10 [lAAD +s :The lean, mean opping machine.
 						ser.mserver(msg);
@@ -472,7 +472,7 @@ public class Core
 					//nickchange
 					if(params.startsWith("N "))
 					{
-						//AB N Ozafy 1 1119649303 ozafy oberjaeger.net.borknet.org +oiwkgrxXnIh Ozafy Darth@Vader B]AAAB ABAXs :Laurens Panier
+						//AB N Ozafy 1 1119649303 ozafy bob.be.borknet.org +oiwkgrxXnIh Ozafy Darth@Vader B]AAAB ABAXs :Laurens Panier
 						ser.nickchange(command, params);
 					}
 					//quit

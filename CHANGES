@@ -1,3 +1,9 @@
+18/02/2010 REV 74
+Core: Stopped crashing when backup directory is invalid.
+Core: Help without arguments shows showcommands.
+P: Fixed G-Line bug in BlackListScanner.
+P: Added option to just display a warning and not gline.
+
 12/10/2009 REV 73
 Q: Updated IP display in Whois.
 

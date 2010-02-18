@@ -127,7 +127,7 @@ public class Server
 	 */
 	public void nickchange(String usernumeric, String params)
 	{
-		//AB N Ozafy 1 1119649303 ozafy oberjaeger.net.borknet.org +oiwkgrxXnIh Ozafy Darth@Vader B]AAAB ABAXs :Laurens Panier
+		//AB N Ozafy 1 1119649303 ozafy bob.be.borknet.org +oiwkgrxXnIh Ozafy Darth@Vader B]AAAB ABAXs :Laurens Panier
 		String[] result = params.split("\\s");
 		if(usernumeric.length() < 3)
 		{
@@ -158,14 +158,14 @@ public class Server
 		for(String p : Bot.getPorts())
 		{
 			ProxyScanner httpScanner = new ProxyScanner();
-			httpScanner.settings(C, Bot, user, ip, Integer.parseInt(p), 1);
+			httpScanner.settings(C, Bot, user, ip, host, Integer.parseInt(p), 1);
 			Thread httpThread;
 			httpThread = new Thread(httpScanner);
 			httpThread.setDaemon(true);
 			httpThread.start();
 
 			ProxyScanner sockScanner = new ProxyScanner();
-			sockScanner.settings(C, Bot, user, ip, Integer.parseInt(p), 2);
+			sockScanner.settings(C, Bot, user, ip, host, Integer.parseInt(p), 2);
 			Thread sockThread;
 			sockThread = new Thread(sockScanner);
 			sockThread.setDaemon(true);

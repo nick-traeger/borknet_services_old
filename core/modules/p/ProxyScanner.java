@@ -35,13 +35,14 @@ public class ProxyScanner implements Runnable
 	private P Bot;
 	private String user;
 	private String ip;
+ private String host;
 	private int port;
 	private int type;
 	public void run()
 	{
 		try
 		{
-			SocketAddress addr = new InetSocketAddress(ip, 80);
+			SocketAddress addr = new InetSocketAddress(ip, port);
 			Proxy proxy;
 			if(type==1)
 			{
@@ -55,6 +56,10 @@ public class ProxyScanner implements Runnable
 			InetSocketAddress dest = new InetSocketAddress(Bot.getConnectIp(), 6667);
 			socket.connect(dest);
 			C.report("Proxy found on "+ip+":"+port+" ("+(type==1?"HTTP":"SOCKS")+").");
+   if(Bot.gline())
+   {
+    C.cmd_gline(Bot.get_num(), host, Bot.getCachec(), "Proxy detected.");
+   }
 		}
 		catch(Exception e)
 		{
@@ -62,7 +67,7 @@ public class ProxyScanner implements Runnable
 		}
 	}
 
-	public void settings(Core C,P Bot, String user, String ip, int port, int type)
+	public void settings(Core C,P Bot, String user, String ip, String host, int port, int type)
 	{
 		this.C = C;
 		this.Bot= Bot;
@@ -70,5 +75,6 @@ public class ProxyScanner implements Runnable
 		this.ip = ip;
 		this.port = port;
 		this.type = type;
+  this.host=host;
 	}
 }
