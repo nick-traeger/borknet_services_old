@@ -1,3 +1,6 @@
+09/06/2010 REV 76
+T: fixed unload causing a crash if no fakeclients were created.
+
 18/02/2010 REV 75
 P: Added exceptions.
 
