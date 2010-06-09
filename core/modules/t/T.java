@@ -70,9 +70,9 @@ public class T implements Modules
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
 		C.ircsend(numeric + " EA");
+  tTimer = new TTimer(this);
   if(fakes)
   {
-   tTimer = new TTimer(this);
    Thread thread = new Thread(tTimer);
    thread.setDaemon(true);
    thread.start();
@@ -97,14 +97,14 @@ public class T implements Modules
 
 	public void stop()
 	{
-  tTimer.stop();
+  stopTimer();
 		C.cmd_kill_service(numeric+num, "Quit: Soon will I rest, yes, forever sleep. Earned it I have. Twilight is upon me, soon night must fall.");
 		C.cmd_kill_server(host, "Module unloaded.");
 	}
 
 	public void hstop()
 	{
-  tTimer.stop();
+  stopTimer();
 		C.cmd_kill_service(numeric+num, "Quit: Happens to every guy sometimes this does.");
 		C.cmd_kill_server(host, "Module unloaded.");
 	}
@@ -172,7 +172,10 @@ public class T implements Modules
  }
  public void stopTimer()
  {
-  tTimer.stop();
+  if(tTimer.isRunning())
+  {
+   tTimer.stop();
+  }
  }
 	public void clean()
 	{

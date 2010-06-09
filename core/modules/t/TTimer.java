@@ -68,4 +68,16 @@ public class TTimer implements Runnable
 	{
 		timer.stop();
 	}
+ 
+ public boolean isRunning()
+ {
+  if(timer instanceof Timer)
+  {
+   return timer.isRunning();
+  }
+  else
+  {
+   return false;
+  }
+ }
 }//end of class
