@@ -43,6 +43,8 @@ public class Resetpassword implements Command
 
 	public void parse_command(Core C, Q Bot, DBControl dbc, String numeric, String botnum, String target, String username, String params)
 	{
+		String nick = Bot.get_nick();
+		String host = Bot.get_host();
 		String[] result = params.split("\\s");
 		try
 		{
@@ -57,7 +59,7 @@ public class Resetpassword implements Command
 				C.cmd_notice(numeric, botnum, username, "Done.");
 				C.cmd_notice(numeric, botnum, username, "Your new password is "+pass);
 				C.cmd_notice(numeric, botnum, username, "You can AUTH using the following command:");
-				C.cmd_notice(numeric, botnum, username, "/msg q@cserve.borknet.org AUTH "+user+" "+pass);
+				C.cmd_notice(numeric, botnum, username, "/msg " + nick + "@" + host + " AUTH "+user+" "+pass);
 				C.cmd_notice(numeric, botnum, username, "You can use the newpass command to change your password:");
 				C.cmd_notice(numeric, botnum, username, "/msg Q newpass "+pass+" newpassword newpassword");
 				C.cmd_notice(numeric, botnum, username, "Your password has successfully been reset! Your new password is "+pass);
