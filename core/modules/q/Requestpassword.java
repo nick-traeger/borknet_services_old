@@ -71,14 +71,12 @@ public class Requestpassword implements Command
 					}
 					dbc.addPwRequest(user,pass,code);
 					//make the mail
-					//use the %nbsp tag to indicate a space, %newline for a newline
+					//use the  tag to indicate a space, \n for a newline
 					String subj = "Your " + Bot.get_nick() + " account password!";
-					String mesg = "Someone has requested your password, if it wasn't you, please disregard this message.%newline";
-					mesg += "To obtain your password, please use the following Q command:%newline";
-					mesg += "%nbsp%newline";
-					mesg += "/msg " + Bot.get_nick() + " resetpassword " + user + " " + code + "%newline";
-					mesg += "%nbsp%newline";
-					mesg += "%nbsp%newline";
+					String mesg = "Someone has requested your password, if it wasn't you, please disregard this message.\n";
+					mesg += "To obtain your password, please use the following Q command:\n";
+					mesg += "\n";
+					mesg += "/msg " + Bot.get_nick() + " resetpassword " + user + " " + code + "\n";
 					//call mail thread
 					C.send_mail(subj, mail, mesg,Bot.get_nick(),Bot.get_host());
 					//should get sent

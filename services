@@ -10,11 +10,12 @@ fi
 echo "Do you want to start in debug mode? (Y/n)"
 read debug
 echo "Starting services..."
-export CLASSPATH=${PWD%/*}:$CLASSPATH
-if [[ $debug != "n"  ]]
+export CLASSPATH=${PWD%/*}:${PWD%/*}/borknet_services/mail.jar:${PWD%/*}/borknet_services/mysql-connector-java-3.0.17-ga-bin.jar:$CLASSPATH
+if [[ $log != "n"  ]]
 then
 nohup java borknet_services.Start -d &
 else
 nohup java borknet_services.Start &
 fi
+pidof /usr/bin/java > services.pid
 echo "Done."
