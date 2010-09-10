@@ -1602,13 +1602,17 @@ public class Core
    {
 			 dbc.save();
    }
+   dbc.clean();
 			mod.clean();
 			cleaner = 0;
 			System.gc();
 			return;
 		}
+  else
+  {
+   cleaner++;
+  }
 		ser.timerTick();
-		cleaner++;
 	}
 
 	/**

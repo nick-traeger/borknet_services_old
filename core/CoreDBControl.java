@@ -1720,6 +1720,42 @@ public class CoreDBControl
 			System.exit(0);
 		}
 	}
+ 
+ public void clean()
+ {
+		Calendar cal = Calendar.getInstance();
+		long now = (cal.getTimeInMillis() / 1000);
+		try
+		{
+   C.report("Cleaning Core DB...");
+			ArrayList<String> authlist = new ArrayList<String>(auths.keySet());
+			ArrayList<String> delete = new ArrayList<String>();
+			for(String authnick : authlist)
+			{
+				Auth auth = auths.get(authnick);
+    boolean online = authOnline(authnick);
+				if(!online && auth.getLevel() < 2 && auth.getSuspended()==0 && auth.getLast() < now-3456000)
+				{
+					delete.add(authnick);
+				}
+			}
+			if(delete.size()>0)
+			{
+    for(String auth : delete)
+    {
+					C.report("Deleting AUTH: '" + auth + "'");
+					delAuth(auth);
+    }
+			}
+   C.report("Core Cleanup complete!");
+  }
+		catch(Exception e)
+		{
+			System.out.println ( "Error executing sql statement" );
+			e.printStackTrace();
+			System.exit(0);
+		}
+ }
 
 	public String encrypt(String plaintext)
 	{
