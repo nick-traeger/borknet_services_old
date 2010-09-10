@@ -1818,84 +1818,71 @@ public class DBControl
 
 	public void clean()
 	{
-		//Error should be fixed, however DB changes have not yet been implemented here
-		/*Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance();
 		long now = (cal.getTimeInMillis() / 1000);
 		try
 		{
-			C.report("Cleaning DB...");
+			C.report("Cleaning Q DB...");
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM q_channels");
+			pstmt = con.prepareStatement("SELECT name,level,suspended,last FROM q_channels");
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				if(!chanfixHasOps(rs.getString(2)) && Integer.parseInt(rs.getString(11)) < 2 && !Boolean.parseBoolean(rs.getString(9)) && Long.parseLong(rs.getString(7)) < now-3456000)
+				if(!chanfixHasOps(rs.getString("name")) && Integer.parseInt(rs.getString("level")) < 2 && Integer.parseInt(rs.getString("suspended"))==0 && Long.parseLong(rs.getString("last")) < now-3456000)
 				{
-					C.report("Deleting Channel: '" + rs.getString(2) + "'");
-					//delChan(rs.getString(2));
-					//C.cmd_part(Bot.get_num(),Bot.get_corenum(),rs.getString(2), "Automatic removal");
+					C.report("Deleting Channel: '" + rs.getString("name") + "'");
+					delChan(rs.getString("name"));
+					C.cmd_part(Bot.get_num(),Bot.get_corenum(),rs.getString("name"), "Automatic removal");
 				}
 			}
-			pstmt = con.prepareStatement("SELECT * FROM auths");
+			pstmt = con.prepareStatement("SELECT gline,timeset,timeexp FROM q_glines");
 			rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				boolean online = authOnline(rs.getString(2));
-				if(!online && Integer.parseInt(rs.getString(5)) < 2 && !Boolean.parseBoolean(rs.getString(6)) && Long.parseLong(rs.getString(7)) < now-3456000)
+				if(Integer.parseInt(rs.getString("timeset")) + Integer.parseInt(rs.getString("timeexp")) - Integer.parseInt(C.get_time()) < 0)
 				{
-					C.report("Deleting AUTH: '" + rs.getString(2) + "'");
-					//delAuth(rs.getString(2));
+					C.report("Deleting G-line: '" + rs.getString("gline") + "'");
+					delGline(rs.getString("gline"));
 				}
 			}
-			pstmt = con.prepareStatement("SELECT * FROM q_glines");
+			pstmt = con.prepareStatement("SELECT host,time FROM q_trusts");
 			rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				if(Integer.parseInt(rs.getString(3)) + Integer.parseInt(rs.getString(4)) - Integer.parseInt(C.get_time()) < 0)
+				if(Long.parseLong(rs.getString("time")) < Long.parseLong(C.get_time()))
 				{
-					C.report("Deleting G-line: '" + rs.getString(2) + "'");
-					//delGline(rs.getString(2));
+					C.report("Deleting Trust: '" + rs.getString("host") + "'.");
+					addGline(rs.getString("host"),C.get_time(),"60","Trust expired. 60 Second gline applied.","Q");
+					delTrust(rs.getString("host"));
 				}
 			}
-			pstmt = con.prepareStatement("SELECT * FROM q_trusts");
+			pstmt = con.prepareStatement("SELECT jupe,timeset,timeexp FROM q_jupes");
 			rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				if(Long.parseLong(rs.getString(5)) < Long.parseLong(C.get_time()))
+				if(Integer.parseInt(rs.getString("timeset")) + Integer.parseInt(rs.getString("timeexp")) - Integer.parseInt(C.get_time()) < 0)
 				{
-					C.report("Deleting Trust: '" + rs.getString(2) + "'.");
-					//addGline(rs.getString(2),C.get_time(),"1800","Trust expired.","Q");
-					//delTrust(rs.getString(2));
+					C.report("Deleting Jupe: '" + rs.getString("jupe") + "'");
+					delJupe(rs.getString("jupe"),Bot.get_num());
 				}
 			}
-			pstmt = con.prepareStatement("SELECT * FROM q_jupes");
+			pstmt = con.prepareStatement("SELECT user,time FROM q_challenge");
 			rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				if(Integer.parseInt(rs.getString(4)) + Integer.parseInt(rs.getString(5)) - Integer.parseInt(C.get_time()) < 0)
+				if(Long.parseLong(rs.getString("time")) < now-60)
 				{
-					C.report("Deleting Jupe: '" + rs.getString(2) + "'");
-					//delJupe(rs.getString(2),Bot.get_num());
+					delChallenge(rs.getString("user"));
 				}
 			}
-			pstmt = con.prepareStatement("SELECT * FROM q_challenge");
-			rs = pstmt.executeQuery();
-			while(rs.next())
-			{
-				if(Long.parseLong(rs.getString(4)) < now-60)
-				{
-					delChallenge(rs.getString(2));
-				}
-			}
-			C.report("Cleanup complete!");
-
+			C.report("Q Cleanup complete!");
 		}
 		catch(Exception e)
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
 			System.exit(0);
-		}*/
+		}
 	}
 
 	public String encrypt(String plaintext)
