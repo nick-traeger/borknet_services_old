@@ -1,4 +1,7 @@
-09/06/2010 REV 77
+10/09/2010 REV 78
+Changes: file booboo.
+
+10/09/2010 REV 77
 Core: Revamped CoreMail to use javamail and support authentication.
 Core: Better mail threading.
 Bash: Updated services to add mysqlconnector and javamail to classpath.
