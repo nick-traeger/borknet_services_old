@@ -52,10 +52,6 @@ public class Core
 	private boolean EA = false;
 	/** Have we ended our burst */
 	private boolean EB = false;
-	/** Seperate deamon to send mails */
-	private CoreMail mail;
-	/** Create mail daemon */
-	private Thread mailThread;
 	/** Internal Timer */
 	private CoreTimer timer;
 	/** Create mail daemon */
@@ -83,6 +79,12 @@ public class Core
 	private String mailserver = "";
 	/** Port of the mail server */
 	private String mailport = "";
+	/** SMTP server requires authentication? */
+	private Boolean mailauth = false;
+	/** SMTP server username */
+	private String mailuser = "";
+	/** SMTP server password */
+	private String mailpass = "";
 	/** Name of the network the bot is connecting to */
 	private String network = "";
 	/** Users needed to request Q */
@@ -241,6 +243,9 @@ public class Core
 			reportchan = dataSrc.getProperty("reportchan");
 			mailserver = dataSrc.getProperty("mailserver");
 			mailport = dataSrc.getProperty("mailport");
+   mailauth = Boolean.parseBoolean(dataSrc.getProperty("mailauth"));
+			mailuser = dataSrc.getProperty("mailuser");
+			mailpass = dataSrc.getProperty("mailpass");
 			network = dataSrc.getProperty("network");
 			dbserv = dataSrc.getProperty("dbserv");
 			dbuser = dataSrc.getProperty("dbuser");
@@ -269,12 +274,6 @@ public class Core
 		dbc = new CoreDBControl(dbserv, dbuser, dbpass, dbtabl, this);
 		//create the server communication class
 		ser = new CoreServer(this, dbc);
-		//create the mail sending class and deamon it.
-		mail = new CoreMail();
-		mailThread = new Thread(mail);
-		mailThread.setDaemon(true);
-		mailThread.start();
-		mail.setCore(this);
 		timer = new CoreTimer(this);
 		Thread timerThread = new Thread(timer);
 		timerThread.setDaemon(true);
@@ -1059,8 +1058,12 @@ public class Core
      */
 	public void send_mail(String subj, String umail, String mesg, String nick, String host)
 	{
-		mail.setMail(mailserver, mailport, nick, host, umail, subj, mesg);
-		mail.setSend(true);
+		//create the mail sending class and deamon it.
+		CoreMail mail = new CoreMail();
+  mail.setMail(this, mailserver, mailport, mailauth, mailuser, mailpass, nick, host, umail, subj, mesg);
+		Thread mailThread = new Thread(mail);
+		mailThread.setDaemon(true);
+		mailThread.start();
 	}
 
     /**

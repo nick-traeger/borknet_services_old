@@ -1,3 +1,8 @@
+09/06/2010 REV 77
+Core: Revamped CoreMail to use javamail and support authentication.
+Core: Better mail threading.
+Bash: Updated services to add mysqlconnector and javamail to classpath.
+
 09/06/2010 REV 76
 T: fixed unload causing a crash if no fakeclients were created.
 

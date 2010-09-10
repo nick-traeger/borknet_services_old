@@ -104,25 +104,23 @@ public class Hello implements Command
 				}
 				String pass = dbc.encrypt(userpass);
 				//the actual message, you can easely add/change it
-				//use the %nbsp tag to indicate a space, %newline for a newline
+				//use the  tag to indicate a space, \n for a newline
 				if(Bot.getSendmail())
 				{
 					String subj = "Your " + nick + " account!";
-					String mesg = "Your login/password is:%newline";
-					mesg += "Login: " + userinfo[1] + "%newline";
-					mesg += "Password: " + userpass + "%newline";
-					mesg += "%nbsp%newline";
-					mesg += "To AUTH yourself type the following command:%newline";
-					mesg += "/msg " + nick + "@" + host + " AUTH " + userinfo[1] + " " + userpass + "%newline";
-					mesg += "or you can use the challenge-repsonse method%newline";
-					mesg += "%nbsp%newline";
-					mesg += "You can use the newpass command to change your password:%newline";
-					mesg += "/msg " + nick + " newpass " + userpass + " newpassword newpassword%newline";
-					mesg += "would change your password in newpassword.%newline";
-					mesg += "%nbsp%newline";
-					mesg += "NB: Save this email for future reference.%newline";
-					mesg += "%nbsp%newline";
-					mesg += "%nbsp%newline";
+					String mesg = "Your login/password is:\n";
+					mesg += "Login: " + userinfo[1] + "\n";
+					mesg += "Password: " + userpass + "\n";
+					mesg += "\n";
+					mesg += "To AUTH yourself type the following command:\n";
+					mesg += "/msg " + nick + "@" + host + " AUTH " + userinfo[1] + " " + userpass + "\n";
+					mesg += "or you can use the challenge-repsonse method\n";
+					mesg += "\n";
+					mesg += "You can use the newpass command to change your password:\n";
+					mesg += "/msg " + nick + " newpass " + userpass + " newpassword newpassword\n";
+					mesg += "would change your password in newpassword.\n";
+					mesg += "\n";
+					mesg += "NB: Save this email for future reference.\n";
 					//call the external thread to send the mail, and not hog recources
 					C.send_mail(subj, mail1, mesg,nick,host);
 					//well, we hope it's sent
