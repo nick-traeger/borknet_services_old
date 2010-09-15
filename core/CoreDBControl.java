@@ -1797,7 +1797,7 @@ public class CoreDBControl
 					if(isOpChan(users[n], channels[p]))
 					{
 						String user[] = getUserRow(users[n]);
-						if(!user[2].startsWith("~") && !user[2].equalsIgnoreCase(C.get_ident() + "@" + C.get_host()))
+						if(!user[2].equalsIgnoreCase(C.get_ident() + "@" + C.get_host()))
 						{
 							String userid = user[2];
 							if(!user[4].equalsIgnoreCase("0"))
