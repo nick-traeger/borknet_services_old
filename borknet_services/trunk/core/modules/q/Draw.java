@@ -126,7 +126,7 @@ public class Draw implements Command
 			}
 			catch(Exception e)
 			{
-				C.cmd_notice(numeric, botnum,username, "/msg " + Bot.get_nick() + " draw #channel <batman|moose|borknet>");
+				C.cmd_notice(numeric, botnum,username, "/msg " + Bot.get_nick() + " draw #channel <batman|moose|borknet|facepalm|trex>");
 			}
 			return;
 		}
