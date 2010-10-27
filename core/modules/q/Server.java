@@ -726,6 +726,7 @@ public class Server
 				}
 				if((opernck.matches("[^\\w]*[A-Z][^\\w]*") || dbc.isReservedNick(opernck)) && !dbc.isService(opernume))
 				{
+     C.cmd_notice(numeric,num,opernume, "This nick is protected. Please change your nickname or you will be disconnected.");
 					badnicks.add(opernume);
 				}
 				if(!Bot.getInfoLine().equals("0"))
