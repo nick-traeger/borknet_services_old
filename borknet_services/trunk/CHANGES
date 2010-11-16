@@ -1,3 +1,12 @@
+16/11/2010 REV 83
+Core: Cleaned up rehash code.
+Core: Improved jupes.
+Core: Made die() available to all.
+Q: Fixed the mess that was jupes.
+SQL: Added default line for X.
+SQL: Added default line for R.
+All: Changed all non critical system.exit()'s to C.die();
+
 29/09/2010 REV 82
 Q: Warning to protected nick holders.
 

@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS `auths` (
   PRIMARY KEY  (`authnick`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+INSERT INTO `auths` (`authnick`, `pass`, `level`, `suspended`) VALUES ('R', 'R', 1000, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -271,3 +273,5 @@ CREATE TABLE IF NOT EXISTS `x_stats` (
   `maxservers` int(11) NOT NULL,
   `maxchannels` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+INSERT INTO `x_stats` (`maxusers`, `maxopers`, `maxservers`, `maxchannels`) VALUES (0, 0, 0, 0);

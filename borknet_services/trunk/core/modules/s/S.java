@@ -118,7 +118,7 @@ public class S implements Modules
 		{
 			C.printDebug("Error loading configfile.");
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
