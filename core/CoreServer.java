@@ -468,7 +468,7 @@ public class CoreServer
 		{
 			C.printDebug("[><] >> srv_quit gave an error");
 			C.debug(e);
-			System.exit(1);
+			C.die("Critical error, trying to die gracefully.");
 		}
 		//was it a quit, or a forcefull disconnect?
 		if(msg.equals("Q"))

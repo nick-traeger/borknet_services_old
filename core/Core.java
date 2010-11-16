@@ -226,7 +226,7 @@ public class Core
 		catch(Exception e)
 		{
 			debug(e);
-			System.exit(0);
+			System.exit(1);
 		}
 		Properties dataSrc = loader.getVars();
 		try
@@ -261,7 +261,7 @@ public class Core
 		{
 			printDebug("Error loading configfile.");
 			debug(e);
-			System.exit(0);
+			System.exit(1);
 		}
 	}
 
@@ -303,7 +303,7 @@ public class Core
 		{
 			printDebug("error opening streams to IRC server");
 			debug(e);
-			System.exit(0);
+			System.exit(1);
 		}
 		return;
 	}
@@ -342,7 +342,7 @@ public class Core
 		catch(Exception e)
 		{
 			printDebug("logoff error: " + e);
-			System.exit(0);
+			System.exit(1);
 		}
 	}
 
@@ -377,7 +377,7 @@ public class Core
 		catch(Exception e)
 		{
 			printDebug("logon error: " + e);
-			System.exit(0);
+			System.exit(1);
 		}
 		return;
 	}
@@ -736,7 +736,7 @@ public class Core
 		catch(IOException e)
 		{
 			debug(e);
-			System.exit(0);
+			System.exit(1);
 		}
 	}
 
@@ -776,6 +776,13 @@ public class Core
 		connect(server,port);
 		logon();
 	}
+ 
+ public void die(String quit)
+ {
+  get_modCore().stop();
+  cmd_quit(corenum, quit);
+  running = false;
+ }
 
 	public void reop(String chan)
 	{
@@ -1318,10 +1325,10 @@ public class Core
      * remove a Jupe
      * @param host		host to unban
      */
-	public void cmd_unjupe(String host, String connect)
+	public void cmd_unjupe(String host)
 	{
 		//AB SQ eclipse.il.us.borknet.org 1123885086 :Read error: Broken pipe
-		ircsend(numeric + " SQ " + host + " " + connect + " :EOF from client");
+		ircsend(numeric + " SQ " + host + " 0 :EOF from client");
 		dbc.delServer(host);
 	}
 
@@ -1329,10 +1336,10 @@ public class Core
      * remove a Jupe
      * @param host		host to unban
      */
-	public void cmd_unjupe(String numeric, String host, String connect)
+	public void cmd_unjupe(String numeric, String host)
 	{
 		//AB SQ eclipse.il.us.borknet.org 1123885086 :Read error: Broken pipe
-		ircsend(numeric + " SQ " + host + " " + connect + " :EOF from client");
+		ircsend(numeric + " SQ " + host + " 0 :EOF from client");
 		dbc.delServer(host);
 	}
 

@@ -59,8 +59,8 @@ public class CoreModControl
 				}
 				catch (Exception e)
 				{
+     C.report("[CORE] Error opening module directory");
 					C.debug(e);
-					System.exit(1);
 				}
 				// Create a new class loader with the directory
 				ClassLoader clsl = new URLClassLoader(urls);
@@ -104,42 +104,7 @@ public class CoreModControl
 		{
 			modules.get(module.toLowerCase()).hstop();
 			modules.remove(module.toLowerCase());
-			try
-			{
-				URL[] urls = null;
-				// Convert the file object to a URL
-				File dir = new File(System.getProperty("user.dir")+File.separator+"core"+File.separator+"modules"+File.separator+module.toLowerCase()+File.separator);
-				URI uri = dir.toURI();
-				URL url = uri.toURL();
-				urls = new URL[]{url};
-				// Create a new class loader with the directory
-				ClassLoader clsl = new URLClassLoader(urls);
-				// Load in the class
-				Class cls = clsl.loadClass(initialUpper(module));
-				// Create a new instance of the new class
-				Modules m = (Modules) cls.newInstance();
-				modules.put(module.toLowerCase(),m);
-				ArrayList<Object> modcmds = new ArrayList<Object>();
-				ArrayList<String> modcmdn = new ArrayList<String>();
-				CmdLoader cl = new CmdLoader("core/modules/"+module.toLowerCase()+"/cmds");
-				String[] commandlist = cl.getVars();
-				for(int a=0; a<commandlist.length; a++)
-				{
-					// Load in the class
-					Class clss = clsl.loadClass(commandlist[a]);
-					// Create a new instance of the new class
-					modcmds.add(clss.newInstance());
-					modcmdn.add(commandlist[a].toLowerCase());
-				}
-				m.setCmnds(modcmds,modcmdn);
-				m.start(C);
-			}
-			catch (Exception e)
-			{
-				C.debug(e);
-				C.report("Failed loading module \""+module+"\".");
-				return;
-			}
+   load(username,module);
 		}
 		else
 		{

@@ -67,7 +67,11 @@ public class Q implements Modules
 		{
 			for(int a=0;a<jp.length;a++)
 			{
-				C.cmd_jupe(numeric, jp[a][0], jp[a][1]);
+    C.cmd_jupe(numeric, jp[a][0], jp[a][1]);
+    if(Integer.parseInt(jp[a][2]) + Integer.parseInt(jp[a][3]) - Integer.parseInt(C.get_time()) <= 0)
+    {
+     dbc.delJupe(jp[a][0],numeric);
+    }
 			}
 		}
 		String gl[][] = dbc.getFakeList("%");
@@ -139,12 +143,28 @@ public class Q implements Modules
 
 	public void stop()
 	{
+		String jp[][] = dbc.getJupelist("%");
+		if(!jp[0][0].equals("0"))
+		{
+			for(int a=0;a<jp.length;a++)
+			{
+    C.cmd_unjupe(numeric, jp[a][0]);
+			}
+		}
 		C.cmd_kill_service(numeric+num, "Quit: Soon will I rest, yes, forever sleep. Earned it I have. Twilight is upon me, soon night must fall.");
 		C.cmd_kill_server(host, "Module unloaded.");
 	}
 
 	public void hstop()
 	{
+		String jp[][] = dbc.getJupelist("%");
+		if(!jp[0][0].equals("0"))
+		{
+			for(int a=0;a<jp.length;a++)
+			{
+    C.cmd_unjupe(numeric, jp[a][0]);
+			}
+		}
 		C.cmd_kill_service(numeric+num, "Quit: Happens to every guy sometimes this does.");
 		C.cmd_kill_server(host, "Module unloaded.");
 	}
@@ -172,7 +192,7 @@ public class Q implements Modules
 		{
 			C.printDebug("Error loading configfile.");
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 

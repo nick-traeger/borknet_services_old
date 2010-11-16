@@ -91,7 +91,7 @@ public class CoreDBControl
 		catch(Exception e)
 		{
 			C.printDebug("Database error!");
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -108,7 +108,7 @@ public class CoreDBControl
 		catch(Exception e)
 		{
 			C.printDebug("MySQL connection failed to close!");
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -125,7 +125,7 @@ public class CoreDBControl
 		catch ( java.lang.ClassNotFoundException e )
 		{
 			C.printDebug("MySQL JDBC Driver not found!");
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -180,7 +180,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -210,7 +210,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1231,7 +1231,7 @@ public class CoreDBControl
 			{
 				System.out.println( "Error finding user." );
 				C.debug(e);
-				System.exit(0);
+				C.die("SQL error, trying to die gracefully.");
 			}
 		}
 		else
@@ -1311,7 +1311,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1344,7 +1344,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1365,7 +1365,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1387,7 +1387,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1492,7 +1492,7 @@ public class CoreDBControl
 		else
 		{
 			System.out.println ( "Error Removing server: "+host );
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1515,7 +1515,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1587,7 +1587,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1621,7 +1621,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1652,7 +1652,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1671,7 +1671,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1717,7 +1717,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
  
@@ -1753,7 +1753,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
  }
 
@@ -1779,7 +1779,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error encrypting password." );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 			return "0";
 		}
 	}
@@ -1849,7 +1849,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1882,7 +1882,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1914,7 +1914,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1934,7 +1934,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1952,7 +1952,7 @@ public class CoreDBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 }

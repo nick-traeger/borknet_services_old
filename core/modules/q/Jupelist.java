@@ -63,14 +63,14 @@ public class Jupelist implements Command
 					for(int a=0;a<gl.length;a++)
 					{
 						//display it
-						if(Integer.parseInt(gl[a][2]) > 0)
+						if(Integer.parseInt(gl[a][2]) + Integer.parseInt(gl[a][3]) - Integer.parseInt(C.get_time()) > 0)
 						{
-							Date theDate = new Date((Long.parseLong(gl[a][2]) + Long.parseLong(C.get_time())) * 1000);
+							Date theDate = new Date((Long.parseLong(gl[a][2]) + Long.parseLong(gl[a][3])) * 1000);
 							SimpleDateFormat sdf = new SimpleDateFormat("EEEEEEEEEE, yyyy-MM-dd HH:mm:ss");
 							StringBuffer sb = new StringBuffer();
 							FieldPosition f = new FieldPosition(0);
 							sdf.format(theDate,sb,f);
-							C.cmd_notice(numeric, botnum,username, gl[a][0] + " ("+gl[a][1]+") Expires on " + sb + "s set by " + gl[a][4] + " reason: " + gl[a][3]);
+							C.cmd_notice(numeric, botnum,username, gl[a][0] + " ("+gl[a][1]+") Expires on " + sb + "s set by " + gl[a][5] + " reason: " + gl[a][4]);
 						}
 					}
 				}

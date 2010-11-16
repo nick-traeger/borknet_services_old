@@ -65,7 +65,7 @@ public class DBControl
 		catch(Exception e)
 		{
 			C.printDebug("Database error!");
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -961,27 +961,31 @@ public class DBControl
 			ResultSet rs = pstmt.executeQuery();
 			ArrayList<String> a = new ArrayList<String>();
 			ArrayList<String> b = new ArrayList<String>();
-			ArrayList<Integer> c = new ArrayList<Integer>();
+			ArrayList<String> c = new ArrayList<String>();
 			ArrayList<String> d = new ArrayList<String>();
 			ArrayList<String> e = new ArrayList<String>();
+   ArrayList<String> f = new ArrayList<String>();
 			while(rs.next())
 			{
 				a.add(rs.getString(1));
 				b.add(rs.getString(2));
-				c.add(Integer.parseInt(rs.getString(3)) + Integer.parseInt(rs.getString(4)) - Integer.parseInt(C.get_time()));
-				d.add(rs.getString(5));
-				e.add(rs.getString(6));
+				//c.add(Integer.parseInt(rs.getString(3)) + Integer.parseInt(rs.getString(4)) - Integer.parseInt(C.get_time()));
+    c.add(rs.getString(3));
+				d.add(rs.getString(4));
+				e.add(rs.getString(5));
+    f.add(rs.getString(6));
 			}
-			String[][] r = new String[a.size()][5];
+			String[][] r = new String[a.size()][6];
 			if(a.size()>0)
 			{
 				for(int n=0; n<r.length; n++)
 				{
 					r[n][0] = a.get(n);
 					r[n][1] = b.get(n);
-					r[n][2] = c.get(n)+"";
+					r[n][2] = c.get(n);
 					r[n][3] = d.get(n);
 					r[n][4] = e.get(n);
+     r[n][5] = f.get(n);
 				}
 				return r;
 			}
@@ -1178,7 +1182,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1240,7 +1244,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1265,7 +1269,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1299,7 +1303,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1326,7 +1330,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1351,7 +1355,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1383,7 +1387,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1406,7 +1410,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1434,7 +1438,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1447,12 +1451,12 @@ public class DBControl
 		try
 		{
 			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT jupe,timeset FROM q_jupes WHERE jupe like ?");
+			pstmt = con.prepareStatement("SELECT jupe FROM q_jupes WHERE jupe like ?");
 			pstmt.setString(1,host);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
-				C.cmd_unjupe(numer, rs.getString("jupe"), rs.getString("timeset"));
+				C.cmd_unjupe(numer, rs.getString("jupe"));
 			}
 			pstmt = con.prepareStatement("DELETE FROM q_jupes WHERE jupe like ?");
 			pstmt.setString(1,host);
@@ -1462,7 +1466,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1483,7 +1487,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1504,7 +1508,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1525,7 +1529,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1546,7 +1550,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1567,7 +1571,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1584,7 +1588,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1616,7 +1620,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1635,7 +1639,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1657,7 +1661,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1697,7 +1701,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1722,7 +1726,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1745,7 +1749,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1766,7 +1770,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1788,7 +1792,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1812,7 +1816,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1881,7 +1885,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -1907,7 +1911,7 @@ public class DBControl
 		{
 			System.out.println ( "Error encrypting password." );
 			e.printStackTrace();
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 			return "0";
 		}
 	}

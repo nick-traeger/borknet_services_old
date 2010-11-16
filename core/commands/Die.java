@@ -74,9 +74,7 @@ public class Die implements Cmds
 			//be pissed because i have to die
 			C.cmd_notice(bot,username, "Bastard :*(");
 			//finally die
-			C.get_modCore().stop();
-			C.cmd_quit(bot,quit);
-			C.running = false;
+   C.die(quit);
 		}
 		//user doesn't have access, that bastard!
 		else

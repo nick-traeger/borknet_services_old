@@ -69,7 +69,7 @@ public class DBControl
 		catch(Exception e)
 		{
 			C.printDebug("Database error!");
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -90,7 +90,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
@@ -111,7 +111,7 @@ public class DBControl
 		{
 			System.out.println ( "Error executing sql statement" );
 			C.debug(e);
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 

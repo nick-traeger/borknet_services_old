@@ -77,7 +77,7 @@ public class DBControl
 		catch(Exception e)
 		{
 			C.printDebug("Database error!");
-			System.exit(0);
+			C.die("SQL error, trying to die gracefully.");
 		}
 	}
 
