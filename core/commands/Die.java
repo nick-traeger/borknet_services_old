@@ -100,7 +100,7 @@ public class Die implements Cmds
 	{
 		if(lev>998)
 		{
-			C.cmd_notice(bot, username, "DIE                 Exit. - level 1000.");
+			C.cmd_notice(bot, username, "DIE                 Exit. - level 999.");
 		}
 	}
 }
