@@ -1073,6 +1073,15 @@ public class Core
 		mailThread.start();
 	}
 
+ /**
+ * Make the bot send <raw>
+ * @param raw		string to send
+ */
+	public void cmd_raw(String raw)
+	{
+		ircsend(raw);
+	} 
+ 
     /**
      * Make the bot join a channel
      * @param channel		channel to join

@@ -8,7 +8,7 @@ rem set CLASSPATH=G:\borknet
 
 rem javac *.java
  javac core/*.java
-rem javac core/commands/*.java
+ javac core/commands/*.java
 rem javac core/modules/basic/*.java
 rem javac core/modules/bob/*.java
 rem javac core/modules/g/*.java
