@@ -1,3 +1,6 @@
+26/02/2011 REV 85
+Core: ConcurrentModificationException in delServer.
+
 18/11/2010 REV 84
 Core: Added RAW command.
 P: On hold, use pxys2 (tip: you need to add some includes).
