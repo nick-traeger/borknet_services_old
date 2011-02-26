@@ -3,8 +3,8 @@ rem
 rem Used for compiling on windows.
 rem 
 
-set CLASSPATH=D:\java;D:\java\javamail-1.4.3\mail.jar;
-rem set CLASSPATH=G:\borknet
+rem set CLASSPATH=D:\java;D:\work\borknet_services\mail.jar;
+ set CLASSPATH=D:\work;D:\work\borknet_services\mail.jar;
 
 rem javac *.java
  javac core/*.java

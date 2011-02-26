@@ -1455,6 +1455,7 @@ public class CoreDBControl
 		Server s = serversByHost.get(host.toLowerCase());
 		if(s instanceof Server)
 		{
+   delChildren(host);
 			String numer = s.getNumeric();
    String hub = s.getHub();
    ArrayList<Server> servers = serversByHub.get(hub);
@@ -1469,13 +1470,32 @@ public class CoreDBControl
      }
 				}
 			}
-			servers = serversByHub.get(numer);
+		}
+		else
+		{
+			System.out.println ( "Error Removing server: "+host );
+			C.die("SQL error, trying to die gracefully.");
+		}
+	}
+ 
+ /**
+  * Delete a Server's children
+  * @param host  host of the server that has to remove his children
+  */
+  
+	public void delChildren(String host)
+	{
+		Server s = serversByHost.get(host.toLowerCase());
+		if(s instanceof Server)
+		{
+			String numer = s.getNumeric();
+			ArrayList<Server> servers = serversByHub.get(numer);
 			if(servers instanceof ArrayList)
 			{
-				for(Server ser : servers)
-				{
-					delServer(ser.getHost());
-				}
+    for(Server ser : servers)
+    {
+     delChildren(ser.getHost());
+    }
 			}
 			ArrayList<String> numerics = new ArrayList<String>(usersByNumeric.keySet());
 			for(String n : numerics)
