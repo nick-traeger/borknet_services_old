@@ -1,3 +1,6 @@
+28/02/2011 REV 86
+V: Added qwebirc vhost support. Probably a bad idea to use, i'll write an actual patch for snircd some day.
+
 26/02/2011 REV 85
 Core: ConcurrentModificationException in delServer.
 

@@ -103,7 +103,7 @@ public class Server
 		}
 		if(params.startsWith("N "))
 		{
-			if(Bot.get_automatic())
+			if(Bot.get_qwebirc() || Bot.get_automatic())
 			{
 				nickchange(command, params);
 			}
@@ -148,7 +148,21 @@ public class Server
 					ip = "0.0.0.0";
 				}
 				String numeric = templist[templist.length -1];
-				setHost(numeric, ident, ip);
+    if(Bot.get_qwebirc() && ident.equals(Bot.get_qident()) && result[5].equals(Bot.get_qhost()))
+    {
+     String vhost = params.substring(params.indexOf(":")+1, params.length()-1);
+     if(vhost.contains("/"))
+     {
+      String hostparts[]=vhost.split("/");
+      vhost=hostparts[0];
+     }
+     setHost(numeric, Bot.get_qident(), vhost);
+    }
+    else if(Bot.get_automatic())
+    {
+     String vhost = encrypt(ip) + "." + Bot.get_vhost();
+     setHost(numeric, ident, vhost);
+    }
 			}
 			catch(ArrayIndexOutOfBoundsException e)
 			{
@@ -159,9 +173,8 @@ public class Server
 		}
 	}
 
-	public void setHost(String numeric, String ident, String ip)
+	public void setHost(String numeric, String ident, String vhost)
 	{
-		String vhost = encrypt(ip) + "." + Bot.get_vhost();
 		String user[] = C.get_dbc().getUserRow(numeric);
 		C.cmd_sethost(numeric, ident, vhost, user[3]);
 	}
