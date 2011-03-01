@@ -49,6 +49,9 @@ public class V implements Modules
 	private String reportchan = "";
 	private String vhost = "";
 	private boolean automatic = true;
+	private boolean qwebirc = false;
+ private String qhost = "webchat@borknet.org";
+ private String qident = "webchat";
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
 
@@ -114,7 +117,9 @@ public class V implements Modules
 			/* remove the next line if you build a client only */
 			numeric = dataSrc.getProperty("numeric");
 			automatic = Boolean.parseBoolean(dataSrc.getProperty("automatic"));
-			vhost = dataSrc.getProperty("vhost");
+			qwebirc = Boolean.parseBoolean(dataSrc.getProperty("qwebirc"));
+   qhost = dataSrc.getProperty("qhost");
+   qident = dataSrc.getProperty("qident");
 		}
 		catch(Exception e)
 		{
@@ -159,6 +164,18 @@ public class V implements Modules
 	public String get_vhost()
 	{
 		return vhost;
+	}
+	public boolean get_qwebirc()
+	{
+		return qwebirc;
+	}
+	public String get_qhost()
+	{
+		return qhost;
+	}
+	public String get_qident()
+	{
+		return qident;
 	}
 	public void clean()
 	{
