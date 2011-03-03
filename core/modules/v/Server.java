@@ -148,15 +148,17 @@ public class Server
 					ip = "0.0.0.0";
 				}
 				String numeric = templist[templist.length -1];
-    if(Bot.get_qwebirc() && ident.equals(Bot.get_qident()) && result[5].equals(Bot.get_qhost()))
+    if(Bot.get_qwebirc() && result[5].equals(Bot.get_qhost()))
     {
-     String vhost = params.substring(params.indexOf(":")+1, params.length()-1);
-     if(vhost.contains("/"))
+     try
      {
-      String hostparts[]=vhost.split("/");
-      vhost=hostparts[0];
+      long realip = Long.parseLong(ident.substring(1),16);
+      setHost(numeric, Bot.get_qident(), C.longToIp(realip));
      }
-     setHost(numeric, Bot.get_qident(), vhost);
+     catch(Exception longex)
+     {
+      //do nothing
+     }
     }
     else if(Bot.get_automatic())
     {
@@ -178,7 +180,7 @@ public class Server
 		String user[] = C.get_dbc().getUserRow(numeric);
 		C.cmd_sethost(numeric, ident, vhost, user[3]);
 	}
-
+ 
 	public String encrypt(String str)
 	{
 		long hash = 0;
