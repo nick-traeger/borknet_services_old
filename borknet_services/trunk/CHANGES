@@ -1,3 +1,8 @@
+14/03/2011 REV 89
+Core: Added Create channel.
+Core: userchans should be held in memory now, next update will use this.
+Core: Random Command: various checks on inmemory userchans.
+
 03/03/2011 REV 88
 Changes: file booboo.
 
