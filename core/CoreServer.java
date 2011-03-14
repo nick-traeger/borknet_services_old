@@ -91,7 +91,7 @@ public class CoreServer
 	public void cmode(String chan, String modes)
 	{
 		//if another bot then me clears a channel i need to enforce myself, since i'm the big pooba
-		dbc.setClearOps(chan);
+		dbc.setClearMode(chan,modes);
 	}
 
 	/**
@@ -175,27 +175,27 @@ public class CoreServer
 					{
 						return;
 					}
-					parse_mode(result[3], result[1], change[0]);
+					dbc.setUserChanMode(result[3], result[1], change[0]);
 				}
 				if(result.length > 4 && change.length > 1)
 				{
-					parse_mode(result[4], result[1], change[1]);
+					dbc.setUserChanMode(result[4], result[1], change[1]);
 				}
 				if(result.length > 5 && change.length > 2)
 				{
-					parse_mode(result[5], result[1], change[2]);
+					dbc.setUserChanMode(result[5], result[1], change[2]);
 				}
 				if(result.length > 6 && change.length > 3)
 				{
-					parse_mode(result[6], result[1], change[3]);
+					dbc.setUserChanMode(result[6], result[1], change[3]);
 				}
 				if(result.length > 7 && change.length > 4)
 				{
-					parse_mode(result[7], result[1], change[4]);
+					dbc.setUserChanMode(result[7], result[1], change[4]);
 				}
 				if(result.length > 8 && change.length > 5)
 				{
-					parse_mode(result[8], result[1], change[5]);
+					dbc.setUserChanMode(result[8], result[1], change[5]);
 				}
 				return;
 			}
@@ -263,18 +263,6 @@ public class CoreServer
 			C.debug(e);
 			C.report("ArrayIndexOutOfBoundsException in srv_mode!");
 		}
-	}
-
-	/**
-	 * Parses mode changes
-	 * @param username		numeric of the user affected
-	 * @param chan			channel where the change happend
-	 * @param chanm			modes that changed
-	 * @param change		a + or - indicating gain or loss of modes
-	 */
-	private void parse_mode(String username, String chan, String change)
-	{
-		dbc.setUserChanMode(username, chan, change);
 	}
 
 	/**
@@ -638,9 +626,9 @@ public class CoreServer
 	 * @param username		the user's numeric
 	 * @param channel		the channel getting joined
 	 */
-	public void join(String username , String channel)
+	public void join(String username , String channel, String timestamp)
 	{
-		dbc.addUserChan(channel, username, "0");
+		dbc.addUserChan(channel, username, "0", timestamp);
 	}
 
 	/**
@@ -661,7 +649,7 @@ public class CoreServer
 	 * @param channel		channel getting bursted
 	 * @param users			the users currently on the channel, with their modes
 	 */
-	public void bline(String channel, String users)
+	public void bline(String channel, String users, String timestamp)
 	{
 		/*
 		[>in <] >> AB B #BorkNet 949217470 +tncCNul 14 ABBly,ABBlb,ABAXs:ov,ABBli:v,ABBjL,ACAAi:o,ABBlK,ACAAT
@@ -685,12 +673,12 @@ public class CoreServer
 			if(o)
 			{
 				u[n] = u[n] + ":o";
-				dbc.addUserChan(channel, u[n].substring(0,u[n].indexOf(":")),"o");
+				dbc.addUserChan(channel, u[n].substring(0,u[n].indexOf(":")),"o",timestamp);
 			}
 			else
 			{
 				u[n] = u[n] + ":v";
-				dbc.addUserChan(channel, u[n].substring(0,u[n].indexOf(":")),"0");
+				dbc.addUserChan(channel, u[n].substring(0,u[n].indexOf(":")),"0",timestamp);
 			}
 		}
 	}
@@ -701,12 +689,12 @@ public class CoreServer
 	 * @param channel		channel getting created
 	 * @param user			the user who created it
 	 */
-	public void create(String channel, String user)
+	public void create(String channel, String user, String timestamp)
 	{
 		String[] c = channel.split(",");
 		for(int n=0; n<c.length;n++)
 		{
-			dbc.addUserChan(c[n], user, "o");
+			dbc.addUserChan(c[n], user, "o",timestamp);
 		}
 	}
 

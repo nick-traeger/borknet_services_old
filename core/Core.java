@@ -506,7 +506,8 @@ public class Core
 						if(!params.equals("J 0"))
 						{
 							String chan = params.substring(params.indexOf("#"),params.indexOf(" ",params.indexOf("#")));
-							ser.join(command, chan);
+       String timestamp = params.substring(params.indexOf(" ",params.indexOf("#"))+1);
+							ser.join(command, chan, timestamp);
 						}
 						else
 						{
@@ -542,7 +543,8 @@ public class Core
 						//ABAAA C #Feds 1119880843
 						//[>in <] >> ABAXs C #bla,#bli,#blo 1125181542
 						String chan = params.substring(params.indexOf("#"),params.lastIndexOf(" "));
-						ser.create(chan, command);
+      String timestamp = params.substring(params.indexOf(" ")+1);
+						ser.create(chan, command, timestamp);
 					}
 					//Topic change
 					if(params.startsWith("T "))
@@ -600,7 +602,7 @@ public class Core
 							{
 								reop(chan);
 							}
-							ser.bline(chan, users);
+							ser.bline(chan, users, result[2]);
 						}
 					}
 					//a mode change
@@ -1088,9 +1090,17 @@ public class Core
      */
 	public void cmd_join(String num, String channel)
 	{
-		ircsend(numeric + num + " J " + channel);
-		cmd_mode(numeric + num , channel , "+o");
-		dbc.addUserChan(channel, numeric + num, "o");
+  if(dbc.chanExists(channel))
+  {
+   ircsend(numeric + num + " J " + channel);
+   cmd_mode(numeric + num , channel , "+o");
+   dbc.addUserChan(channel, numeric + num, "o","0");
+  }
+  else
+  {
+   ircsend(numeric + num + " C " + channel + " " + get_time());
+   dbc.addUserChan(channel, numeric + num, "o", get_time());
+  }
 	}
 
     /**
@@ -1099,9 +1109,17 @@ public class Core
      */
 	public void cmd_join(String numeric, String num, String channel)
 	{
-		ircsend(numeric + num + " J " + channel);
-		cmd_mode(numeric + num , channel , "+o");
-		dbc.addUserChan(channel, numeric + num, "o");
+  if(dbc.chanExists(channel))
+  {
+   ircsend(numeric + num + " J " + channel);
+   cmd_mode(numeric + num , channel , "+o");
+   dbc.addUserChan(channel, numeric + num, "o","0");
+  }
+  else
+  {
+   ircsend(numeric + num + " C " + channel + " " + get_time());
+   dbc.addUserChan(channel, numeric + num, "o", get_time());
+  }
 	}
 
     /**
@@ -1110,8 +1128,16 @@ public class Core
      */
 	public void cmd_join(String numeric, String num, String channel, boolean noop)
 	{
-		ircsend(numeric + num + " J " + channel);
-		dbc.addUserChan(channel, numeric + num, "0");
+  if(dbc.chanExists(channel))
+  {
+   ircsend(numeric + num + " J " + channel);
+   dbc.addUserChan(channel, numeric + num, "0", "0");
+  }
+  else
+  {
+   ircsend(numeric + num + " C " + channel + " " + get_time());
+   dbc.addUserChan(channel, numeric + num, "0",get_time());
+  }
 	}
 
     /**

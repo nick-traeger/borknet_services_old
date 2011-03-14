@@ -23,6 +23,7 @@
 */
 package borknet_services.core;
 import borknet_services.core.*;
+import java.util.*;
 
 public class User
 {
@@ -36,6 +37,7 @@ public class User
 	private String server;
 	private String ip;
 	private String fakehost;
+ private ArrayList<String> channels = new ArrayList<String>();
 
 	public User(String numeric)
 	{
@@ -141,4 +143,19 @@ public class User
 	{
 		fakehost = s;
 	}
+ 
+ public void joinChannel(String channel)
+ {
+  channels.add(channel.toLowerCase());
+ }
+ 
+ public void partChannel(String channel)
+ {
+  channels.remove(channel);
+ }
+ 
+ public ArrayList<String> getChannels()
+ {
+  return channels;
+ }
 }

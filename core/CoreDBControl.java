@@ -58,6 +58,8 @@ public class CoreDBControl
 	private HashMap<String,Server> serversByNumeric = new HashMap<String,Server>();
 	private HashMap<String,ArrayList<Server>> serversByHub = new HashMap<String,ArrayList<Server>>();
 	private HashMap<String,Server> serversByHost = new HashMap<String,Server>();
+ 
+	private HashMap<String,Channel> channels = new HashMap<String,Channel>();
 
 	/**
 	 * Constructs a Database connection.
@@ -1346,13 +1348,20 @@ public class CoreDBControl
 			C.debug(e);
 			C.die("SQL error, trying to die gracefully.");
 		}
+  
+  
+  Channel c = channels.get(chan.toLowerCase());
+  if(c instanceof Channel)
+  {
+   c.setUserChanMode(user,mode);
+  }
 	}
 
 	/**
 	 * Remove all ops from a channel
 	 * @param chan		channel to change
 	 */
-	public void setClearOps(String chan)
+	public void setClearMode(String chan, String modes)
 	{
 		try
 		{
@@ -1367,6 +1376,14 @@ public class CoreDBControl
 			C.debug(e);
 			C.die("SQL error, trying to die gracefully.");
 		}
+  
+  
+  
+  Channel c = channels.get(chan.toLowerCase());
+  if(c instanceof Channel)
+  {
+   c.setClearMode(modes);
+  }
 	}
 
 	/**
@@ -1440,6 +1457,12 @@ public class CoreDBControl
 			pstmt = con.prepareStatement("DELETE FROM userchans WHERE BINARY user = ?");
 			pstmt.setString(1,numer);
 			pstmt.executeUpdate();
+   
+   ArrayList<String> userchannels = u.getChannels();
+   for(String channel: userchannels)
+   {
+    delUser(numer);
+   }
 		}
 		catch ( Exception e )
 		{
@@ -1537,6 +1560,17 @@ public class CoreDBControl
 			C.debug(e);
 			C.die("SQL error, trying to die gracefully.");
 		}
+  
+  Channel c = channels.get(chan.toLowerCase());
+  if(c instanceof Channel)
+  {
+   c.delUser(user);
+  }
+  User u = usersByNumeric.get(user);
+  if(u instanceof User)
+  {
+   u.partChannel(chan);
+  }
 	}
 
 	public void addUser(String nume,String nick, String host, String mode, String auth, boolean isop, String server, String ip, String fake)
@@ -1676,7 +1710,7 @@ public class CoreDBControl
 		}
 	}
 
-	public void addUserChan(String channel,String user,String modes)
+	public void addUserChan(String channel,String user,String modes, String timestamp)
 	{
 		try
 		{
@@ -1693,6 +1727,30 @@ public class CoreDBControl
 			C.debug(e);
 			C.die("SQL error, trying to die gracefully.");
 		}
+  
+  
+  Channel c = channels.get(channel.toLowerCase());
+  if(c instanceof Channel)
+  {
+   c.addUser(user);
+  }
+  else
+  {
+   if(modes.equals("o"))
+   {
+    c = new Channel(channel,timestamp,user,true);
+   }
+   else
+   {
+    c = new Channel(channel,timestamp,user,false);
+   }
+   channels.put(channel.toLowerCase(),c);
+  }
+  User u = usersByNumeric.get(user);
+  if(u instanceof User)
+  {
+   u.joinChannel(channel);
+  }
 	}
 
 	public void save()
@@ -1975,4 +2033,34 @@ public class CoreDBControl
 			C.die("SQL error, trying to die gracefully.");
 		}
 	}
+ 
+ public ArrayList<String> checkUserChans()
+ {
+  ArrayList<String> info = new ArrayList<String>();
+  /*
+  chanExists
+  -isOpChan
+  -isOnChan
+  -chanHasOps
+  getChanUsers
+  -getUserChans
+  getChannelUsers
+  -getUserChanTable
+  */
+  info.add("MYSQL vs Memory");
+  Channel c = channels.get("#azefezfzefzefzfzefzefzf");
+  info.add(chanExists("#azefezfzefzefzfzefzefzf")+" "+(c instanceof Channel));
+  c = channels.get("#borknet");
+  if(c instanceof Channel)
+  {
+   info.add(chanExists("#BorkNet")+" true");
+   info.add(getChanUsers("#BorkNet")+" "+c.getUsercount());
+   info.add(Arrays.toString(getChannelUsers("#BorkNet"))+" "+Arrays.toString(c.getUserlist()));
+  }
+  else
+  {
+   info.add("#BorkNet not in memory");
+  }
+  return info;
+ }
 }

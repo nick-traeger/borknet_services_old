@@ -3,12 +3,12 @@ rem
 rem Used for compiling on windows.
 rem 
 
-rem set CLASSPATH=D:\java;D:\work\borknet_services\mail.jar;
- set CLASSPATH=D:\work;D:\work\borknet_services\mail.jar;
+set CLASSPATH=D:\java;D:\java\borknet_services\mail.jar;
+rem set CLASSPATH=D:\work;D:\work\borknet_services\mail.jar;
 
 rem javac *.java
-rem javac core/*.java
-rem javac core/commands/*.java
+ javac core/*.java
+ javac core/commands/*.java
 rem javac core/modules/basic/*.java
 rem javac core/modules/bob/*.java
 rem javac core/modules/g/*.java
@@ -20,6 +20,6 @@ rem javac core/modules/r/*.java
 rem javac core/modules/s/*.java
 rem javac core/modules/t/*.java
 rem javac core/modules/tutor/*.java
- javac core/modules/v/*.java
+rem javac core/modules/v/*.java
 rem javac core/modules/x/*.java
 pause
