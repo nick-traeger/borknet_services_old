@@ -53,7 +53,7 @@ public class Random implements Cmds
 		//check if he's an operator and has a high enough level
 		if(user[5].equals("1") && Integer.parseInt(auth[3]) >998)
 		{
-   ArrayList<String> info = dbc.checkUserChans();
+   ArrayList<String> info = dbc.checkUserChans(username);
    for(String line : info)
    {
     C.cmd_notice(bot, username, line);

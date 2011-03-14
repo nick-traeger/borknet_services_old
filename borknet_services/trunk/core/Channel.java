@@ -64,18 +64,10 @@ public class Channel
 		return users.size();
 	}
  
- public String[] getUserlist()
+ public ArrayList<String> getUserlist()
  {
-  ArrayList<String> userlist = new ArrayList<String>(users.keySet());
-			if(userlist.size()>0)
-			{
-				String[] r = (String[]) userlist.toArray(new String[ userlist.size() ]);
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-			} }
+  return new ArrayList<String>(users.keySet());
+ }
  
  public void setUserChanMode(String user, String mode)
  {
@@ -162,6 +154,46 @@ public class Channel
  public void delUser(String user)
  {
   users.remove(user);
+ }
+ 
+ public Boolean ison(String user)
+ {
+  ChannelUser cu=users.get(user);
+  return (cu instanceof ChannelUser);
+ }
+ 
+ public Boolean isop(String user)
+ {
+  ChannelUser cu=users.get(user);
+  if(cu instanceof ChannelUser)
+  {
+   return cu.isop();
+  }
+  return false;
+ }
+ 
+ public Boolean isvoice(String user)
+ {
+  ChannelUser cu=users.get(user);
+  if(cu instanceof ChannelUser)
+  {
+   return cu.isvoice();
+  }
+  return false;
+ }
+ 
+ public Boolean hasop()
+ {
+  ArrayList<String> userlist = new ArrayList<String>(users.keySet());
+  for(String user : userlist)
+  {
+   ChannelUser cu=users.get(user);
+   if(cu.isop())
+   {
+    return true;
+   }
+  }
+  return false;
  }
  
  class ChannelUser

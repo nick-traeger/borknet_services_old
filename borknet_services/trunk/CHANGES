@@ -1,3 +1,6 @@
+14/03/2011 REV 90
+Core: Random Command: more checks implemented.
+
 14/03/2011 REV 89
 Core: Added Create channel.
 Core: userchans should be held in memory now, next update will use this.

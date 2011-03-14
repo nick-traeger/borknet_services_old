@@ -2034,28 +2034,67 @@ public class CoreDBControl
 		}
 	}
  
- public ArrayList<String> checkUserChans()
+ public ArrayList<String> checkUserChans(String username)
  {
   ArrayList<String> info = new ArrayList<String>();
   /*
   chanExists
-  -isOpChan
-  -isOnChan
-  -chanHasOps
+  isOpChan
+  isOnChan
+  chanHasOps
   getChanUsers
-  -getUserChans
+  getUserChans
   getChannelUsers
-  -getUserChanTable
+  getUserChanTable
   */
   info.add("MYSQL vs Memory");
   Channel c = channels.get("#azefezfzefzefzfzefzefzf");
-  info.add(chanExists("#azefezfzefzefzfzefzefzf")+" "+(c instanceof Channel));
+  info.add("chanExists: "+chanExists("#azefezfzefzefzfzefzefzf")+" "+(c instanceof Channel));
   c = channels.get("#borknet");
-  if(c instanceof Channel)
+  User u = usersByNumeric.get(username);
+  if(c instanceof Channel && u instanceof User)
   {
-   info.add(chanExists("#BorkNet")+" true");
-   info.add(getChanUsers("#BorkNet")+" "+c.getUsercount());
-   info.add(Arrays.toString(getChannelUsers("#BorkNet"))+" "+Arrays.toString(c.getUserlist()));
+   info.add("chanExists: "+chanExists("#BorkNet")+" true");
+   info.add("isOpChan: "+isOpChan(username,"#BorkNet")+" "+c.isop(username));
+   info.add("isOnChan: "+isOnChan(username,"#BorkNet")+" "+c.ison(username));
+   info.add("chanHasOps: "+chanHasOps("#BorkNet")+" "+c.hasop());
+   info.add("getChanUsers: "+getChanUsers("#BorkNet")+" "+c.getUsercount());
+   ArrayList<String> channellist = u.getChannels();
+   if(channellist.size()>0)
+   {
+    String[] r = (String[]) channellist.toArray(new String[ channellist.size() ]);
+    info.add("getUserChans: "+Arrays.toString(getUserChans(username)));
+    info.add("getUserChans: "+Arrays.toString(r));
+   }
+   else
+   {
+    info.add("getUserChans: "+Arrays.toString(getUserChans(username))+" empty");
+    info.add("getUserChans: empty");
+   }
+   ArrayList<String> userlist = c.getUserlist();
+   if(userlist.size()>0)
+   {
+    String[] r = (String[]) userlist.toArray(new String[ userlist.size() ]);
+    info.add("getChannelUsers: "+Arrays.toString(getChannelUsers("#BorkNet")));
+    info.add("getChannelUsers: "+Arrays.toString(r));
+   }
+   else
+   {
+    info.add("getChannelUsers: "+Arrays.toString(getChannelUsers("#BorkNet"))+" empty");
+    info.add("getChannelUsers: empty");
+   }
+   channellist = new ArrayList<String>(channels.keySet());
+   if(channellist.size()>0)
+   {
+    String[] r = (String[]) channellist.toArray(new String[ channellist.size() ]);
+    info.add("getUserChanTable: "+Arrays.toString(getUserChanTable()));
+    info.add("getUserChanTable: "+Arrays.toString(r));
+   }
+   else
+   {
+    info.add("getUserChanTable: "+Arrays.toString(getUserChanTable())+" empty");
+    info.add("getUserChanTable: empty");
+   }
   }
   else
   {
