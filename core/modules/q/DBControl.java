@@ -1879,6 +1879,8 @@ public class DBControl
 					delChallenge(rs.getString("user"));
 				}
 			}
+			pstmt = con.prepareStatement("DELETE FROM q_access WHERE user NOT IN (SELECT authnick FROM auths)");
+			pstmt.executeUpdate();
 			C.report("Q Cleanup complete!");
 		}
 		catch(Exception e)

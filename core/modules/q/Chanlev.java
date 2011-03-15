@@ -454,7 +454,7 @@ public class Chanlev implements Command
 			C.cmd_notice(numeric, botnum, username, "q - cannot get voiced");
 			C.cmd_notice(numeric, botnum, username, "d - cannot get oped");
 			C.cmd_notice(numeric, botnum, username, "m - master, can make all the above");
-			C.cmd_notice(numeric, botnum, username, "n - owner, can make all the above");
+			C.cmd_notice(numeric, botnum, username, "n - owner, can make all");
 		}
 		else
 		{
