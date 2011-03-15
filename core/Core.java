@@ -1094,12 +1094,12 @@ public class Core
   {
    ircsend(numeric + num + " J " + channel);
    cmd_mode(numeric + num , channel , "+o");
-   dbc.addUserChan(channel, numeric + num, "o","0");
+   dbc.addUserChan(channel, numeric + num, "0", true, false);
   }
   else
   {
    ircsend(numeric + num + " C " + channel + " " + get_time());
-   dbc.addUserChan(channel, numeric + num, "o", get_time());
+   dbc.addUserChan(channel, numeric + num, get_time(), true, false);
   }
 	}
 
@@ -1113,12 +1113,12 @@ public class Core
   {
    ircsend(numeric + num + " J " + channel);
    cmd_mode(numeric + num , channel , "+o");
-   dbc.addUserChan(channel, numeric + num, "o","0");
+   dbc.addUserChan(channel, numeric + num, "0", true, false);
   }
   else
   {
    ircsend(numeric + num + " C " + channel + " " + get_time());
-   dbc.addUserChan(channel, numeric + num, "o", get_time());
+   dbc.addUserChan(channel, numeric + num, get_time(), true, false);
   }
 	}
 
@@ -1131,12 +1131,12 @@ public class Core
   if(dbc.chanExists(channel))
   {
    ircsend(numeric + num + " J " + channel);
-   dbc.addUserChan(channel, numeric + num, "0", "0");
+   dbc.addUserChan(channel, numeric + num, "0", false, false);
   }
   else
   {
    ircsend(numeric + num + " C " + channel + " " + get_time());
-   dbc.addUserChan(channel, numeric + num, "0",get_time());
+   dbc.addUserChan(channel, numeric + num, get_time(), false, false);
   }
 	}
 

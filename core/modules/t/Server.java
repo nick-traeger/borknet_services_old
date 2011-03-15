@@ -131,7 +131,7 @@ public class Server
 	 */
 	public void privmsg(String me, String username, String message)
 	{
-  if(dbc.isOnChan(username, channel) && me.equals(Bot.get_num()+"BBB"))
+  if(me.equals(Bot.get_num()+"BBB") && dbc.isOnChan(username, channel))
   {
    String user[] = dbc.getUserRow(username);
    C.cmd_privmsg(Bot.get_num(), "AAA", reportchan, "Suspicious activity from " + user[1] + " on " + channel + ": '" + message + "'");

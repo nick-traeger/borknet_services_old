@@ -628,7 +628,7 @@ public class CoreServer
 	 */
 	public void join(String username , String channel, String timestamp)
 	{
-		dbc.addUserChan(channel, username, "0", timestamp);
+		dbc.addUserChan(channel, username, timestamp, false, false);
 	}
 
 	/**
@@ -658,27 +658,28 @@ public class CoreServer
 		ABBli:v,ABBjL == +v
 		ACAAi:o,ABBlK,ACAAT == +o
 		*/
-		String[] u = users.split(",");
-		boolean o = false;
-		for(int n=0; n<u.length;n++)
+		String[] userlist = users.split(",");
+		for(String user : userlist)
 		{
-			if(u[n].indexOf(":o") != -1)
+			if(user.contains(":ov") || user.contains(":vo"))
 			{
-				o = true;
+				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, true, true);
 			}
-			if(u[n].indexOf(":v") != -1)
+			else if(user.contains(":o"))
 			{
-				o = false;
+				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, true, false);
 			}
-			if(o)
+			else if(user.contains(":v"))
 			{
-				u[n] = u[n] + ":o";
-				dbc.addUserChan(channel, u[n].substring(0,u[n].indexOf(":")),"o",timestamp);
+				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, false, true);
+			}
+			else if(user.contains(":"))
+			{
+				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, false, false);
 			}
 			else
 			{
-				u[n] = u[n] + ":v";
-				dbc.addUserChan(channel, u[n].substring(0,u[n].indexOf(":")),"0",timestamp);
+				dbc.addUserChan(channel, user,timestamp, false, false);
 			}
 		}
 	}
@@ -689,12 +690,12 @@ public class CoreServer
 	 * @param channel		channel getting created
 	 * @param user			the user who created it
 	 */
-	public void create(String channel, String user, String timestamp)
+	public void create(String channels, String user, String timestamp)
 	{
-		String[] c = channel.split(",");
-		for(int n=0; n<c.length;n++)
+		String[] channellist = channels.split(",");
+		for(String channel : channellist)
 		{
-			dbc.addUserChan(c[n], user, "o",timestamp);
+			dbc.addUserChan(channel, user, timestamp, true, false);
 		}
 	}
 
@@ -704,12 +705,12 @@ public class CoreServer
 	 * @param chan		channel getting parted
 	 * @param user		the user parting
 	 */
-	public void part(String chan, String user)
+	public void part(String channels, String user)
 	{
-		String[] c = chan.split(",");
-		for(int n=0; n<c.length;n++)
+		String[] channellist = channels.split(",");
+		for(String channel : channellist)
 		{
-			dbc.delUserChan(c[n], user);
+			dbc.delUserChan(channel, user);
 		}
 	}
 

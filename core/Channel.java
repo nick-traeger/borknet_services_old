@@ -31,11 +31,11 @@ public class Channel
 	private String creationtime;
 	private HashMap<String,ChannelUser> users = new HashMap<String,ChannelUser>();
 
-	public Channel(String channel,String creationtime,String user, boolean isop)
+	public Channel(String channel,String creationtime,String user, boolean isop, boolean isvoice)
 	{
 		this.channel = channel;
   this.creationtime = creationtime;
-  ChannelUser chanuser = new ChannelUser(user,isop);
+  ChannelUser chanuser = new ChannelUser(user,isop,isvoice);
   users.put(user,chanuser);
 	}
 
@@ -67,6 +67,17 @@ public class Channel
  public ArrayList<String> getUserlist()
  {
   return new ArrayList<String>(users.keySet());
+ }
+ 
+ public ArrayList<ChannelUser> getChannelUserlist()
+ {
+  ArrayList<String> keys =  new ArrayList<String>(users.keySet());
+  ArrayList<ChannelUser> channelusers = new ArrayList<ChannelUser>();
+  for(String user : keys)
+  {
+   channelusers.add(users.get(user));
+  }
+  return channelusers;
  }
  
  public void setUserChanMode(String user, String mode)
@@ -104,7 +115,7 @@ public class Channel
   }
  }
  
- public void setUserVoice(String user, Boolean isvoice)
+ public void setUserVoice(String user, boolean isvoice)
  {
   ChannelUser cu=users.get(user);
   if(cu instanceof ChannelUser)
@@ -145,9 +156,9 @@ public class Channel
   }
  }
  
- public void addUser(String user)
+ public void addUser(String user, boolean isop, boolean isvoice)
  {
-  ChannelUser chanuser = new ChannelUser(user,false);
+  ChannelUser chanuser = new ChannelUser(user,isop,isvoice);
   users.put(user,chanuser);
  }
  
@@ -156,13 +167,13 @@ public class Channel
   users.remove(user);
  }
  
- public Boolean ison(String user)
+ public boolean ison(String user)
  {
   ChannelUser cu=users.get(user);
   return (cu instanceof ChannelUser);
  }
  
- public Boolean isop(String user)
+ public boolean isop(String user)
  {
   ChannelUser cu=users.get(user);
   if(cu instanceof ChannelUser)
@@ -172,7 +183,7 @@ public class Channel
   return false;
  }
  
- public Boolean isvoice(String user)
+ public boolean isvoice(String user)
  {
   ChannelUser cu=users.get(user);
   if(cu instanceof ChannelUser)
@@ -182,7 +193,7 @@ public class Channel
   return false;
  }
  
- public Boolean hasop()
+ public boolean hasop()
  {
   ArrayList<String> userlist = new ArrayList<String>(users.keySet());
   for(String user : userlist)
@@ -194,37 +205,5 @@ public class Channel
    }
   }
   return false;
- }
- 
- class ChannelUser
- {
-  private String user;
-  private Boolean op;
-  private Boolean voice;
-  public ChannelUser(String user, Boolean isop)
-  {
-   this.user=user;
-   this.op=isop;
-  }
-  
-  public Boolean isop()
-  {
-   return op;
-  }
-
-  public void isop(Boolean isop)
-  {
-   this.op = isop;
-  }
-  
-  public Boolean isvoice()
-  {
-   return voice;
-  }
-
-  public void isvoice(Boolean isvoice)
-  {
-   this.voice = isvoice;
-  }
  }
 }
