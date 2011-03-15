@@ -81,10 +81,6 @@ public class CoreDBControl
 			this.C = C;
 			testDriver();
 			con = getConnection ( server, user, password, db);
-			C.printDebug( "[>---<] >> *** Truncating userchans..." );
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("TRUNCATE TABLE `userchans`");
-			pstmt.execute();
 			C.printDebug( "[>---<] >> *** Done." );
 			C.printDebug( "[>---<] >> *** Loading Auth data..." );
 			loadAuths();
@@ -169,9 +165,6 @@ public class CoreDBControl
 	{
 		try
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("TRUNCATE TABLE `userchans`");
-			pstmt.execute();
 			usersByNumeric = new HashMap<String,User>();
 			usersByNick = new HashMap<String,User>();
 			usersByAuth = new HashMap<String,ArrayList<User>>();
@@ -224,20 +217,8 @@ public class CoreDBControl
 	 */
 	public boolean chanExists(String chan)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT channel FROM userchans WHERE channel = ?");
-			pstmt.setString(1,chan);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String channel = rs.getString("channel");
-			return true;
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
+  Channel c = channels.get(chan.toLowerCase());
+		return (c instanceof Channel);
 	}
 
 	/**
@@ -399,25 +380,12 @@ public class CoreDBControl
 	 */
 	public boolean isOpChan(String user, String channel)
 	{
-		try
+		Channel c = channels.get(channel.toLowerCase());
+		if(c instanceof Channel)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT modes FROM userchans WHERE BINARY user = ? AND channel = ?");
-			pstmt.setString(1,user);
-			pstmt.setString(2,channel);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String mode = rs.getString("modes");
-			if(mode.equals("o"))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return c.isop(user);
 		}
-		catch(Exception e)
+		else
 		{
 			return false;
 		}
@@ -443,18 +411,12 @@ public class CoreDBControl
 	 */
 	public boolean isOnChan(String user, String channel)
 	{
-		try
+		Channel c = channels.get(channel.toLowerCase());
+		if(c instanceof Channel)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT user FROM userchans WHERE BINARY user = ? AND channel = ?");
-			pstmt.setString(1,user);
-			pstmt.setString(2,channel);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			String mode = rs.getString("user");
-			return true;
+			return c.ison(user);
 		}
-		catch(Exception e)
+		else
 		{
 			return false;
 		}
@@ -524,23 +486,12 @@ public class CoreDBControl
 	 */
 	public boolean chanHasOps(String channel)
 	{
-		try
+		Channel c = channels.get(channel.toLowerCase());
+		if(c instanceof Channel)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT modes FROM userchans WHERE channel = ?");
-			pstmt.setString(1,channel);
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next())
-			{
-				String mode = rs.getString("modes");
-				if(mode.equals("o"))
-				{
-					return true;
-				}
-			}
-			return false;
+			return c.hasop();
 		}
-		catch(Exception e)
+		else
 		{
 			return false;
 		}
@@ -584,20 +535,12 @@ public class CoreDBControl
 	 */
 	public int getChanUsers(String channel)
 	{
-		try
+		Channel c = channels.get(channel.toLowerCase());
+		if(c instanceof Channel)
 		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT SQL_CALC_FOUND_ROWS * FROM userchans WHERE channel = ?");
-			pstmt.setString(1,channel);
-			ResultSet rs = pstmt.executeQuery();
-			pstmt = con.prepareStatement("SELECT FOUND_ROWS();");
-			rs = pstmt.executeQuery();
-			rs.first();
-			int users = rs.getInt(1);
-			rs.close();
-			return users;
+			return c.getUsercount();
 		}
-		catch(Exception e)
+		else
 		{
 			return 0;
 		}
@@ -753,7 +696,6 @@ public class CoreDBControl
 		{
 			Auth a = auths.get(nick.toLowerCase());
 			return new String[]{a.getAuthnick(),a.getPassword(),a.getMail(),a.getLevel()+"",a.getSuspended()+"",a.getLast()+"",a.getInfo(),a.getUserflags(),a.getVHost()};
-
 		}
 		catch(Exception e)
 		{
@@ -769,31 +711,24 @@ public class CoreDBControl
 	 */
 	public String[] getUserChans(String user)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE BINARY user = ?");
-			pstmt.setString(1,user);
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
-			{
-				a.add(rs.getString("channel"));
-			}
-			if(a.size()>0)
-			{
-				String[] r = (String[]) a.toArray(new String[ a.size() ]);
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-			}
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
+  User u = usersByNumeric.get(user);
+  if(u instanceof User)
+  {
+   ArrayList<String> channellist = u.getChannels();
+   if(channellist.size()>0)
+   {
+    String[] r = (String[]) channellist.toArray(new String[ channellist.size() ]);
+    return r;
+   }
+   else
+   {
+    return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+   }
+  }
+  else
+  {
+   return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+  }
 	}
 
 	/**
@@ -804,31 +739,77 @@ public class CoreDBControl
 	 */
 	public String[] getChannelUsers(String chan)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT * FROM userchans WHERE channel = ?");
-			pstmt.setString(1,chan);
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
-			{
-				a.add(rs.getString("user"));
-			}
-			if(a.size()>0)
-			{
-				String[] r = (String[]) a.toArray(new String[ a.size() ]);
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-			}
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
+  Channel c = channels.get(chan.toLowerCase());
+  if(c instanceof Channel)
+  {
+   ArrayList<String> userlist = c.getUserlist();
+   if(userlist.size()>0)
+   {
+    String[] r = (String[]) userlist.toArray(new String[ userlist.size() ]);
+    return r;
+   }
+   else
+   {
+    return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+   }
+  }
+  else
+  {
+   return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+  }
+	}
+ 
+ 	/**
+	 * Get a channel's users and modes
+	 * @param chan		channel to fetch
+	 *
+	 * @return			an array of all users
+	 */
+	public String[] getChannelUsersModes(String chan)
+	{
+  Channel c = channels.get(chan.toLowerCase());
+  if(c instanceof Channel)
+  {
+   ArrayList<ChannelUser> userlist = c.getChannelUserlist();
+   if(userlist.size()>0)
+   {
+    ArrayList<String> fulluserlist = new ArrayList<String>();
+    for(ChannelUser user : userlist)
+    {
+     User u = usersByNumeric.get(user.getNumeric());
+     if(u instanceof User)
+     {
+      String fulluser="";
+      if(user.isop())
+      {
+       if(user.isvoice())
+       {
+        fulluser+="@"+u.getNick()+" (+)";
+       }
+       else
+       {
+        fulluser+="@"+u.getNick();
+       }
+      }
+      else if(user.isvoice())
+      {
+       fulluser+="+"+u.getNick();
+      }
+      else
+      {
+       fulluser=u.getNick();
+      }
+      fulluserlist.add(fulluser);
+     }
+    }
+    if(fulluserlist.size()>0)
+    {
+     String[] r = (String[]) fulluserlist.toArray(new String[ fulluserlist.size() ]);
+     return r;
+    }
+   }
+  }
+  return new String[]{"0","0","0","0","0","0","0","0","0","0"};
 	}
 
 	/**
@@ -837,30 +818,16 @@ public class CoreDBControl
 	 */
 	public String[] getUserChanTable()
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("SELECT DISTINCT channel FROM userchans");
-			ResultSet rs = pstmt.executeQuery();
-			ArrayList<String> a = new ArrayList<String>();
-			while(rs.next())
-			{
-				a.add(rs.getString(1));
-			}
-			if(a.size()>0)
-			{
-				String[] r = (String[]) a.toArray(new String[ a.size() ]);
-				return r;
-			}
-			else
-			{
-				return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-			}
-		}
-		catch(Exception e)
-		{
-			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-		}
+  ArrayList<String> channellist = new ArrayList<String>(channels.keySet());
+  if(channellist.size()>0)
+  {
+   String[] r = (String[]) channellist.toArray(new String[ channellist.size() ]);
+   return r;
+  }
+  else
+  {
+   return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+  }
 	}
 
 	/**
@@ -1325,31 +1292,6 @@ public class CoreDBControl
 	 */
 	public void setUserChanMode(String user, String chan, String mode)
 	{
-		try
-		{
-			if(mode.contains("o"))
-			{
-				PreparedStatement pstmt;
-				String change = "0";
-				if(mode.contains("+"))
-				{
-					change = "o";
-				}
-				pstmt = con.prepareStatement("UPDATE userchans SET modes = ? WHERE BINARY user = ? AND channel = ?");
-				pstmt.setString(1,change);
-				pstmt.setString(2,user);
-				pstmt.setString(3,chan);
-				pstmt.executeUpdate();
-			}
-		}
-		catch ( SQLException e )
-		{
-			System.out.println ( "Error executing sql statement" );
-			C.debug(e);
-			C.die("SQL error, trying to die gracefully.");
-		}
-  
-  
   Channel c = channels.get(chan.toLowerCase());
   if(c instanceof Channel)
   {
@@ -1363,22 +1305,6 @@ public class CoreDBControl
 	 */
 	public void setClearMode(String chan, String modes)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("UPDATE userchans SET modes = '0' WHERE channel = ?");
-			pstmt.setString(1,chan);
-			pstmt.executeUpdate();
-		}
-		catch ( SQLException e )
-		{
-			System.out.println ( "Error executing sql statement" );
-			C.debug(e);
-			C.die("SQL error, trying to die gracefully.");
-		}
-  
-  
-  
   Channel c = channels.get(chan.toLowerCase());
   if(c instanceof Channel)
   {
@@ -1453,15 +1379,14 @@ public class CoreDBControl
 			}
 			usersByNumeric.remove(numer);
 			System.gc();
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("DELETE FROM userchans WHERE BINARY user = ?");
-			pstmt.setString(1,numer);
-			pstmt.executeUpdate();
-   
    ArrayList<String> userchannels = u.getChannels();
    for(String channel: userchannels)
    {
-    delUser(numer);
+    Channel c = channels.get(channel.toLowerCase());
+    if(c instanceof Channel)
+    {
+     c.delUser(numer);
+    }
    }
 		}
 		catch ( Exception e )
@@ -1546,21 +1471,6 @@ public class CoreDBControl
 	 */
 	public void delUserChan(String chan, String user)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("DELETE FROM userchans WHERE channel = ? AND BINARY user = ?");
-			pstmt.setString(1,chan);
-			pstmt.setString(2,user);
-			pstmt.executeUpdate();
-		}
-		catch ( SQLException e )
-		{
-			System.out.println ( "Error executing sql statement" );
-			C.debug(e);
-			C.die("SQL error, trying to die gracefully.");
-		}
-  
   Channel c = channels.get(chan.toLowerCase());
   if(c instanceof Channel)
   {
@@ -1710,40 +1620,16 @@ public class CoreDBControl
 		}
 	}
 
-	public void addUserChan(String channel,String user,String modes, String timestamp)
+	public void addUserChan(String channel,String user,String timestamp, Boolean isop, Boolean isvoice)
 	{
-		try
-		{
-			PreparedStatement pstmt;
-			pstmt = con.prepareStatement("INSERT INTO userchans VALUES (?,?,?)");
-			pstmt.setString(1,channel);
-			pstmt.setString(2,user);
-			pstmt.setString(3,modes);
-			pstmt.executeUpdate();
-		}
-		catch ( SQLException e )
-		{
-			System.out.println ( "Error executing sql statement" );
-			C.debug(e);
-			C.die("SQL error, trying to die gracefully.");
-		}
-  
-  
   Channel c = channels.get(channel.toLowerCase());
   if(c instanceof Channel)
   {
-   c.addUser(user);
+   c.addUser(user,isop,isvoice);
   }
   else
   {
-   if(modes.equals("o"))
-   {
-    c = new Channel(channel,timestamp,user,true);
-   }
-   else
-   {
-    c = new Channel(channel,timestamp,user,false);
-   }
+   c = new Channel(channel,timestamp,user,isop,isvoice);
    channels.put(channel.toLowerCase(),c);
   }
   User u = usersByNumeric.get(user);
@@ -2037,69 +1923,7 @@ public class CoreDBControl
  public ArrayList<String> checkUserChans(String username)
  {
   ArrayList<String> info = new ArrayList<String>();
-  /*
-  chanExists
-  isOpChan
-  isOnChan
-  chanHasOps
-  getChanUsers
-  getUserChans
-  getChannelUsers
-  getUserChanTable
-  */
-  info.add("MYSQL vs Memory");
-  Channel c = channels.get("#azefezfzefzefzfzefzefzf");
-  info.add("chanExists: "+chanExists("#azefezfzefzefzfzefzefzf")+" "+(c instanceof Channel));
-  c = channels.get("#borknet");
-  User u = usersByNumeric.get(username);
-  if(c instanceof Channel && u instanceof User)
-  {
-   info.add("chanExists: "+chanExists("#BorkNet")+" true");
-   info.add("isOpChan: "+isOpChan(username,"#BorkNet")+" "+c.isop(username));
-   info.add("isOnChan: "+isOnChan(username,"#BorkNet")+" "+c.ison(username));
-   info.add("chanHasOps: "+chanHasOps("#BorkNet")+" "+c.hasop());
-   info.add("getChanUsers: "+getChanUsers("#BorkNet")+" "+c.getUsercount());
-   ArrayList<String> channellist = u.getChannels();
-   if(channellist.size()>0)
-   {
-    String[] r = (String[]) channellist.toArray(new String[ channellist.size() ]);
-    info.add("getUserChans: "+Arrays.toString(getUserChans(username)));
-    info.add("getUserChans: "+Arrays.toString(r));
-   }
-   else
-   {
-    info.add("getUserChans: "+Arrays.toString(getUserChans(username))+" empty");
-    info.add("getUserChans: empty");
-   }
-   ArrayList<String> userlist = c.getUserlist();
-   if(userlist.size()>0)
-   {
-    String[] r = (String[]) userlist.toArray(new String[ userlist.size() ]);
-    info.add("getChannelUsers: "+Arrays.toString(getChannelUsers("#BorkNet")));
-    info.add("getChannelUsers: "+Arrays.toString(r));
-   }
-   else
-   {
-    info.add("getChannelUsers: "+Arrays.toString(getChannelUsers("#BorkNet"))+" empty");
-    info.add("getChannelUsers: empty");
-   }
-   channellist = new ArrayList<String>(channels.keySet());
-   if(channellist.size()>0)
-   {
-    String[] r = (String[]) channellist.toArray(new String[ channellist.size() ]);
-    info.add("getUserChanTable: "+Arrays.toString(getUserChanTable()));
-    info.add("getUserChanTable: "+Arrays.toString(r));
-   }
-   else
-   {
-    info.add("getUserChanTable: "+Arrays.toString(getUserChanTable())+" empty");
-    info.add("getUserChanTable: empty");
-   }
-  }
-  else
-  {
-   info.add("#BorkNet not in memory");
-  }
+  info.add("Nothing to see here!");
   return info;
  }
 }

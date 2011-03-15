@@ -1,3 +1,9 @@
+15/03/2011 REV 91
+Core: userchans should now be internal.
+Core: holds voice status.
+Q: chaninfo displays userlist+modes.
+T: should now only parse it's own messages.
+
 14/03/2011 REV 90
 Core: Random Command: more checks implemented.
 

@@ -89,6 +89,14 @@ public class Chaninfo implements Command
 						C.cmd_notice(numeric, botnum, username, "Current key: " + channel[8] + ".");
 					}
 					C.cmd_notice(numeric, botnum, username, "Level: " + channel[9] + ".");
+     C.cmd_notice(numeric, botnum, username, "Userlist:");
+     String[] fulllist=C.get_dbc().getChannelUsersModes(chan);
+     Arrays.sort(fulllist, new myComparator());
+     for(String line : fulllist)
+     {
+      C.cmd_notice(numeric, botnum, username, line);
+     }
+     C.cmd_notice(numeric, botnum, username, "End of list.");
 					return;
 				}
 			}
@@ -125,4 +133,28 @@ public class Chaninfo implements Command
 			C.cmd_notice(numeric, botnum, username, "CHANINFO            Gives some information about a channel. - level 2.");
 		}
 	}
-}
+ 
+ class myComparator implements Comparator<String>
+ {
+  public int compare(String nick1, String nick2)
+  {
+   //1>2=1,1<2=-1,1==2=0
+   if(nick1.startsWith("@"))
+   {
+    if(nick2.startsWith("@"))
+    {
+     return nick1.toLowerCase().compareTo(nick2.toLowerCase());
+    }
+    else
+    {
+     return -1;
+    }
+   }
+   if(nick2.startsWith("@"))
+   {
+    return 1;
+   }
+   return nick1.toLowerCase().compareTo(nick2.toLowerCase());
+  }
+ }
+}   
