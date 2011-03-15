@@ -657,28 +657,34 @@ public class CoreServer
 		ABAXs:ov == +ov
 		ABBli:v,ABBjL == +v
 		ACAAi:o,ABBlK,ACAAT == +o
+  <wiebe> modes are only once in burst
+  <wiebe> and apply to all users after it
 		*/
 		String[] userlist = users.split(",");
+  String lastfound = "";
 		for(String user : userlist)
 		{
-			if(user.contains(":ov") || user.contains(":vo"))
+			if(user.contains(":ov") || user.contains(":vo") || lastfound.equals(":ov"))
 			{
-				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, true, true);
+    lastfound=":ov";
+    String[] username = user.split(":");
+				dbc.addUserChan(channel, username[0],timestamp, true, true);
 			}
-			else if(user.contains(":o"))
+			else if(user.contains(":o") || lastfound.equals(":o"))
 			{
-				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, true, false);
+    lastfound=":o";
+    String[] username = user.split(":");
+				dbc.addUserChan(channel, username[0],timestamp, true, false);
 			}
-			else if(user.contains(":v"))
+			else if(user.contains(":v") || lastfound.equals(":v"))
 			{
-				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, false, true);
-			}
-			else if(user.contains(":"))
-			{
-				dbc.addUserChan(channel, user.substring(0,user.indexOf(":")),timestamp, false, false);
+    lastfound=":v";
+    String[] username = user.split(":");
+				dbc.addUserChan(channel, username[0],timestamp, false, true);
 			}
 			else
 			{
+    lastfound="";
 				dbc.addUserChan(channel, user,timestamp, false, false);
 			}
 		}
