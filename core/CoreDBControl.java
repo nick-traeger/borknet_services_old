@@ -813,6 +813,15 @@ public class CoreDBControl
 	}
 
 	/**
+	 * Get the number of channels
+	 * @return			number of channels
+	 */
+	public int getChannelCount()
+	{
+  return channels.size();
+	}
+ 
+	/**
 	 * Get all channels
 	 * @return			an array of all channels
 	 */
@@ -827,6 +836,30 @@ public class CoreDBControl
   else
   {
    return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+  }
+	}
+ 
+ 	/**
+	 * Get all channels and the number of users
+	 * @return			an array of all channels and users
+	 */
+	public String[][] getChannelTable()
+	{
+  ArrayList<String> channellist = new ArrayList<String>(channels.keySet());
+  try
+  {
+   String[][] r = new String[channellist.size()][2];
+   for(int n=0; n<r.length; n++)
+   {
+    r[n][0] = channellist.get(n);
+    Channel c = channels.get(channellist.get(n).toLowerCase());
+    r[n][1] = c.getUsercount()+"";
+   }
+   return r;
+  }
+  catch(Exception e)
+  {
+   return new String[][] {{"0","0"},{"0","0"}};
   }
 	}
 

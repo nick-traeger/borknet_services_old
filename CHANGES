@@ -1,3 +1,7 @@
+18/03/2011 REV 94
+S: Added remove command.
+X: Fixed userchan references.
+
 15/03/2011 REV 93
 SQL: Added drop for userchans.
 Q: Fixed help on chanlev.
