@@ -94,6 +94,31 @@ public class DBControl
 	{
 		return channels.containsKey(chan.toLowerCase());
 	}
+ 
+	/**
+	 * Check a users Q access.
+	 * @param nick		   auth to check
+  * @param channel		channel to check
+	 *
+	 * @return			the users access level
+	 */
+ public String[] getAccRow(String nick,String channel)
+	{
+		try
+		{
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement("SELECT * FROM q_access WHERE user = ? AND channel = ?");
+			pstmt.setString(1,nick);
+			pstmt.setString(2,channel);
+			ResultSet rs = pstmt.executeQuery();
+			rs.first();
+			return new String[]{ rs.getString(1), rs.getString(2), rs.getString(3)};
+		}
+		catch(Exception e)
+		{
+			return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+		}
+	}
 
 	/**
 	 * Get a numeric's user row
