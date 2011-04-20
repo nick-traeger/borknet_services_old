@@ -1,3 +1,6 @@
+20/04/2011 REV 95
+Core: Fixed not deleting empty channels
+
 18/03/2011 REV 94
 S: Added remove command.
 X: Fixed userchan references.

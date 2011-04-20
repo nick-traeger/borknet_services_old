@@ -1415,11 +1415,7 @@ public class CoreDBControl
    ArrayList<String> userchannels = u.getChannels();
    for(String channel: userchannels)
    {
-    Channel c = channels.get(channel.toLowerCase());
-    if(c instanceof Channel)
-    {
-     c.delUser(numer);
-    }
+    delUserChan(channel, numer);
    }
 		}
 		catch ( Exception e )
@@ -1508,6 +1504,10 @@ public class CoreDBControl
   if(c instanceof Channel)
   {
    c.delUser(user);
+  }
+  if(c.getUsercount()<=0)
+  {
+   channels.remove(chan.toLowerCase());
   }
   User u = usersByNumeric.get(user);
   if(u instanceof User)
