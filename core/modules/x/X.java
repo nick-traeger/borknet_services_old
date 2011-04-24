@@ -41,7 +41,9 @@ public class X implements Modules
 	private String num = "";
 	private String reportchan = "";
 	private String stats = "";
+	private String feedchannel = "";
 	private XmlTimer xmlTimer;
+ private Feeder feeder;
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
 
@@ -59,6 +61,8 @@ public class X implements Modules
 		C.cmd_create_service(num, nick, ident, host, "+oXwkgr", description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
+		C.cmd_join(numeric, num, feedchannel);
+  feeder = new Feeder(C, this, numeric, num, feedchannel);
 		xmlTimer = new XmlTimer(this);
 		Thread th1 = new Thread(xmlTimer);
 		th1.setDaemon(true);
@@ -108,6 +112,7 @@ public class X implements Modules
 			pass = dataSrc.getProperty("pass");
 			num = dataSrc.getProperty("numeric");
 			stats = dataSrc.getProperty("stats");
+   feedchannel = dataSrc.getProperty("feedchannel");
 		}
 		catch(Exception e)
 		{
@@ -149,6 +154,10 @@ public class X implements Modules
 	{
 		return stats;
 	}
+	public String getFeedchannel()
+	{
+		return feedchannel;
+	}
 	public DBControl getDBC()
 	{
 		return dbc;
@@ -163,6 +172,17 @@ public class X implements Modules
 
 	}
 
+ public void timerEvent()
+	{
+  writeXML();
+  readFeeds();
+ }
+ 
+ public void readFeeds()
+ {
+  feeder.readFeeds();
+ }
+ 
 	public void writeXML()
 	{
 		try
