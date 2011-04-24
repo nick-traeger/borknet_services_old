@@ -84,7 +84,7 @@ public class Feeder
     readRSS(feed);
     output.write("<feed>\n");
     output.write("<url>"+feed.getUrl()+"</url>\n");
-    output.write("<output>"+feed.getOutput()+"<output>\n");
+    output.write("<output>"+feed.getOutput()+"</output>\n");
     output.write("<lastitem>"+feed.getLastitem()+"</lastitem>\n");
     output.write("</feed>\n");
    }

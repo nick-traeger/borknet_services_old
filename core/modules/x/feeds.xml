@@ -2,7 +2,7 @@
 <feeds>
 <feed>
 <url>http://www.borknet.org/rss.xml</url>
-<output>[BorkNet] @title - @guid<output>
+<output>[BorkNet] @title - @guid</output>
 <lastitem></lastitem>
 </feed>
 </feeds>
