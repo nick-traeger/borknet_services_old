@@ -1,7 +1,6 @@
 /**
 #
-# The Q bot
-# Channelservice
+# BorkNet Services Core
 #
 
 #
@@ -23,49 +22,42 @@
 #
 */
 import java.io.*;
-import java.net.*;
 import java.util.*;
-import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import borknet_services.core.*;
 
 /**
- * The mail class of the Q IRC Bot.
+ * Class to load configuration files.
  * @author Ozafy - ozafy@borknet.org - http://www.borknet.org
  */
-public class XmlTimer implements Runnable
+public class Feeds implements Command
 {
-	private X Bot;
-
-    Timer timer;
-
     /**
-     * Runnable programs need to define this class.
+     * Constructs a Loader
+     * @param debug		If we're running in debug.
      */
-	public void run()
+	public Feeds()
 	{
-		int delay = 30*60*1000; //min*sec*milisec
-		ActionListener taskPerformer = new ActionListener()
+	}
+
+	public void parse_command(Core C, X Bot, String numeric, String botnum, String username, String params)
+	{
+		Bot.readFeeds();
+		C.cmd_notice(numeric, botnum,username,"Done.");
+	}
+
+	public void parse_help(Core C, X Bot, String numeric, String botnum, String username, int lev)
+	{
+		if(lev > 949)
 		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				Bot.timerEvent();
-			}
-		};
-		timer = new Timer(delay, taskPerformer);
-		timer.start();
+			C.cmd_notice(numeric, botnum, username, "/msg "+Bot.get_nick()+" feeds");
+			C.cmd_notice(numeric, botnum, username, "Read the feeds to "+Bot.getFeedchannel()+".");
+		}
 	}
-
-    /**
-     * Set the tutorial
-     */
-	public XmlTimer(X Bot)
+	public void showcommand(Core C, X Bot, String numeric, String botnum, String username, int lev)
 	{
-		this.Bot = Bot;
+		if(lev > 949)
+		{
+			C.cmd_notice(numeric, botnum, username, "FEEDS               Read the feeds. - level 950");
+		}
 	}
-
-	public void stop()
-	{
-		timer.stop();
-	}
-}//end of class
+}
