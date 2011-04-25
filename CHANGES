@@ -1,3 +1,7 @@
+25/04/2011 REV 98
+X: Fixed bug in feeder not remembering lastitem on rehash
+X: Fixed bug in feed.xml writing
+
 24/04/2011 REV 97
 X: Fixed bug in feed.xml writing
 

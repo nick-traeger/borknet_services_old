@@ -83,9 +83,9 @@ public class Feeder
    {
     readRSS(feed);
     output.write("<feed>\n");
-    output.write("<url>"+feed.getUrl()+"</url>\n");
-    output.write("<output>"+feed.getOutput()+"</output>\n");
-    output.write("<lastitem>"+feed.getLastitem()+"</lastitem>\n");
+    output.write("<url><![CDATA["+feed.getUrl()+"]]></url>\n");
+    output.write("<output><![CDATA["+feed.getOutput()+"]]></output>\n");
+    output.write("<lastitem><![CDATA["+feed.getLastitem()+"]]></lastitem>\n");
     output.write("</feed>\n");
    }
    output.write("</feeds>\n");
@@ -175,6 +175,7 @@ public class Feeder
   {
    this.url = url;
    this.output = output;
+   this.lastitem = lastitem;
   }
   
   public String getUrl()
