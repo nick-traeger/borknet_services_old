@@ -1,4 +1,9 @@
-25/04/2011 REV 99
+09/06/2011 REV 100
+Core: added backup rotation.
+X: changed timeout value to 60.
+CreateAccount: added small script to run CreateAccount with the proper classpath.
+
+09/06/2011 REV 99
 Q: Changed how settopic and welcome work.
 X: Can now properly timout without locking up.
 X: Shouldn't overwrite his last XML with a broken one when an error occurs.
