@@ -100,8 +100,7 @@ public class Q implements Modules
 				}
 				if(flags.contains("f"))
 				{
-					String topic = channel[4];
-					C.cmd_topic(numeric, num,channels[n], topic);
+					C.cmd_topic(numeric, num,channels[n], channel[4]);
 				}
 				if(!bans[0].equals("0"))
 				{

@@ -47,13 +47,14 @@ public class Welcome implements Command
 		try
 		{
 			//get the channel
-			String channel = result[1];
+			String chan = result[1];
 			// xD
-			if(!channel.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
-			//temp topic
-			String topic = "";
+			if(!chan.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
+			//temp welcome
+			String welcome = "";
 			//get the channel
-			if(!dbc.chanExists(channel))
+   String channel[] = dbc.getChanRow(chan);
+			if(channel[0].equals("0"))
 			{
 				C.cmd_notice(numeric, botnum, username, "Can't find that channel!");
 				return;
@@ -63,33 +64,28 @@ public class Welcome implements Command
 			{
 				String user[] = dbc.getUserRow(username);
 				//get access string
-				String acc = get_access(user[4], channel,dbc);
+				String acc = get_access(user[4], chan,dbc);
 				if(acc.contains("n") || acc.contains("m") || user[5].equals("1"))
 				{
-					//we have to set a new topic
+					//we have to set a new welcome
 					if(result.length>2)
 					{
 						for(int p=2;p<result.length;p++)
 						{
-							topic += result[p] + " ";
+							welcome += result[p] + " ";
 						}
+      if(welcome.trim().length() > 250)
+      {
+       welcome = welcome.substring(0,250);
+      }
+      //save it
+      dbc.setChanField(chan,3,welcome);
 					}
-					//we have to clear the topic
+					//we have to show the welcome
 					else
 					{
-						topic = "0";
+						C.cmd_notice(numeric, botnum, username, "The current welcome message for "+chan+" is: '"+channel[3]+"'");
 					}
-					//check if we're not replacing the topic with just a space
-					if(topic.trim().length() == 0)
-					{
-						topic = "0";
-					}
-					if(topic.trim().length() > 250)
-					{
-						topic = topic.substring(0,250);
-					}
-					//save it
-					dbc.setChanField(channel,3,topic);
 					C.cmd_notice(numeric, botnum, username, "Done.");
 					return;
 				}
@@ -113,8 +109,8 @@ public class Welcome implements Command
 		if(lev > 0)
 		{
 			String nick = Bot.get_nick();
-			C.cmd_notice(numeric, botnum, username, "/msg " + nick + " welcome <#channel> [topic]");
-			C.cmd_notice(numeric, botnum, username, "Sets the welcome message on a channel.");
+			C.cmd_notice(numeric, botnum, username, "/msg " + nick + " welcome <#channel> [welcome]");
+			C.cmd_notice(numeric, botnum, username, "Sets the welcome message on a channel. If no welcome message is set the existing welcome message is displayed.");
 			C.cmd_notice(numeric, botnum, username, "eg: /msg " + nick + " welcome #BorkNet Welcome to the BorkNet channel.");
 			C.cmd_notice(numeric, botnum, username, "This must be combined with \"/msg "+nick+" chanflags #channel +w\" to keep the message permanent.");
 		}

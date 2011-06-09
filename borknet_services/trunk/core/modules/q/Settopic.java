@@ -47,13 +47,14 @@ public class Settopic implements Command
 		try
 		{
 			//get the channel
-			String channel = result[1];
+			String chan = result[1];
 			// xD
-			if(!channel.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
+			if(!chan.startsWith("#")) throw new ArrayIndexOutOfBoundsException();
 			//temp topic
 			String topic = "";
 			//get the channel
-			if(!dbc.chanExists(channel))
+   String channel[] = dbc.getChanRow(chan);
+			if(channel[0].equals("0"))
 			{
 				C.cmd_notice(numeric, botnum, username, "Can't find that channel!");
 				return;
@@ -63,7 +64,7 @@ public class Settopic implements Command
 			{
 				String user[] = dbc.getUserRow(username);
 				//get access string
-				String acc = get_access(user[4], channel,dbc);
+				String acc = get_access(user[4], chan,dbc);
 				if(acc.contains("t") || acc.contains("n") || acc.contains("m") || Boolean.parseBoolean(user[5]))
 				{
 					//we have to set a new topic
@@ -73,25 +74,19 @@ public class Settopic implements Command
 						{
 							topic += result[p] + " ";
 						}
-						C.cmd_topic(numeric, botnum, channel, topic);
+      if(topic.trim().length() > 250)
+      {
+       topic = topic.substring(0,250);
+      }
+      //save it
+      dbc.setChanField(chan,4,topic);
 					}
-					//we have to clear the topic
+					//we have to reset the stored topic
 					else
 					{
-						topic = "0";
-						C.cmd_topic(numeric, botnum, channel, "");
+						topic = channel[4];
 					}
-					//check if we're not replacing the topic with just a space
-					if(topic.trim().length() == 0)
-					{
-						topic = "0";
-					}
-					if(topic.trim().length() > 250)
-					{
-						topic = topic.substring(0,250);
-					}
-					//save it
-					dbc.setChanField(channel,4,topic);
+     C.cmd_topic(numeric, botnum, chan, topic);
 					C.cmd_notice(numeric, botnum, username, "Done.");
 					return;
 				}
@@ -115,7 +110,7 @@ public class Settopic implements Command
 		if(lev > 0)
 		{
 			C.cmd_notice(numeric, botnum, username, "/msg " + Bot.get_nick() + " settopic <#channel> [topic]");
-			C.cmd_notice(numeric, botnum, username, "Sets the topic on a channel.");
+			C.cmd_notice(numeric, botnum, username, "Sets the topic on a channel. If no topic is set, the stored topic will be reset.");
 			C.cmd_notice(numeric, botnum, username, "eg: /msg " + Bot.get_nick() + " settopic #BorkNet Welcome to the BorkNet channel.");
 		}
 		else

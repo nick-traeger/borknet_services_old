@@ -83,7 +83,7 @@ public class Csuspend implements Command
 					}
 					C.cmd_part(numeric, botnum,channel, part);
 				}
-				dbc.addChan(channel,"ap","nt","0","0",Long.parseLong(C.get_time()),10,true,"0",1,user[4]);
+				dbc.addChan(channel,"ap","nt","","",Long.parseLong(C.get_time()),10,true,"0",1,user[4]);
 				C.cmd_notice(numeric, botnum,username, "Done.");
 				return;
 			}

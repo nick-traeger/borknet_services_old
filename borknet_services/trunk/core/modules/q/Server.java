@@ -604,7 +604,7 @@ public class Server
 		String channel[] = dbc.getChanRow(chan);
 		if(!channel[0].equals("0"))
 		{
-			if(channel[1].contains("f") && !channel[4].equals("0"))
+			if(channel[1].contains("f"))
 			{
 				C.cmd_topic(numeric,num,chan, channel[4]);
 			}
