@@ -76,7 +76,7 @@ public class Addchan implements Command
 					C.cmd_notice(numeric,botnum,username, "Channel is already registered.");
 					return;
 				}
-				dbc.addChan(channel,"ap","nt","0","0",Long.parseLong(C.get_time()),10,false,"0",1,owner);
+				dbc.addChan(channel,"ap","nt","","",Long.parseLong(C.get_time()),10,false,"0",1,owner);
 				dbc.addAccess(owner,channel,"an");
 				C.cmd_join(numeric,botnum,channel);
 				C.cmd_notice(numeric,botnum,username, "Done.");

@@ -37,6 +37,8 @@ public class Feeder
  private String channel = "";
  private ArrayList<Feed> feeds = new ArrayList<Feed>();
  private String config = System.getProperty("user.dir")+File.separator+"core"+File.separator+"modules"+File.separator+"x"+File.separator+"feeds.xml";
+ 
+ private static int TIMEOUT = 10;
 
  public Feeder(Core C, X Bot, String numeric, String botnum, String channel)
 	{
@@ -76,18 +78,20 @@ public class Feeder
  {
   try
   {
-   BufferedWriter output = new BufferedWriter(new FileWriter(config));
-   output.write("<?xml version=\"1.0\"?>\n");
-   output.write("<feeds>\n");
+   String dataToWrite = "";
    for(Feed feed : feeds)
    {
     readRSS(feed);
-    output.write("<feed>\n");
-    output.write("<url><![CDATA["+feed.getUrl()+"]]></url>\n");
-    output.write("<output><![CDATA["+feed.getOutput()+"]]></output>\n");
-    output.write("<lastitem><![CDATA["+feed.getLastitem()+"]]></lastitem>\n");
-    output.write("</feed>\n");
+    dataToWrite+="<feed>\n";
+    dataToWrite+="<url><![CDATA["+feed.getUrl()+"]]></url>\n";
+    dataToWrite+="<output><![CDATA["+feed.getOutput()+"]]></output>\n";
+    dataToWrite+="<lastitem><![CDATA["+feed.getLastitem()+"]]></lastitem>\n";
+    dataToWrite+="</feed>\n";
    }
+   BufferedWriter output = new BufferedWriter(new FileWriter(config));
+   output.write("<?xml version=\"1.0\"?>\n");
+   output.write("<feeds>\n");
+   output.write(dataToWrite);
    output.write("</feeds>\n");
    output.close();
   }
@@ -115,7 +119,10 @@ public class Feeder
    }
    DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
    URL u = new URL(url);
-   Document doc = builder.parse(u.openStream());
+   URLConnection conn = u.openConnection();
+   conn.setConnectTimeout(TIMEOUT);
+   conn.setReadTimeout(TIMEOUT);
+   Document doc = builder.parse(conn.getInputStream());
    NodeList nodes = doc.getElementsByTagName("item");
    for(int i=0;i<nodes.getLength();i++)
    {
