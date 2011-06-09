@@ -38,7 +38,7 @@ public class Feeder
  private ArrayList<Feed> feeds = new ArrayList<Feed>();
  private String config = System.getProperty("user.dir")+File.separator+"core"+File.separator+"modules"+File.separator+"x"+File.separator+"feeds.xml";
  
- private static int TIMEOUT = 10;
+ private static int TIMEOUT = 60;
 
  public Feeder(Core C, X Bot, String numeric, String botnum, String channel)
 	{

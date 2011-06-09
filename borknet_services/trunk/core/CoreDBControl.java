@@ -1686,9 +1686,26 @@ public class CoreDBControl
     long now = (cal.getTimeInMillis() / 1000);
 
     Runtime rt = Runtime.getRuntime();
-    File backup=new File("backup/"+now+".sql");
+    
+    File backup = new File("backup.sql");
+    if(backup.exists())
+    {
+     for(int i=20; i>0; i--)
+     {
+      File check = new File("backup"+i+".sql");
+      if(check.exists())
+      {
+       check.delete();
+      }
+      File rename = new File("backup"+(i-1>0?i-1:"")+".sql");
+      if(rename.exists())
+      {
+       rename.renameTo(check);
+      }
+     }
+    }
+    
     PrintStream ps;
-
     Process child = rt.exec("mysqldump -u"+user+" -p"+password+" "+db);
     ps=new PrintStream(backup);
     InputStream in = child.getInputStream();

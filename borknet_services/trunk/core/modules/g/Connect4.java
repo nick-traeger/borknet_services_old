@@ -248,40 +248,40 @@ public class Connect4 implements Command
 
 	private String checkWin(int r, int k, String player, String field[][])
 	{
-        int checked1 = checkLijn(1, 0, r, k, player, field) + checkLijn(-1, 0, r, k, player, field);
-        int checked2 = checkLijn(1, 1, r, k, player, field) + checkLijn(-1, -1, r, k, player, field);
-        int checked3 = checkLijn(0, 1, r, k, player, field) + checkLijn(0, -1, r, k, player, field);
-        int checked4 = checkLijn(-1, 1, r, k, player, field) + checkLijn(1, -1, r, k, player, field);
-        if (checked1 >= 3 || checked2 >= 3 || checked3 >= 3 || checked4 >= 3)
-        {
-			return player;
-		}
-		else
-		{
-			return "0";
-		}
+  int checked1 = checkLijn(1, 0, r, k, player, field) + checkLijn(-1, 0, r, k, player, field);
+  int checked2 = checkLijn(1, 1, r, k, player, field) + checkLijn(-1, -1, r, k, player, field);
+  int checked3 = checkLijn(0, 1, r, k, player, field) + checkLijn(0, -1, r, k, player, field);
+  int checked4 = checkLijn(-1, 1, r, k, player, field) + checkLijn(1, -1, r, k, player, field);
+  if (checked1 >= 3 || checked2 >= 3 || checked3 >= 3 || checked4 >= 3)
+  {
+   return player;
+  }
+  else
+  {
+   return "0";
+  }
 	}
 
 	private int checkLijn(int l, int b, int r, int k, String player, String[][] field)
 	{
-        String color = player;
-        int same = -1;
-        int row = r;
-        int colum = k;
-        while (color.equals(player) && row<field.length && colum<field[r].length && row >=0 && colum >= 0)
-        {
-            color = field[row][colum];
-            if (color.equals(player))
-            {
-                same++;
-			}
-            else
-            {
-                break;
-			}
-            row += l;
-            colum += b;
-        }
-        return same;
+  String color = player;
+  int same = -1;
+  int row = r;
+  int colum = k;
+  while (color.equals(player) && row<field.length && colum<field[r].length && row >=0 && colum >= 0)
+  {
+   color = field[row][colum];
+   if (color.equals(player))
+   {
+    same++;
+   }
+   else
+   {
+    break;
+   }
+   row += l;
+   colum += b;
+  }
+  return same;
 	}
 }
