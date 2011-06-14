@@ -473,7 +473,7 @@ public class CoreServer
 		{
 			nume = nume2;
 		}
-		if(C.get_debug() && C.get_EA())
+		if(reportconn && C.get_EA())
 		{
 			String user[] = dbc.getUserRow(nume);
    String ipv4 = C.longToIp(C.base64Decode(user[7]));
@@ -584,7 +584,7 @@ public class CoreServer
 					}
 				}
 				dbc.addUser(opernume,opernck,operhst,opermde,auth,isop,opernume.substring(0,2),ip,fake);
-				if(C.get_debug() && C.get_EA())
+				if(reportconn && C.get_EA())
 				{
 					//user [scrawl43] [dwelabbric@data.searchirc.org] has connected on [hub.webbirc.se]
      //72.64.145.20 searchirc
