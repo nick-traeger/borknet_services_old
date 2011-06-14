@@ -151,7 +151,7 @@ public class User
  
  public void partChannel(String channel)
  {
-  channels.remove(channel);
+  channels.remove(channel.toLowerCase());
  }
  
  public ArrayList<String> getChannels()
