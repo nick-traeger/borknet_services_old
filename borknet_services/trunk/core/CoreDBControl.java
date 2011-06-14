@@ -1687,17 +1687,17 @@ public class CoreDBControl
 
     Runtime rt = Runtime.getRuntime();
     
-    File backup = new File("backup.sql");
+    File backup = new File("backup/backup.sql");
     if(backup.exists())
     {
      for(int i=20; i>0; i--)
      {
-      File check = new File("backup"+i+".sql");
+      File check = new File("backup/backup"+i+".sql");
       if(check.exists())
       {
        check.delete();
       }
-      File rename = new File("backup"+(i-1>0?i-1:"")+".sql");
+      File rename = new File("backup/backup"+(i-1>0?i-1:"")+".sql");
       if(rename.exists())
       {
        rename.renameTo(check);
