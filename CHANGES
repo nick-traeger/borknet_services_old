@@ -1,3 +1,8 @@
+14/06/2011 REV 101 (WARNING: bot.conf update)
+X: Added timeout value to config.
+Core: fixed backup rotation to use backup folder.
+Core: Added option to show all connections to the reportchan+exempt list.
+
 09/06/2011 REV 100
 Core: added backup rotation.
 X: changed timeout value to 60.

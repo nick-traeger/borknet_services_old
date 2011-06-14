@@ -35,18 +35,18 @@ public class Feeder
  private String numeric = "";
  private String botnum = "";
  private String channel = "";
+ private int timeout = 60;
  private ArrayList<Feed> feeds = new ArrayList<Feed>();
  private String config = System.getProperty("user.dir")+File.separator+"core"+File.separator+"modules"+File.separator+"x"+File.separator+"feeds.xml";
  
- private static int TIMEOUT = 60;
-
- public Feeder(Core C, X Bot, String numeric, String botnum, String channel)
+ public Feeder(Core C, X Bot, String numeric, String botnum, String channel, int timeout)
 	{
 		this.C = C;
 		this.Bot = Bot;
   this.numeric = numeric;
 		this.botnum = botnum;
 		this.channel = channel;
+  this.timeout = timeout;
   readFeedConfig();
   C.cmd_privmsg(numeric, botnum, channel, "Found "+feeds.size()+" urls.");
 	}
@@ -120,8 +120,8 @@ public class Feeder
    DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
    URL u = new URL(url);
    URLConnection conn = u.openConnection();
-   conn.setConnectTimeout(TIMEOUT);
-   conn.setReadTimeout(TIMEOUT);
+   conn.setConnectTimeout(timeout);
+   conn.setReadTimeout(timeout);
    Document doc = builder.parse(conn.getInputStream());
    NodeList nodes = doc.getElementsByTagName("item");
    for(int i=0;i<nodes.getLength();i++)

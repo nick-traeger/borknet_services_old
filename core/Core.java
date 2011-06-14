@@ -75,6 +75,10 @@ public class Core
 	private String numeric = "";
 	/** Channel to report to */
 	private String reportchan = "";
+ /** Report connections? */
+	private boolean reportconn = false;
+ /** ip's to ignore */
+	private String reportignore = "";
 	/** SMTP server to send mails */
 	private String mailserver = "";
 	/** Port of the mail server */
@@ -241,6 +245,8 @@ public class Core
 			pass = dataSrc.getProperty("pass");
 			numeric = dataSrc.getProperty("numeric");
 			reportchan = dataSrc.getProperty("reportchan");
+   reportconn = Boolean.parseBoolean(dataSrc.getProperty("reportconn"));
+   reportignore = dataSrc.getProperty("reportignore");
 			mailserver = dataSrc.getProperty("mailserver");
 			mailport = dataSrc.getProperty("mailport");
    mailauth = Boolean.parseBoolean(dataSrc.getProperty("mailauth"));
@@ -845,13 +851,31 @@ public class Core
 		return version;
 	}
 
-    /**
-     * Get the reportchannel
-     * @return reportchannel
-     */
+ /**
+  * Get the reportchannel
+  * @return reportchannel
+  */
 	public String get_reportchan()
 	{
 		return reportchan;
+	}
+ 
+ /**
+  * Get the reportchannel
+  * @return reportchannel
+  */
+	public boolean get_reportconn()
+	{
+		return reportconn;
+	}
+ 
+ /**
+  * Get the reportchannel
+  * @return reportchannel
+  */
+	public String get_reportignore()
+	{
+		return reportignore;
 	}
 
     /**

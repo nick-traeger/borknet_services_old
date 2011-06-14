@@ -6,8 +6,8 @@ rem
  set CLASSPATH=D:\java;D:\java\borknet_services\mail.jar;
 rem set CLASSPATH=D:\work;D:\work\borknet_services\mail.jar;
 
-javac *.java
-rem javac core/*.java
+rem javac *.java
+ javac core/*.java
 rem javac core/commands/*.java
 rem javac core/modules/basic/*.java
 rem javac core/modules/bob/*.java

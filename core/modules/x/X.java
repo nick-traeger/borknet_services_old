@@ -42,6 +42,7 @@ public class X implements Modules
 	private String reportchan = "";
 	private String stats = "";
 	private String feedchannel = "";
+ private int timeout = 60;
 	private XmlTimer xmlTimer;
  private Feeder feeder;
 	private ArrayList<Object> cmds = new ArrayList<Object>();
@@ -62,7 +63,7 @@ public class X implements Modules
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
 		C.cmd_join(numeric, num, feedchannel);
-  feeder = new Feeder(C, this, numeric, num, feedchannel);
+  feeder = new Feeder(C, this, numeric, num, feedchannel, timeout);
 		xmlTimer = new XmlTimer(this);
 		Thread th1 = new Thread(xmlTimer);
 		th1.setDaemon(true);
@@ -113,6 +114,7 @@ public class X implements Modules
 			num = dataSrc.getProperty("numeric");
 			stats = dataSrc.getProperty("stats");
    feedchannel = dataSrc.getProperty("feedchannel");
+   timeout = Integer.parseInt(dataSrc.getProperty("timeout"));
 		}
 		catch(Exception e)
 		{
@@ -157,6 +159,10 @@ public class X implements Modules
 	public String getFeedchannel()
 	{
 		return feedchannel;
+	}
+	public int getTimeout()
+	{
+		return timeout;
 	}
 	public DBControl getDBC()
 	{

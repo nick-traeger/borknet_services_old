@@ -48,18 +48,21 @@ public class CoreServer
 	private String corenum;
 	/** the channel we report to */
 	private String reportchan;
+ /** Report connections? */
+	private boolean reportconn = false;
+ /** ip's to ignore */
+	private ArrayList<String> reportignore = new ArrayList<String>();
 	/** our version reply */
 	private String version;
 	/**  counts the number of received pings, used as a timer for channel limits */
 	private int limit = 0;
-
 
 	/**
 	 * Constructs a Server communicator.
 	 * @param B		The main bot
 	 * @param dbc	The connection to the database
 	 */
-    public CoreServer(Core C, CoreDBControl dbc)
+ public CoreServer(Core C, CoreDBControl dbc)
 	{
 		this.C = C;
 		this.dbc = dbc;
@@ -70,6 +73,9 @@ public class CoreServer
 		corenum = C.get_corenum();
 		version = C.get_version();
 		reportchan = C.get_reportchan();
+  reportconn = C.get_reportconn();
+  String[] ignore = C.get_reportignore().split(",");
+  reportignore = new ArrayList<String>(Arrays.asList(ignore)); 
 	}
 
 	/**
@@ -471,7 +477,7 @@ public class CoreServer
 		{
 			String user[] = dbc.getUserRow(nume);
    String ipv4 = C.longToIp(C.base64Decode(user[7]));
-   if(!ipv4.equals("72.64.145.20") && !ipv4.equals("85.25.141.52"))
+   if(!reportignore.contains(ipv4))
    {
     C.report("User: [" + user[1] + "] ["+user[2]+"] has quit ["+params.substring(params.indexOf(":") +1)+"]");
    }
@@ -583,14 +589,9 @@ public class CoreServer
 					//user [scrawl43] [dwelabbric@data.searchirc.org] has connected on [hub.webbirc.se]
      //72.64.145.20 searchirc
      //85.25.141.52 netsplit
-     if(!ipv4.equals("72.64.145.20") && !ipv4.equals("85.25.141.52"))
+     if(!reportignore.contains(ipv4))
      {
-      String serverReport=dbc.getServer(opernume);
-      if(serverReport.toLowerCase().contains("ozafy"))
-      {
-       serverReport = "yfazo.de.borknet.org";
-      }
-      C.report("User: [" + opernck + "] ["+operhst+"] has connected on ["+serverReport+"]");
+      C.report("User: [" + opernck + "] ["+operhst+"] has connected on ["+dbc.getServer(opernume)+"]");
      }
 				}
 				return;
