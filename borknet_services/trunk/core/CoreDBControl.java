@@ -1131,6 +1131,36 @@ public class CoreDBControl
 			return new ArrayList<String[]>();
 		}
 	}
+ 
+	/**
+	 * Get all nicks
+	 *
+	 * @return			a Set of nicks
+	 */
+	public Set<String> getNicks()
+	{
+			return usersByNick.keySet();
+	}
+ 
+	/**
+	 * Get all auths
+	 *
+	 * @return			a Set of auths
+	 */
+	public Set<String> getAuths()
+	{
+			return usersByAuth.keySet();
+	}
+ 
+	/**
+	 * Get all channels
+	 *
+	 * @return			a Set of channels
+	 */
+	public Set<String> getChannels()
+	{
+			return channels.keySet();
+	}
 
 	/**
 	 * Set a userline field to a new value

@@ -1,3 +1,6 @@
+15/06/2011 REV 104
+Q: Added List command.
+
 14/06/2011 REV 103
 Core: Fixed case bug in User causing user to be able to be on a channel twice.
 
