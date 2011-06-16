@@ -1567,6 +1567,13 @@ public class Core
 		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + nick + " B]AAAB " + numeric+num+" :" + desc);
 		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,true,numeric,"0.0.0.0","0");
 	}
+ 
+	public void cmd_create_service(String num, String nick, String ident, String host, String modes, String auth, String desc, boolean customauth)
+	{
+		String time = get_time();
+		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + auth + " B]AAAB " + numeric+num+" :" + desc);
+		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,auth,true,numeric,"0.0.0.0","0");
+	}
 
     /**
      * create a fake user
@@ -1581,6 +1588,7 @@ public class Core
 		ircsend(numeric + " N " + nick + " 1 " + time + " " + ident + " " + host + " "+modes+" " + nick + " B]AAAB " + numeric+num+" :" + desc);
 		dbc.addUser(numeric+num,nick,ident+"@"+host,modes,nick,true,numeric,"0.0.0.0","0");
 	}
+ 
 
     /**
      * create a fake user

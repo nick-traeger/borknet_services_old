@@ -255,6 +255,19 @@ public class CoreDBControl
 			return "0";
 		}
 	}
+ 
+	public String getNumViaNick(String nick)
+	{
+		User u = usersByNick.get(nick.toLowerCase());
+		if(u instanceof User)
+		{
+			return u.getNumeric();
+		}
+		else
+		{
+			return "0";
+		}
+	}
 
 	/**
 	 * Get a numeric's user row

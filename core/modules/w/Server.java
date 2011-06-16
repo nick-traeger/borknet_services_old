@@ -33,7 +33,6 @@ be adjusted to support diffrent protocols (in theory ;)
 
 import java.util.*;
 import java.net.*;
-import java.security.*;
 import borknet_services.core.*;
 
 /**
@@ -61,7 +60,7 @@ public class Server
 	/**  counts the number of received pings, used as a timer for channel limits */
 	private int limit = 0;
 
-	private V Bot;
+	private W Bot;
 
 
 	/**
@@ -69,7 +68,7 @@ public class Server
 	 * @param B		The main bot
 	 * @param dbc	The connection to the database
 	 */
- public Server(Core C, V Bot)
+ public Server(Core C, W Bot)
 	{
 		this.C = C;
 		this.Bot = Bot;
@@ -101,12 +100,12 @@ public class Server
 			String me = params.substring(2, params.indexOf(":")-1);
 			privmsg(me, command, message);
 		}
-		if(params.startsWith("N "))
+		if(params.startsWith("O "))
 		{
-			if(Bot.get_qwebirc() || Bot.get_automatic())
-			{
-				nickchange(command, params);
-			}
+			//AWAAA O #feds :bla
+			String message = params.substring(params.indexOf(":") +1);
+			String me = params.substring(2, params.indexOf(":")-1);
+			notice(me, command, message);
 		}
 	}
 
@@ -120,80 +119,8 @@ public class Server
 	{
 		CC.privmsg(me, username, message);
 	}
-
-	/**
-	 * Handles N lines, these can be a user nickchange, or new clients connecting
-	 *
-	 * @param usernumeric	the user's numeric
-	 * @param params		raw irc data
-	 */
-	public void nickchange(String usernumeric, String params)
+	public void notice(String me, String username, String message)
 	{
-		//AB N Ozafy 1 1119649303 ozafy bob.be.borknet.org +oiwkgrxXnIh Ozafy Darth@Vader B]AAAB ABAXs :Laurens Panier
-		String[] result = params.split("\\s");
-		if(usernumeric.length() < 3)
-		{
-			String temp = params.substring(0, params.indexOf(":"));
-			String[] templist = temp.split("\\s");
-			try
-			{
-				String ident = result[4];
-				String ip;
-				try
-				{
-					ip = InetAddress.getByName(result[5]).getHostAddress();
-				}
-				catch(UnknownHostException e)
-				{
-					ip = "0.0.0.0";
-				}
-				String numeric = templist[templist.length -1];
-    if(Bot.get_qwebirc() && result[5].equals(Bot.get_qhost()))
-    {
-     try
-     {
-      long realip = Long.parseLong(ident.substring(1),16);
-      setHost(numeric, Bot.get_qident(), C.longToIp(realip));
-     }
-     catch(Exception longex)
-     {
-      //do nothing
-     }
-    }
-    else if(Bot.get_automatic())
-    {
-     String vhost = encrypt(ip) + "." + Bot.get_vhost();
-     setHost(numeric, ident, vhost);
-    }
-			}
-			catch(ArrayIndexOutOfBoundsException e)
-			{
-				C.printDebug("ArrayIndexOutOfBoundsException in srv_nickchange! (1)");
-				C.debug(e);
-				C.report("ArrayIndexOutOfBoundsException in srv_nickchange! (1)");
-			}
-		}
-	}
-
-	public void setHost(String numeric, String ident, String vhost)
-	{
-		String user[] = C.get_dbc().getUserRow(numeric);
-		C.cmd_sethost(numeric, ident, vhost, user[3]);
-	}
- 
-	public String encrypt(String str)
-	{
-		long hash = 0;
-		long x    = 0;
-		for(int i = 0; i < str.length(); i++)
-		{
-			hash = (hash << 4) + str.charAt(i);
-			if((x = hash & 0xF0000000L) != 0)
-			{
-				hash ^= (x >> 24);
-			}
-			hash &= ~x;
-		}
-		return hash+"";
+		Bot.relayNotice(me, message);
 	}
 }
