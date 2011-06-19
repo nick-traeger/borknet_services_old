@@ -68,7 +68,6 @@ public class Listener extends Thread
   {
    C.printDebug("Error creating webinterface");
 			C.debug(ex);
-   C.die("Socket error, trying to die gracefully.");
   }
 	}
  
@@ -139,7 +138,6 @@ public class Listener extends Thread
   {
    C.printDebug("Error sleeping in webinterface");
 			C.debug(e);
-   C.die("Socket error, trying to die gracefully.");
   }
  }
  
