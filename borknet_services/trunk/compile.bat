@@ -15,13 +15,13 @@ rem javac core/modules/g/*.java
 rem javac core/modules/h/*.java
 rem javac core/modules/m/*.java
 rem javac core/modules/p/*.java
- javac core/modules/q/*.java
+rem javac core/modules/q/*.java
 rem javac core/modules/r/*.java
 rem javac core/modules/s/*.java
 rem javac core/modules/t/*.java
 rem javac core/modules/t/*.java
 rem javac core/modules/tutor/*.java
 rem javac core/modules/v/*.java
-rem javac core/modules/w/*.java
+ javac core/modules/w/*.java
 rem javac core/modules/x/*.java
 pause
