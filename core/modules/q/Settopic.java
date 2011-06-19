@@ -65,7 +65,7 @@ public class Settopic implements Command
 				String user[] = dbc.getUserRow(username);
 				//get access string
 				String acc = get_access(user[4], chan,dbc);
-				if(acc.contains("t") || acc.contains("n") || acc.contains("m") || Boolean.parseBoolean(user[5]))
+				if(acc.contains("t") || acc.contains("n") || acc.contains("m") || user[5].equals("1"))
 				{
 					//we have to set a new topic
 					if(result.length>2)
