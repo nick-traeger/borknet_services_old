@@ -8,13 +8,13 @@ if($debug)
  error_reporting (E_ALL);
 }
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
 <title>The BorkNet IRC Network - W Example</title>
 </head>
 <body>
-<br><b class="underline">W Example:</b>
-<br>&nbsp;
+<br><b class="underline">W Example:</b><br>
 <?php
 set_time_limit(15);
 $server_host = "127.0.0.1";
@@ -35,3 +35,5 @@ if($server['SOCKET'])
 socket_close($server['SOCKET']);
 echo "Connection Closed.</pre>";
 ?>
+</body>
+</html>
