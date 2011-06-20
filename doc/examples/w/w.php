@@ -7,6 +7,7 @@ if($debug)
  ini_set('display_startup_errors','1');
  error_reporting (E_ALL);
 }
+set_time_limit(15);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -16,17 +17,24 @@ if($debug)
 <body>
 <br><b class="underline">W Example:</b><br>
 <?php
-set_time_limit(15);
+//the following bit of code uses the included java program to connect to W which will make interaction a lot easyer:
+$command="Q say #dev-com php connection using java";
+$output = shell_exec("java W 127.0.0.1 4444 'passwordgoeshere!' ".escapeshellarg($command));
+echo '<pre>'.$output.'</pre>';
+######################################################################################################################
+//the following code connects to W using php, this allows for more customisation but also requires more php knowledge:
 $server_host = "127.0.0.1";
 $server_port = 4444;
+$password = "passwordgoeshere!";
+$command = "Q say #dev-com php connection using php sockets";
 $server = array();
 echo "<pre>Connecting to server...\n\r";
 $server['SOCKET'] = @fsockopen($server_host, $server_port, $errno, $errstr, 2);
 if($server['SOCKET'])
 {
- $cmd="PASS passwordgoeshere!\n";
+ $cmd="PASS ".$password."\n";
  fwrite($server['SOCKET'], $cmd, strlen($cmd));
- $cmd="Q say #dev-com Hello there!\n";
+ $cmd=$command."\n";
  fwrite($server['SOCKET'], $cmd, strlen($cmd));
  $cmd=".\n\r";
  fwrite($server['SOCKET'], $cmd, strlen($cmd));
