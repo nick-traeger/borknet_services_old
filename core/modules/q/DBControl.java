@@ -620,7 +620,7 @@ public class DBControl
 	 *
 	 * @return			an array of all channels
 	 */
-	public String[] getUserChans(String user)
+	public ArrayList<String> getUserChans(String user)
 	{
 		return dbc.getUserChans(user);
 	}

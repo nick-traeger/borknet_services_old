@@ -79,14 +79,11 @@ public class Whoami implements Command
 			{
 				C.cmd_notice(numeric, botnum, username, "Userflags: +" + auth[7]);
 			}
-			String chans[] = dbc.getUserChans(username);
-			if(!chans[0].equals("0"))
-			{
-				for(int n=0; n<chans.length; n++)
-				{
-					C.cmd_notice(numeric, botnum, username, "You are on " + chans[n] + ".");
-				}
-			}
+			ArrayList<String> channels = dbc.getUserChans(username);
+   for(String channel : channels)
+   {
+    C.cmd_notice(numeric, botnum, username, "You are on " + channel + ".");
+   }
 			return;
 		}
 	}

@@ -722,25 +722,16 @@ public class CoreDBControl
 	 *
 	 * @return			an array of all channels
 	 */
-	public String[] getUserChans(String user)
+	public ArrayList<String> getUserChans(String user)
 	{
   User u = usersByNumeric.get(user);
   if(u instanceof User)
   {
-   ArrayList<String> channellist = u.getChannels();
-   if(channellist.size()>0)
-   {
-    String[] r = (String[]) channellist.toArray(new String[ channellist.size() ]);
-    return r;
-   }
-   else
-   {
-    return new String[]{"0","0","0","0","0","0","0","0","0","0"};
-   }
+   return u.getChannels();
   }
   else
   {
-   return new String[]{"0","0","0","0","0","0","0","0","0","0"};
+   return new ArrayList<String>();
   }
 	}
 
@@ -1848,10 +1839,10 @@ public class CoreDBControl
 		{
 			if(!isService(users[n]))
 			{
-				String channels[] = getUserChans(users[n]);;
-				for(int p=0; p<channels.length; p++)
+				ArrayList<String> channels = getUserChans(users[n]);;
+    for(String channel : channels)
 				{
-					if(isOpChan(users[n], channels[p]))
+					if(isOpChan(users[n], channel))
 					{
 						String user[] = getUserRow(users[n]);
 						if(!user[2].equalsIgnoreCase(C.get_ident() + "@" + C.get_host()))
@@ -1861,15 +1852,15 @@ public class CoreDBControl
 							{
 								userid = user[4];
 							}
-							if(hasChanfix(userid, channels[p]))
+							if(hasChanfix(userid, channel))
 							{
-								chanfix_addpoint(userid, channels[p]);
+								chanfix_addpoint(userid, channel);
 							}
 							else
 							{
-								if(getChanUsers(channels[p]) > 2)
+								if(getChanUsers(channel) > 2)
 								{
-									add_chanfix(userid, channels[p]);
+									add_chanfix(userid, channel);
 								}
 							}
 						}
