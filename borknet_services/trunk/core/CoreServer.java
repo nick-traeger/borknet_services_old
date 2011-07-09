@@ -729,10 +729,10 @@ public class CoreServer
 	 */
 	public void partAll(String user)
 	{
-		String[] chans = dbc.getUserChans(user);
-		for(int n=0; n<chans.length;n++)
+		ArrayList<String> channels = dbc.getUserChans(user);
+		for(String channel : channels)
 		{
-			dbc.delUserChan(chans[n], user);
+			dbc.delUserChan(channel, user);
 		}
 	}
 

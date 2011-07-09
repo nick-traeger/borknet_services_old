@@ -156,14 +156,11 @@ public class Whois implements Command
 								C.cmd_notice(numeric, botnum, username, "IP: " + C.longToIp(C.base64Decode(userinfoline[7])));
 								C.cmd_notice(numeric, botnum, username, "Numeric: " + userinfoline[0]);
 								C.cmd_notice(numeric, botnum, username, "Modes: " + userinfoline[3]);
-								String chans[] = dbc.getUserChans(userinfoline[0]);
-								if(!chans[0].equals("0"))
-								{
-									for(int c=0; c<chans.length; c++)
-									{
-										C.cmd_notice(numeric, botnum, username, userinfoline[1] + " is on " + chans[c] + ".");
-									}
-								}
+        ArrayList<String> channels = dbc.getUserChans(userinfoline[0]);
+        for(String channel : channels)
+        {
+         C.cmd_notice(numeric, botnum, username, userinfoline[1] + " is on " + channel + ".");
+        }
 							}
 							if(userinfo.size()>1)
 							{
@@ -305,14 +302,11 @@ public class Whois implements Command
 								C.cmd_notice(numeric, botnum, username, userinfo[4] + " is trusted.");
 							}
 						}
-						String chans[] = dbc.getUserChans(userinfo[0]);
-						if(!chans[0].equals("0"))
-						{
-							for(int n=0; n<chans.length; n++)
-							{
-								C.cmd_notice(numeric, botnum, username, userinfo[1] + " is on " + chans[n] + ".");
-							}
-						}
+      ArrayList<String> channels = dbc.getUserChans(userinfo[0]);
+      for(String channel : channels)
+      {
+       C.cmd_notice(numeric, botnum, username, userinfo[1] + " is on " + channel + ".");
+      }
 					}
 					else
 					{
