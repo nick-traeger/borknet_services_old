@@ -729,7 +729,8 @@ public class CoreServer
 	 */
 	public void partAll(String user)
 	{
-		ArrayList<String> channels = dbc.getUserChans(user);
+		ArrayList<String> channels = new ArrayList<String>();
+  channels.addAll(dbc.getUserChans(user));
 		for(String channel : channels)
 		{
 			dbc.delUserChan(channel, user);
