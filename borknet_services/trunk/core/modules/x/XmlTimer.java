@@ -44,7 +44,7 @@ public class XmlTimer implements Runnable
      */
 	public void run()
 	{
-		int delay = 30*60*1000; //min*sec*milisec
+		int delay = 60*60*1000; //min*sec*milisec
 		ActionListener taskPerformer = new ActionListener()
 		{
 			public void actionPerformed(ActionEvent evt)
