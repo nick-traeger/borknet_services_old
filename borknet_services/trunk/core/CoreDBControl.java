@@ -716,6 +716,11 @@ public class CoreDBControl
 		}
 	}
 
+	public User getUser(String user)
+	{
+  return usersByNumeric.get(user);
+	}
+ 
 	/**
 	 * Get a user's channels
 	 * @param user		user's numeric
@@ -735,6 +740,7 @@ public class CoreDBControl
   }
 	}
 
+ 
 	/**
 	 * Get a channel's users
 	 * @param chan		channel to fetch
