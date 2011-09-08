@@ -201,6 +201,33 @@ public class P implements Modules
 	{
 		return gline;
 	}
+ 
+	public void scan(String user, String ip, String host)
+	{
+		for(String p : getPorts())
+		{
+			ProxyScanner httpScanner = new ProxyScanner();
+			httpScanner.settings(C, this, user, ip, host, Integer.parseInt(p), 1);
+			Thread httpThread;
+			httpThread = new Thread(httpScanner);
+			httpThread.setDaemon(true);
+			httpThread.start();
+
+			ProxyScanner sockScanner = new ProxyScanner();
+			sockScanner.settings(C, this, user, ip, host, Integer.parseInt(p), 2);
+			Thread sockThread;
+			sockThread = new Thread(sockScanner);
+			sockThread.setDaemon(true);
+			sockThread.start();
+		}
+  BlacklistScanner blacklist = new BlacklistScanner();
+  blacklist.settings(C, this, user, ip, host);
+  Thread blacklistThread;
+  blacklistThread = new Thread(blacklist);
+  blacklistThread.setDaemon(true);
+  blacklistThread.start();
+	}
+ 
 	public void clean()
 	{
 		//gets issued every 24 hours, can be used to cleanup the db, or other stuff

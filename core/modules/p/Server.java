@@ -136,7 +136,7 @@ public class Server
 				String temp = params.substring(0, params.indexOf(":"));
 				String[] templist = temp.split("\\s");
 				String numer = templist[templist.length -1];
-    String host = "*@" + result[5];
+    String host = "*!*@" + result[5];
     String ip = templist[templist.length -2];
     ip = C.longToIp(C.base64Decode(ip));
 				//C.report("Scanning "+ip+"...");
@@ -147,38 +147,12 @@ public class Server
       C.cmd_notice(Bot.get_num(), Bot.get_corenum(), numer, "Your host is now being scanned for open proxies.");
       C.cmd_notice(Bot.get_num(), Bot.get_corenum(), numer, "If you see a connection from "+Bot.get_host()+" or "+Bot.getMyIp()+" please ignore it.");
      }
-     scan(numer, ip, host);
+     Bot.scan(numer, ip, host);
     }
 			}
 			catch(Exception e)
 			{
 			}
 		}
-	}
-
-	private void scan(String user, String ip, String host)
-	{
-		for(String p : Bot.getPorts())
-		{
-			ProxyScanner httpScanner = new ProxyScanner();
-			httpScanner.settings(C, Bot, user, ip, host, Integer.parseInt(p), 1);
-			Thread httpThread;
-			httpThread = new Thread(httpScanner);
-			httpThread.setDaemon(true);
-			httpThread.start();
-
-			ProxyScanner sockScanner = new ProxyScanner();
-			sockScanner.settings(C, Bot, user, ip, host, Integer.parseInt(p), 2);
-			Thread sockThread;
-			sockThread = new Thread(sockScanner);
-			sockThread.setDaemon(true);
-			sockThread.start();
-		}
-  BlacklistScanner blacklist = new BlacklistScanner();
-  blacklist.settings(C, Bot, user, ip, host);
-  Thread blacklistThread;
-  blacklistThread = new Thread(blacklist);
-  blacklistThread.setDaemon(true);
-  blacklistThread.start();
 	}
 }
