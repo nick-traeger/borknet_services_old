@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 2.11.8.1deb5
+-- version 3.3.7deb6
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 01, 2009 at 11:58 PM
--- Server version: 5.0.51
--- PHP Version: 5.2.6-1+lenny2
+-- Generation Time: Dec 08, 2011 at 01:44 PM
+-- Server version: 5.1.49
+-- PHP Version: 5.3.3-7+squeeze3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `auths` (
   `info` varchar(250) NOT NULL,
   `userflags` varchar(10) NOT NULL,
   `vhost` varchar(150) NOT NULL,
-  PRIMARY KEY  (`authnick`)
+  PRIMARY KEY (`authnick`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `auths` (`authnick`, `pass`, `level`, `suspended`) VALUES ('R', 'R', 9999, 0);
@@ -57,6 +57,21 @@ CREATE TABLE IF NOT EXISTS `chanfix` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `g_trivia_questions`
+--
+
+CREATE TABLE IF NOT EXISTS `g_trivia_questions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `question` text NOT NULL,
+  `answer` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+INSERT INTO `g_trivia_questions` (`id`,`question`,`answer`)VALUES (NULL , 'Testquestion', 'testanswer one*testanswer two');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `h_tickets`
 --
 
@@ -64,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `h_tickets` (
   `user` varchar(15) NOT NULL,
   `channel` varchar(100) NOT NULL,
   `time` bigint(20) NOT NULL,
-  PRIMARY KEY  (`user`)
+  PRIMARY KEY (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -74,13 +89,13 @@ CREATE TABLE IF NOT EXISTS `h_tickets` (
 --
 
 CREATE TABLE IF NOT EXISTS `m_messages` (
-  `index` int(11) NOT NULL auto_increment,
+  `index` int(11) NOT NULL AUTO_INCREMENT,
   `authname` varchar(15) NOT NULL,
   `from` varchar(15) NOT NULL,
   `message` text NOT NULL,
-  `senttime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`index`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+  `senttime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`index`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 -- --------------------------------------------------------
 
@@ -92,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `q_access` (
   `user` varchar(15) NOT NULL,
   `channel` varchar(100) NOT NULL,
   `flags` varchar(10) NOT NULL,
-  PRIMARY KEY  (`user`,`channel`)
+  PRIMARY KEY (`user`,`channel`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -104,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `q_access` (
 CREATE TABLE IF NOT EXISTS `q_bans` (
   `name` varchar(100) NOT NULL,
   `host` varchar(100) NOT NULL,
-  PRIMARY KEY  (`name`,`host`)
+  PRIMARY KEY (`name`,`host`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -117,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `q_challenge` (
   `user` varchar(5) NOT NULL,
   `challenge` varchar(32) NOT NULL,
   `time` bigint(20) NOT NULL,
-  PRIMARY KEY  (`user`)
+  PRIMARY KEY (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -138,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `q_channels` (
   `chankey` varchar(50) NOT NULL,
   `level` int(11) NOT NULL,
   `owner` varchar(15) NOT NULL,
-  PRIMARY KEY  (`name`)
+  PRIMARY KEY (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -153,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `q_fakeusers` (
   `ident` varchar(50) NOT NULL,
   `host` varchar(250) NOT NULL,
   `desc` varchar(250) NOT NULL,
-  PRIMARY KEY  (`numer`)
+  PRIMARY KEY (`numer`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -168,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `q_glines` (
   `timeexp` bigint(20) NOT NULL,
   `reason` varchar(250) NOT NULL,
   `oper` varchar(15) NOT NULL,
-  PRIMARY KEY  (`gline`(30))
+  PRIMARY KEY (`gline`(30))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -184,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `q_jupes` (
   `timeexp` int(11) NOT NULL,
   `reason` varchar(250) NOT NULL,
   `oper` varchar(15) NOT NULL,
-  PRIMARY KEY  (`jupe`),
+  PRIMARY KEY (`jupe`),
   KEY `numer` (`numer`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -196,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `q_jupes` (
 
 CREATE TABLE IF NOT EXISTS `q_mails` (
   `mail` varchar(100) NOT NULL,
-  PRIMARY KEY  (`mail`)
+  PRIMARY KEY (`mail`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -209,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `q_pwrequest` (
   `user` varchar(15) NOT NULL,
   `pass` varchar(7) NOT NULL,
   `code` varchar(100) NOT NULL,
-  PRIMARY KEY  (`user`)
+  PRIMARY KEY (`user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -224,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `q_trusts` (
   `auth` varchar(15) NOT NULL,
   `time` int(11) NOT NULL,
   `need-ident` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`host`)
+  PRIMARY KEY (`host`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -246,20 +261,7 @@ CREATE TABLE IF NOT EXISTS `q_variables` (
 CREATE TABLE IF NOT EXISTS `s_channels` (
   `name` varchar(100) NOT NULL,
   `flags` varchar(5) NOT NULL,
-  PRIMARY KEY  (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `userchans`
---
-
-CREATE TABLE IF NOT EXISTS `userchans` (
-  `channel` varchar(100) NOT NULL,
-  `user` varchar(5) NOT NULL,
-  `modes` varchar(3) NOT NULL,
-  KEY `chanuser` (`channel`,`user`)
+  PRIMARY KEY (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

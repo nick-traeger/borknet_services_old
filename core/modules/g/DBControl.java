@@ -42,8 +42,12 @@ import borknet_services.core.*;
  */
 public class DBControl
 {
+	/** Database connection */
+	private Connection con;
 	/** Main bot */
 	private Core C;
+
+	private CoreDBControl dbc;
 
 	private G Bot;
 
@@ -52,6 +56,13 @@ public class DBControl
 	private HashMap<String,Game> c4id = new HashMap<String,Game>();
 	private HashMap<String,Game> c4user1 = new HashMap<String,Game>();
 	private HashMap<String,Game> c4user2 = new HashMap<String,Game>();
+ 
+	private ArrayList<String> channels = new ArrayList<String>();
+ 
+	private HashMap<String,TriviaGame> triviaGames = new HashMap<String,TriviaGame>();
+	private int triviaQuestions=0;
+ 
+ private Random randomGenerator = new Random();
 
 	/**
 	 * Constructs a Database connection.
@@ -66,20 +77,117 @@ public class DBControl
 	{
 		this.C = C;
 		this.Bot = Bot;
+  this.dbc = C.get_dbc();
+  this.con = dbc.getCon();
 	}
 
-	/**
-	 * Check if a numeric is on a channel
-	 * @param user		numeric to check
-	 * @param channel	channel to check
-	 *
-	 * @return			true or false
-	 */
-/*	public boolean isOnChan(String user, String channel)
+	public boolean chanExists(String channel)
 	{
-		return dbc.isOnChan(user,channel);
-	}*/
+		return channels.contains(channel.toLowerCase());
+	}
+ 
+	public boolean isOpChan(String user, String channel)
+	{
+		return dbc.isOpChan(user,channel);
+	}
+ 
+ public void addChan(String channel)
+ {
+  channels.add(channel.toLowerCase());
+ }
+ 
+ public void delChan(String channel)
+ {
+  if(triviaGames.containsKey(channel.toLowerCase()))
+  {
+   delTriviaGame(channel);
+  }
+  channels.remove(channel.toLowerCase());
+ }
+ 
+ public ArrayList<String> getChannels()
+ {
+  return channels;
+ }
 
+ public boolean TriviaGameExists(String channel)
+	{
+		return triviaGames.containsKey(channel.toLowerCase());
+	}
+ 
+ public void addTriviaGame(String channel)
+	{
+		triviaGames.put(channel.toLowerCase(),new TriviaGame(C, Bot, this, channel));
+	}
+ 
+ public TriviaGame getTriviaGame(String channel)
+	{
+		return triviaGames.get(channel.toLowerCase());
+	}
+ 
+ public void delTriviaGame(String channel)
+	{
+  TriviaGame game = getTriviaGame(channel);
+  if(game instanceof TriviaGame)
+  {
+   game.printScores(100);
+  }
+		triviaGames.remove(channel.toLowerCase());
+	}
+ 
+ public void tickTriviaGames()
+	{
+  ArrayList<String> keys = new ArrayList<String>(triviaGames.keySet());
+  for(String key : keys)
+  {
+   triviaGames.get(key).gameTick();
+  }
+	}
+ 
+ public void loadTriviaQuestions()
+ {
+  try
+  {
+   PreparedStatement pstmt;
+   pstmt = con.prepareStatement("SELECT MAX(id) as maxid FROM g_trivia_questions");
+   ResultSet rs = pstmt.executeQuery();
+   rs.first();
+   triviaQuestions = rs.getInt("maxid");
+  }
+  catch(Exception ex)
+  {
+   triviaQuestions=0;
+  }
+  Bot.report("Loaded "+triviaQuestions+" trivia questions.");
+ }
+ 
+ public int getRandom(int max)
+ {
+  return randomGenerator.nextInt(max);
+ }
+ 
+ public String[] getRandomTriviaQuestion()
+ {
+  int id = getRandom(triviaQuestions);
+  try
+  {
+   PreparedStatement pstmt;
+   pstmt = con.prepareStatement("SELECT question,answer FROM g_trivia_questions WHERE id = ?");
+   pstmt.setInt(1,id);
+   ResultSet rs = pstmt.executeQuery();
+   rs.first();
+   String[] answers=rs.getString("answer").split("\\*");
+   String[] triviaQuestion=new String[answers.length+1];
+   triviaQuestion[0]=rs.getString("question");
+   System.arraycopy(answers, 0, triviaQuestion, 1, answers.length);
+   return triviaQuestion;
+  }
+  catch(Exception ex)
+  {
+   return new String[] {"There was an error fetching the question. Can you guess which one", ex.getMessage()};
+  }
+ }
+ 
 	public boolean C4gameExists(String username)
 	{
 		return (c4user1.containsKey(username) || c4user2.containsKey(username));

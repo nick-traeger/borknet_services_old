@@ -1,0 +1,15 @@
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+CREATE TABLE `g_trivia_questions` (
+`id` INT NOT NULL AUTO_INCREMENT ,
+`question` TEXT NOT NULL ,
+`answer` TEXT NOT NULL ,
+PRIMARY KEY ( `id` )
+) ENGINE = MYISAM ;
+
+INSERT INTO `g_trivia_questions` (`id`,`question`,`answer`)VALUES (NULL , 'Testquestion', 'testanswer one*testanswer two');

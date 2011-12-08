@@ -40,6 +40,7 @@ public class G implements Modules
 	private Core C;
 	private Server ser;
 	private DBControl dbc;
+	private GameTimer GT;
 	private String description = "";
 	private String nick = "";
 	private String ident = "";
@@ -50,6 +51,8 @@ public class G implements Modules
 	private String reportchan = "";
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
+
+ private final int TRIVIA = 1;
 
 	public G()
 	{
@@ -62,9 +65,14 @@ public class G implements Modules
 		numeric = C.get_numeric();
 		dbc = new DBControl(C,this);
 		ser = new Server(C,dbc,this);
-		C.cmd_create_service(num, nick, ident, host, "+oXwkgsr", description);
+		C.cmd_create_service(num, nick, ident, host, "+ir", description);
 		reportchan = C.get_reportchan();
 		C.cmd_join(numeric, num, reportchan);
+  dbc.loadTriviaQuestions();
+		GT = new GameTimer(this,10,TRIVIA);
+		Thread th1 = new Thread(GT);
+		th1.setDaemon(true);
+		th1.start();
 	}
 
 	public void setCmnds(ArrayList<Object> cmds,ArrayList<String> cmdn)
@@ -150,7 +158,28 @@ public class G implements Modules
 	}
 	public void clean()
 	{
+  ser.clean();
 	}
+ 
+ public void talk(String channel, String s)
+ {
+  C.cmd_privmsg(numeric, num , channel, s);
+ }
+ 
+ public void report(String s)
+ {
+  talk(reportchan, s);
+ }
+ 
+ public void tick(int action)
+ {
+  switch(action)
+  {
+   case TRIVIA:
+    dbc.tickTriviaGames();
+    break;
+  }
+ }
 
 	public void reop(String chan)
 	{
