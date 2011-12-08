@@ -55,16 +55,9 @@ public class Server
 	private String numeric;
 	/** the bot's numeric */
 	private String corenum;
-	/** the channel we report to */
-	private String reportchan;
-	/** our version reply */
-	private String version;
-	/**  counts the number of received pings, used as a timer for channel limits */
-	private int limit = 0;
 
 	private G Bot;
-
-
+ 
 	/**
 	 * Constructs a Server communicator.
 	 * @param B		The main bot
@@ -76,12 +69,10 @@ public class Server
 		this.Bot = Bot;
 		this.dbc = dbc;
 		CC = new Commands(C,Bot);
-		nick = C.get_nick();
-		host = C.get_host();
-		numeric = C.get_numeric();
-		corenum = C.get_corenum();
-		version = C.get_version();
-		reportchan = C.get_reportchan();
+		nick = Bot.get_nick();
+		host = Bot.get_host();
+		numeric = Bot.get_num();
+		corenum = 	Bot.get_corenum();
 	}
 
 	public void parse(String msg)
@@ -103,6 +94,31 @@ public class Server
 			String me = params.substring(2, params.indexOf(":")-1);
 			privmsg(me, command, message);
 		}
+		if(params.startsWith("I "))
+		{
+			//[>in <] >> ABAAI I bob :#FLE
+			//String chan = params.substring(params.indexOf(":")+1);
+			//changed in snircd? or a bug?
+			//[>in <] >> ABAAF I bob #404forums 0
+   String[] result = params.split("\\s");
+   if(result[1].toLowerCase().equals(nick.toLowerCase()))
+   {
+    String chan = result[2];
+    C.cmd_join(numeric, corenum, chan);
+    dbc.addChan(chan);
+    C.cmd_privmsg(numeric, corenum , chan, "G is here to tickle your spot.");
+   }
+		}
+		if(params.startsWith("K "))
+		{
+			//[>in <] >> ABAAI K #FLE ]NAAE :moo
+			String chan = params.substring(params.indexOf("#"),params.indexOf(" ",params.indexOf("#")));
+			String me = params.substring(params.indexOf(" ",params.indexOf("#"))+1, params.indexOf(":")-1);
+			if(me.equals(numeric+corenum))
+			{
+				dbc.delChan(chan);
+			}
+		}
 	}
 
 	/**
@@ -113,6 +129,30 @@ public class Server
 	 */
 	public void privmsg(String me, String username, String message)
 	{
+		if(me.startsWith("#"))
+		{
+			if(dbc.chanExists(me))
+			{
+    TriviaGame game = dbc.getTriviaGame(me);
+    if(game instanceof TriviaGame)
+    {
+     game.checkAnswer(username, message);
+    }
+			}
+		}
 		CC.privmsg(me, username, message);
+	}
+ 
+	public void clean()
+	{
+  ArrayList<String> channels = dbc.getChannels();
+		for(String chan : channels)
+		{
+			if(C.get_dbc().getChanUsers(chan)<1)
+			{
+				C.cmd_part(numeric, corenum, chan, "Game off :<");
+				dbc.delChan(chan);
+			}
+		}
 	}
 }
