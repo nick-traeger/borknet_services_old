@@ -128,7 +128,7 @@ public class Hello implements Command
 				}
 				else
 				{
-					C.cmd_notice(numeric, botnum, username, "Account created successfully, your new password is: " + userpass + "!");
+					C.cmd_notice(numeric, botnum, username, "Account created successfully, your new password is: " + userpass);
 				}
 				//we add his info to the active authed array
 				dbc.addAuth(userinfo[1],pass,mail1,1,false,Long.parseLong(C.get_time()),"0","0","0");

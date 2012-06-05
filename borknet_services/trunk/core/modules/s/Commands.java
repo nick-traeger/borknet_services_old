@@ -153,7 +153,7 @@ public class Commands
  }
 	private void spamscan(String username, String msg)
 	{
-		dbc.addPoints(username, 16);
+		dbc.addPoints(username, Bot.getSpamtext());
 		if(msg.contains("#"))
 		{
 			if(msg.indexOf("#",msg.indexOf("#")) > -1)
@@ -163,7 +163,7 @@ public class Commands
 				{
 					if(chan.startsWith("#") && dbc.chanExists(chan))
 					{
-						dbc.addPoints(username, 64);
+						dbc.addPoints(username, Bot.getSpamchan());
 					}
 				}
 			}
@@ -176,25 +176,25 @@ public class Commands
 				}
 				if(dbc.chanExists(chan))
 				{
-					dbc.addPoints(username, 64);
+					dbc.addPoints(username, Bot.getSpamchan());
 				}
 			}
 		}
 		if(msg.contains("http://") || msg.contains("www."))
 		{
-			dbc.addPoints(username, 64);
+			dbc.addPoints(username, Bot.getSpamweb());
 		}
 		if(dbc.repeat(username,msg))
 		{
-			dbc.addPoints(username, 24);
+			dbc.addPoints(username, Bot.getSpamrepeat());
 		}
   dbc.addPoints(username, spamwords.getPoints(msg));
 		dbc.setMsg(username,msg);
-		if(dbc.getPoints(username) > 79)
+		if(dbc.getPoints(username) >= Bot.getSpamwarning())
 		{
 			C.cmd_notice(numeric, botnum,username, "You are violating "+network+" rules. Please read "+rules+" and cease your abuse.");
 		}
-		if(dbc.getPoints(username) > 100)
+		if(dbc.getPoints(username) >= Bot.getSpamkill())
 		{
 			C.cmd_dis(username, "You are violating "+network+" rules. Please read "+rules+". ID: "+dbc.getID());
 		}
