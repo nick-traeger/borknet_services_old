@@ -43,6 +43,13 @@ public class S implements Modules
 	private String rules = "";
 	private ArrayList<Object> cmds = new ArrayList<Object>();
 	private ArrayList<String> cmdn = new ArrayList<String>();
+ 
+ private int spamtext=16;
+ private int spamchan=64;
+ private int spamweb=64;
+ private int spamrepeat=24;
+ private int spamwarning=80;
+ private int spamkill=100;
 
 	public S()
 	{
@@ -113,6 +120,12 @@ public class S implements Modules
 			pass = dataSrc.getProperty("pass");
 			num = dataSrc.getProperty("numeric");
 			rules = dataSrc.getProperty("rules");
+   spamtext=Integer.parseInt(dataSrc.getProperty("spamtext"));
+   spamchan=Integer.parseInt(dataSrc.getProperty("spamchan"));
+   spamweb=Integer.parseInt(dataSrc.getProperty("spamweb"));
+   spamrepeat=Integer.parseInt(dataSrc.getProperty("spamrepeat"));
+   spamwarning=Integer.parseInt(dataSrc.getProperty("spamwarning"));
+   spamkill=Integer.parseInt(dataSrc.getProperty("spamkill"));
 		}
 		catch(Exception e)
 		{
@@ -154,6 +167,32 @@ public class S implements Modules
 	{
 		return rules;
 	}
+ 
+	public int getSpamtext()
+	{
+		return spamtext;
+	}
+	public int getSpamchan()
+	{
+		return spamchan;
+	}
+	public int getSpamweb()
+	{
+		return spamweb;
+	}
+	public int getSpamrepeat()
+	{
+		return spamrepeat;
+	}
+	public int getSpamwarning()
+	{
+		return spamwarning;
+	}
+	public int getSpamkill()
+	{
+		return spamkill;
+	}
+ 
 	public DBControl getDBC()
 	{
 		return dbc;
